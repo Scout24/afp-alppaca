@@ -11,7 +11,7 @@ class NoCredentialsFoundException(Exception):
 
 
 class IMSInterface(object):
-    
+
     def __init__(self, ims_url, debug=False):
         self.ims_url = ims_url
         self.logger = init_logging(debug)
@@ -23,7 +23,7 @@ class IMSInterface(object):
             if response.status_code == 200:
                 if not response.content:
                     raise NoRolesFoundException("Server response was empty; host has no roles?")
-                
+
                 roles_list = [line.strip() for line in response.content.split("\n")] if response.content else []
                 self.logger.debug("Loaded roles: {0}".format(roles_list))
                 return roles_list
