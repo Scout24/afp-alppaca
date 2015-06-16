@@ -18,4 +18,5 @@ default_task = "publish"
 def set_properties(project):
     if sys.version_info[0:2] < (2, 7):
         project.depends_on("unittest2")
+    project.depends_on("mock")
     project.depends_on("requests_mock")
