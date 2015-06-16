@@ -7,7 +7,7 @@ import mock
 import requests_mock
 import requests
 
-from alppaca import IMSInterface, NoRolesFoundException
+from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
 
 
 
@@ -63,3 +63,8 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
         mock_object.get(requests_mock.ANY, text=self.json_response)
         received_credentials = self.imsi.get_credentials("test_role")
         self.assertEqual(self.json_response, received_credentials)
+
+    @requests_mock.mock()
+    def test_get_credentials_exception_for_empty_response(self, mock_object):
+        mock_object.get(requests_mock.ANY, text="")
+        self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")

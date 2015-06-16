@@ -1,1 +1,1 @@
-from ims_interface import IMSInterface, NoRolesFoundException
+from ims_interface import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
