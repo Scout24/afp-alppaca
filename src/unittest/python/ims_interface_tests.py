@@ -17,36 +17,36 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
         self.imsi = IMSInterface("no-such-host.com")
     
     @requests_mock.mock()
-    def test_get_ims_credentials_for_single_role(self, mock_object):
+    def test_get_role_for_single_role(self, mock_object):
         mock_object.get(requests_mock.ANY, text="test_role")
         received_roles = self.imsi.get_roles()
         expected_roles = ["test_role"]
         self.assertEqual(expected_roles, received_roles)
 
     @requests_mock.mock()
-    def test_get_ims_credentials_for_multiple_roles(self, mock_object):
+    def test_get_role_for_multiple_roles(self, mock_object):
         mock_object.get(requests_mock.ANY, text="test_role1\ntest_role2\n test_role3")
         received_roles = self.imsi.get_roles()
         expected_roles = ["test_role1", "test_role2", "test_role3"]
         self.assertEqual(expected_roles, received_roles)
 
     @requests_mock.mock()
-    def test_exception_for_empty_request(self, mock_object):
+    def test_get_role_exception_for_empty_response(self, mock_object):
         mock_object.get(requests_mock.ANY, text="")
         self.assertRaises(NoRolesFoundException, self.imsi.get_roles)
 
     @mock.patch("requests.get")
-    def test_exception_for_bad_host(self, mock_object):
+    def test_get_role_exception_for_bad_host(self, mock_object):
         mock_object.side_effect = [requests.ConnectionError("Could not resolve host")]
         self.assertRaises(NoRolesFoundException, self.imsi.get_roles)
 
     @requests_mock.mock()
-    def test_url_of_role_request(self, mock_object):
+    def test_get_role_url(self, mock_object):
         mock_object.get("http://no-such-host.com/latest/meta-data/iam/security-credentials/", text="test_role")
         self.imsi.get_roles()
 
     @requests_mock.mock()
-    def test_get_ims_credentials_for_single_role(self, mock_object):
+    def test_get_role_exception_for_http_status_error(self, mock_object):
         mock_object.get(requests_mock.ANY, status_code=400)
         self.assertRaises(NoRolesFoundException, self.imsi.get_roles)
 
