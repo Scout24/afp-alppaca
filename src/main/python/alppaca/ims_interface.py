@@ -13,9 +13,6 @@ class IMSInterface(object):
         self.ims_url = ims_url
         self.logger = init_logging(debug)
 
-    def get_ims_credentials(self):
-        pass
-
     def get_roles(self):
         try:
             response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/".format(self.ims_url))
@@ -32,3 +29,7 @@ class IMSInterface(object):
         except Exception as e:
             self.logger.exception("Due to following cause:")
             raise NoRolesFoundException(e.message)
+
+    def get_credentials(self, role):
+        response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_url, role))
+        return response.content
