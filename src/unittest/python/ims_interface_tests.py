@@ -44,4 +44,4 @@ class IMSInterfaceTest(unittest.TestCase):
     def test_get_ims_credentials_for_single_role(self, mock_object):
         mock_object.get(requests_mock.ANY, status_code=400)
         imsi = IMSInterface("http://no-such-host.com")
-        self.assertEqual(NoRolesFoundException, imsi.get_roles)
+        self.assertRaises(NoRolesFoundException, imsi.get_roles)
