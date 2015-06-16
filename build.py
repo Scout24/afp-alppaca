@@ -1,3 +1,5 @@
+import sys
+
 from pybuilder.core import use_plugin, init
 
 use_plugin("python.core")
@@ -14,4 +16,5 @@ default_task = "publish"
 
 @init
 def set_properties(project):
-    pass
+    if sys.version_info[0:2] < (2, 7):
+        project.depends_on("unittest2")
