@@ -1,5 +1,5 @@
 # alppaca
-Amazing Local Prefetch Proxy for Amazon Credentials
+A(mazing) Local Prefetch Proxy for Amazon CredentiAls
 
 # Schematic
 
