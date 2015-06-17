@@ -68,3 +68,8 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
     def test_get_credentials_exception_for_empty_response(self, mock_object):
         mock_object.get(requests_mock.ANY, text="")
         self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
+
+    @requests_mock.mock()
+    def test_get_credentials_exception_for_http_status_error(self, mock_object):
+        mock_object.get(requests_mock.ANY, status_code=400)
+        self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
