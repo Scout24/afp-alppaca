@@ -73,3 +73,17 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
     def test_get_credentials_exception_for_http_status_error(self, mock_object):
         mock_object.get(requests_mock.ANY, status_code=400)
         self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
+        
+        
+class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
+    def setUp(self):
+        self.imsi = IMSInterface("no-such-host.com")
+        self.json_response ='\'{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", ' \
+                        '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
+                        '"Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}\''
+        
+    @requests_mock.mock()
+    def test_get_roles_and_credentials_for_single_role(self, mock_object):
+        mock_object.get(requests_mock.ANY, [{'text': 'test_role'}, {'text': self.json_response}])
+        received_credentials = self.imsi.get_credentials_for_all_roles()
+        self.assertEqual({'test_role': self.json_response}, received_credentials)
