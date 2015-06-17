@@ -99,3 +99,16 @@ class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
                     'test_role2': self.json_response,
                     }
         self.assertEqual(expected, received_credentials)
+
+    @requests_mock.mock()
+    def test_get_roles_and_credentials_for_empty_role(self, mock_object):
+        mock_object.get(requests_mock.ANY, [{'text': ''}])
+        self.assertRaises(NoRolesFoundException, self.imsi.get_credentials_for_all_roles)
+
+    @requests_mock.mock()
+    def test_get_roles_and_credentials_for_empty_credentials(self, mock_object):
+        mock_object.get(requests_mock.ANY, [{'text': 'test_role1\n test_role2'},
+                                            {'text': self.json_response}, 
+                                            {'text': ''}])
+        received_credentials = self.imsi.get_credentials_for_all_roles()
+        self.assertEqual({'test_role1': self.json_response}, received_credentials)

@@ -50,5 +50,8 @@ class IMSInterface(object):
     def get_credentials_for_all_roles(self):
         results = {}
         for role in self.get_roles():
-            results[role] = self.get_credentials(role)
+            try:
+                results[role] = self.get_credentials(role)
+            except NoCredentialsFoundException:
+                self.logger.exception("Role {0} didn't have any credentials.".format(role))
         return results
