@@ -14,12 +14,12 @@ class NoCredentialsFoundException(Exception):
 class IMSInterface(object):
 
     def __init__(self, ims_url, debug=False):
-        self.ims_url = ims_url
+        self.ims_host = ims_url
         self.logger = init_logging(debug)
 
     def get_roles(self):
         try:
-            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/".format(self.ims_url))
+            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/".format(self.ims_host))
 
             if response.status_code == 200:
                 if not response.content:
@@ -36,7 +36,7 @@ class IMSInterface(object):
 
     def get_credentials(self, role):
         try:
-            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_url, role))
+            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_host, role))
             if response.status_code == 200:
                 if not response.content:
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
