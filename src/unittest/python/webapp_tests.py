@@ -35,3 +35,9 @@ class AwsInstanceMetadataClientTest(TestCase):
         response = self.app.get('/latest/meta-data/iam/security-credentials/test_role')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.text, json_response)
+
+    @mock.patch.dict('alppaca.webapp.credentials', {})
+    def test_server_delivers_empty_string_on_non_existent_cache(self):
+        response = self.app.get('/latest/meta-data/iam/security-credentials/no_role')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.text, "")
