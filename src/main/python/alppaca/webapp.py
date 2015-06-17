@@ -9,11 +9,14 @@ local_port = 5000
 ims_host = 'localhost'
 
 
+roles = []
 credentials = {}
+
 
 @bottle_app.route(path)
 def get_roles():
-    return "\n".join(sorted(credentials.keys()))
+    return "\n".join(roles)
+
 
 @bottle_app.route(path+'<role>')
 def get_credentials(role):
