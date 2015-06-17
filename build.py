@@ -20,4 +20,5 @@ def set_properties(project):
         project.depends_on("unittest2")
     project.depends_on("mock")
     project.depends_on("requests_mock")
-    project.depends_on("flask")
+    project.depends_on("bottle")
+    project.depends_on("webtest")

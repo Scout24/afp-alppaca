@@ -1,8 +1,8 @@
-from flask import Flask
+from bottle import Bottle
 
 from alppaca import IMSInterface
 
-flask_app = Flask(__name__)
+bottle_app = Bottle(__name__)
 path = '/latest/meta-data/iam/security-credentials/'
 local_host = '127.0.0.1'
 local_port = 5000
@@ -11,10 +11,10 @@ ims_host = 'localhost'
 
 credentials = {}
 
-@flask_app.route(path, methods=['GET'])
+@bottle_app.route(path)
 def get_roles():
     return "\n".join(sorted(credentials.keys()))
 
-@flask_app.route(path+'<string:role>', methods=['GET'])
+@bottle_app.route(path+'<role>')
 def get_credentials(role):
     pass
