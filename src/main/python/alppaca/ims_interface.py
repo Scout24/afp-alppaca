@@ -6,6 +6,7 @@ from util import init_logging
 class NoRolesFoundException(Exception):
     pass
 
+
 class NoCredentialsFoundException(Exception):
     pass
 
@@ -34,10 +35,14 @@ class IMSInterface(object):
             raise NoRolesFoundException(e.message)
 
     def get_credentials(self, role):
-        response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_url, role))
-        if response.status_code == 200:
-            if not response.content:
-                raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
-            return response.content
-        else:
-            response.raise_for_status()
+        try:
+            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_url, role))
+            if response.status_code == 200:
+                if not response.content:
+                    raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
+                return response.content
+            else:
+                response.raise_for_status()
+        except Exception as e:
+            self.logger.exception("Due to following cause:")
+            raise NoCredentialsFoundException(e.message)
