@@ -87,3 +87,15 @@ class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
         mock_object.get(requests_mock.ANY, [{'text': 'test_role'}, {'text': self.json_response}])
         received_credentials = self.imsi.get_credentials_for_all_roles()
         self.assertEqual({'test_role': self.json_response}, received_credentials)
+
+    @requests_mock.mock()
+    def test_get_roles_and_credentials_for_multiple_roles(self, mock_object):
+        mock_object.get(requests_mock.ANY, [{'text': 'test_role1\ntest_role2'},
+                                            {'text': self.json_response},
+                                            {'text': self.json_response}
+                                            ])
+        received_credentials = self.imsi.get_credentials_for_all_roles()
+        expected = {'test_role1': self.json_response,
+                    'test_role2': self.json_response,
+                    }
+        self.assertEqual(expected, received_credentials)
