@@ -46,7 +46,7 @@ class IMSInterface(object):
         except Exception as e:
             self.logger.exception("Due to following cause:")
             raise NoCredentialsFoundException(e.message)
-        
+
     def get_credentials_for_all_roles(self):
         results = {}
         for role in self.get_roles():
