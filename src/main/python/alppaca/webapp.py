@@ -18,4 +18,7 @@ def get_roles():
 
 @bottle_app.route(path+'<role>')
 def get_credentials(role):
-    pass
+    try:
+        return credentials[role]
+    except KeyError:
+        return ""
