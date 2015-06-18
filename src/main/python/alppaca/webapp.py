@@ -19,7 +19,6 @@ ims_port = '8080'
 credentials = OrderedDict()
 
 task_scheduler = BackgroundScheduler()
-task_scheduler.start()
 
 logger = init_logging(False)
 
@@ -45,7 +44,7 @@ def refresh_roles():
 
 
 def job_executed_event_listener(_):
-    logger.debug("Successfully completed credentials refresh")
+    logger.info("Successfully completed credentials refresh")
 
 
 def job_failed_event_listener(event):
@@ -63,18 +62,18 @@ def init_roles():
 
 def run_scheduler_and_webserver():
     try:
-        trigger = IntervalTrigger(minutes=20)
+        task_scheduler.start()
+        trigger = IntervalTrigger(minutes=1)
         task_scheduler.add_job(func=refresh_roles, trigger=trigger)
         task_scheduler.add_listener(job_executed_event_listener, EVENT_JOB_EXECUTED)
         task_scheduler.add_listener(job_failed_event_listener, EVENT_JOB_ERROR)
         task_scheduler.add_listener(job_missed_event_listener, EVENT_JOB_MISSED)
 
-#        init_roles()
-#        app.run('127.0.0.1', 5000, threaded=True)
+        init_roles()
+        bottle_app.run(host=local_host, port=local_port)
 
     except Exception, e:
         print e
 
 if __name__ == '__main__':
-
     run_scheduler_and_webserver()
