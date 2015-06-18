@@ -2,7 +2,6 @@ from util import init_logging
 from bottle import Bottle
 
 from alppaca import IMSInterface
-from alppaca.compat import OrderedDict
 from alppaca.scheduler import configure_scheduler
 
 local_host = '127.0.0.1'
