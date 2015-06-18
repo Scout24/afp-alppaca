@@ -6,7 +6,6 @@ from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundExcep
 from alppaca.compat import unittest
 
 
-
 class IMSInterfaceTestGetRoles(unittest.TestCase):
 
     def setUp(self):
