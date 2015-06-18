@@ -5,47 +5,50 @@ from alppaca import IMSInterface
 from alppaca.compat import OrderedDict
 from alppaca.scheduler import configure_scheduler
 
-bottle_app = Bottle(__name__)
-path = '/latest/meta-data/iam/security-credentials/'
 local_host = '127.0.0.1'
 local_port = 5000
 ims_host = 'localhost'
 ims_port = '8080'
 
-credentials = OrderedDict()
 
 logger = init_logging(False)
 
-credentials_provider = IMSInterface('{0}:{1}'.format(ims_host, ims_port))
 
+class WebApp(Bottle):
 
-@bottle_app.route(path)
-def get_roles():
-    return "\n".join(credentials.keys())
+    PATH = '/latest/meta-data/iam/security-credentials/'
 
+    def __init__(self, credentials_provider):
+        super(WebApp, self).__init__()
+        self.credentials_provider = credentials_provider
+        logger.info("Initializing local credentials cache")
+        self.refresh_credentials()
+        self.route(self.PATH, callback=self.get_roles)
+        self.route(self.PATH + '<role>', callback=self.get_credentials)
 
-@bottle_app.route(path+'<role>')
-def get_credentials(role):
-    try:
-        return credentials[role]
-    except KeyError:
-        return ""
+    def refresh_credentials(self):
+        self.credentials = self.credentials_provider.get_credentials_for_all_roles()
 
+    def get_roles(self):
+        return "\n".join(self.credentials.keys())
 
-def refresh_roles():
-    global credentials
-    credentials = credentials_provider.get_credentials_for_all_roles()
-
-
-def init_roles():
-    logger.info("Initializing local credentials cache")
-    refresh_roles()
+    def get_credentials(self, role):
+        try:
+            return self.credentials[role]
+        except KeyError:
+            return ""
 
 
 def run_scheduler_and_webserver():
     try:
-        init_roles()
-        task_scheduler = configure_scheduler(refresh_roles, repeat=1)
+        # initialize the credentials provider
+        credentials_provider = IMSInterface('{0}:{1}'.format(ims_host, ims_port))
+        # initialize the webapp
+        bottle_app = WebApp(credentials_provider)
+        # setup the scheduler
+        task_scheduler = configure_scheduler(bottle_app.refresh_credentials, repeat=1)
+
+        # run them both
         task_scheduler.start()
         bottle_app.run(host=local_host, port=local_port)
     except Exception, e:
