@@ -2,6 +2,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
 
+from alppaca.util import init_logging
+logger = init_logging(False)
 
 def job_executed_event_listener(_):
     logger.info("Successfully completed credentials refresh")
