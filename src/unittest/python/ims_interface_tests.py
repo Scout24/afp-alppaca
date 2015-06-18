@@ -1,13 +1,9 @@
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
 import mock
 import requests_mock
 import requests
 
 from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
+from alppaca.compat import unittest
 
 
 

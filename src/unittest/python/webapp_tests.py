@@ -1,9 +1,8 @@
-from unittest import TestCase
-
 import mock
 from webtest import TestApp
 
 from alppaca import bottle_app
+from alppaca.compat import unittest, OrderedDict
 
 json_response = '\'{"Code": "Success", ' \
                 '"AccessKeyId": "ASIAI", ' \
@@ -13,7 +12,7 @@ json_response = '\'{"Code": "Success", ' \
                 '"Type": "AWS-HMAC"}\''
 
 
-class AwsInstanceMetadataClientTest(TestCase):
+class AwsInstanceMetadataClientTest(unittest.TestCase):
 
     def setUp(self):
         self.app = TestApp(bottle_app)
