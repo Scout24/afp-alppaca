@@ -1,8 +1,7 @@
 import requests
 
 from util import init_logging
-
-from alppaca.compat import OrderedDict
+from compat import OrderedDict
 
 
 class NoRolesFoundException(Exception):

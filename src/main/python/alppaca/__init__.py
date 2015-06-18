@@ -1,2 +1,1 @@
 from ims_interface import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
-from webapp import bottle_app
