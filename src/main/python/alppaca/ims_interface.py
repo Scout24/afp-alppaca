@@ -49,7 +49,7 @@ class IMSInterface(object):
             raise NoCredentialsFoundException(e.message)
 
     def get_credentials_for_all_roles(self):
-        results = {}
+        results = OrderedDict()
         for role in self.get_roles():
             try:
                 results[role] = self.get_credentials(role)

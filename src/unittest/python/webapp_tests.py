@@ -17,13 +17,14 @@ class AwsInstanceMetadataClientTest(unittest.TestCase):
     def setUp(self):
         self.app = TestApp(bottle_app)
 
-    @mock.patch('alppaca.webapp.roles', ['test_role'])
+    @mock.patch.dict('alppaca.webapp.credentials', {'test_role': json_response})
     def test_server_is_up_and_running(self):
         response = self.app.get('/latest/meta-data/iam/security-credentials/')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.text, 'test_role')
 
-    @mock.patch('alppaca.webapp.roles', ['test_role1', 'test_role2'])
+    @mock.patch('alppaca.webapp.credentials', OrderedDict((('test_role1', json_response), 
+                                                           ('test_role2', json_response))))
     def test_server_is_up_and_running_with_multiple_roles(self):
         response = self.app.get('/latest/meta-data/iam/security-credentials/')
         self.assertEquals(response.status_code, 200)
