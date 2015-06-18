@@ -1,8 +1,8 @@
-from util import init_logging
 from bottle import Bottle
 
-from alppaca import IMSInterface
-from alppaca.scheduler import configure_scheduler
+from ims_interface import IMSInterface
+from scheduler import configure_scheduler
+from util import init_logging
 
 local_host = '127.0.0.1'
 local_port = 5000
