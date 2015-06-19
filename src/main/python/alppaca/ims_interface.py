@@ -37,7 +37,8 @@ class IMSInterface(object):
 
     def get_credentials(self, role):
         try:
-            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(self.ims_host, role))
+            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(
+                self.ims_host, role))
             if response.status_code == 200:
                 if not response.content:
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
