@@ -1,3 +1,5 @@
+import json
+
 from bottle import Bottle
 
 from util import init_logging
@@ -30,3 +32,6 @@ class WebApp(Bottle):
             return ""
 
 
+def extract_min_expiration(credentials):
+    return min([json.loads(value)['Expiration']
+                for value in credentials.values()])
