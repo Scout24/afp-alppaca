@@ -31,6 +31,8 @@ class WebApp(Bottle):
         except KeyError:
             return ""
 
+def convert_to_datetime():
+    pass
 
 def extract_min_expiration(credentials):
     return min([json.loads(value)['Expiration']

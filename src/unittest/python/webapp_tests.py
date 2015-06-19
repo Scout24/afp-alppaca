@@ -65,3 +65,9 @@ class ExtractMinExpirationTest(unittest.TestCase):
         expected = "1970-01-01T00:00:00Z"
         received = extract_min_expiration(input_)
         self.assertEqual(expected, received)
+
+class ConvertToDatetimeTest(unittest.TestCase):
+
+    def test(self):
+        input_ = "1970-01-01T00:00:00Z"
+
