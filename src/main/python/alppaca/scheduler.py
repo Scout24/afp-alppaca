@@ -18,7 +18,7 @@ def job_missed_event_listener(_):
     logger.warn('Credentials refresh was not executed in time!')
 
 
-def configure_scheduler(func, repeat=59):
+def configure_scheduler(func, repeat=55):
     task_scheduler = BackgroundScheduler()
     trigger = IntervalTrigger(minutes=repeat)
     task_scheduler.add_job(func=func, trigger=trigger)
