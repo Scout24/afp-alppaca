@@ -12,7 +12,7 @@ json_response = '\'{"Code": "Success", ' \
                 '"Type": "AWS-HMAC"}\''
 
 
-class AwsInstanceMetadataClientTest(unittest.TestCase):
+class WebAppTest(unittest.TestCase):
 
     def setUp(self):
         self.bottle_app = WebApp(mock.Mock())
