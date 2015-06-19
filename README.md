@@ -7,6 +7,14 @@ This prefeteches and proxies AWS temporary credentials from the [Instance
 Metadata Server
 (IMS)](https://github.com/ImmobilienScout24/aws-instance-metadata-server).
 
+# Creating a link-local interface
+
+On Ubuntu 15.04 and CentOS 6.6 you can use:
+
+```
+$ sudo ifconfig lo:0 169.254.169.254 netmask 255.255.255.255 
+```
+
 # Playing around
 
 Start ``tmux``.
