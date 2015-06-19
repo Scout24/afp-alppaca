@@ -1,7 +1,9 @@
 import mock
+import datetime
+import pytz
 from webtest import TestApp
 
-from alppaca.webapp import WebApp, extract_min_expiration
+from alppaca.webapp import WebApp, extract_min_expiration, convert_rfc3339_to_datetime
 from alppaca.compat import unittest, OrderedDict
 
 json_response = '\'{"Code": "Success", ' \
@@ -66,8 +68,12 @@ class ExtractMinExpirationTest(unittest.TestCase):
         received = extract_min_expiration(input_)
         self.assertEqual(expected, received)
 
+
 class ConvertToDatetimeTest(unittest.TestCase):
 
     def test(self):
         input_ = "1970-01-01T00:00:00Z"
+        expected = datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc)
+        received = convert_rfc3339_to_datetime(input_)
+        self.assertEqual(expected, received)
 
