@@ -77,3 +77,18 @@ class ConvertToDatetimeTest(unittest.TestCase):
         received = convert_rfc3339_to_datetime(input_)
         self.assertEqual(expected, received)
 
+
+class RefreshCredentialsTest(unittest.TestCase):
+    
+    @mock.patch('alppaca.webapp.DateTrigger')
+    def test_get_credentials_with_correct_date(self, date_trigger_mock):
+        credentials_provider = mock.Mock()
+        credentials_provider.get_credentials_for_all_roles.return_value \
+            = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
+        task_scheduler = mock.Mock()
+        
+        web_app = WebApp(credentials_provider, task_scheduler)
+        web_app.refresh_credentials()
+        
+        task_scheduler.add_job.assert_called_with(func=web_app.refresh_credentials, trigger=mock.ANY)
+        date_trigger_mock.assert_called_with(datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc))
