@@ -1,7 +1,7 @@
 import mock
 from webtest import TestApp
 
-from alppaca.webapp import WebApp
+from alppaca.webapp import WebApp, extract_min_expiration
 from alppaca.compat import unittest, OrderedDict
 
 json_response = '\'{"Code": "Success", ' \
@@ -42,3 +42,26 @@ class WebAppTest(unittest.TestCase):
         response = self.app.get('/latest/meta-data/iam/security-credentials/no_role')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.text, "")
+
+
+class ExtractMinExpirationTest(unittest.TestCase):
+
+    def test_extract_min_expiration_for_single_credential(self):
+        input_ = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
+
+    def test_extract_min_expiration_for_multiple_credentials(self):
+        input_ = {'test_role1':  '{"Expiration": "1970-01-01T00:00:00Z"}',
+                  'test_role2':  '{"Expiration": "1970-01-01T00:00:01Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
+
+    def test_extract_min_expiration_for_multiple_identical_credentials(self):
+        input_ = {'test_role1':  '{"Expiration": "1970-01-01T00:00:00Z"}',
+                  'test_role2':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
