@@ -3,8 +3,8 @@ import datetime
 import pytz
 from webtest import TestApp
 
-from alppaca.webapp import WebApp, extract_min_expiration, convert_rfc3339_to_datetime
 from alppaca.compat import unittest, OrderedDict
+from alppaca.webapp import WebApp, extract_min_expiration, convert_rfc3339_to_datetime
 
 json_response = '\'{"Code": "Success", ' \
                 '"AccessKeyId": "ASIAI", ' \
@@ -17,7 +17,7 @@ json_response = '\'{"Code": "Success", ' \
 class WebAppTest(unittest.TestCase):
 
     def setUp(self):
-        self.bottle_app = WebApp(mock.Mock())
+        self.bottle_app = WebApp(mock.Mock(), mock.Mock())
         self.app = TestApp(self.bottle_app)
 
     def test_server_is_up_and_running(self):
