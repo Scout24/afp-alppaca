@@ -1,6 +1,8 @@
 import logging
-from functools import wraps
-from time import time
+import numbers
+import random
+# from functools import wraps
+# from time import time
 
 
 def init_logging(debug):
@@ -16,16 +18,37 @@ def init_logging(debug):
     return logging.getLogger(__name__)
 
 
-def timed(function):
+def get_random_prime_wait_interval(min_value=1, max_value=100):
+    while True:
+        rand = random.randrange(min_value, max_value)
+        if is_prime(rand):
+            return rand
+        else:
+            continue
 
-    logger = logging.getLogger(__name__)
 
-    @wraps(function)
-    def wrapper(*args, **kwds):
-        start = time()
-        result = function(*args, **kwds)
-        elapsed = time() - start
-        logger.debug("{0} execution needed {1}s".format(function.__name__, round(elapsed, 3)))
-        return result
+def is_prime(rand):
+    if rand <= 3:
+        return rand >= 2
+    if rand % 2 == 0 or rand % 3 == 0:
+        return False
+    for i in range(5, int(rand ** 0.5) + 1, 6):
+        if rand % i == 0 or rand % (i + 2) == 0:
+            return False
+    return True
 
-    return wrapper
+
+
+# def timed(function):
+#
+#     logger = logging.getLogger(__name__)
+#
+#     @wraps(function)
+#     def wrapper(*args, **kwds):
+#         start = time()
+#         result = function(*args, **kwds)
+#         elapsed = time() - start
+#         logger.debug("{0} execution needed {1}s".format(function.__name__, round(elapsed, 3)))
+#         return result
+#
+#     return wrapper
