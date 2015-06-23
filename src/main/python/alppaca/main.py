@@ -2,11 +2,14 @@ from ims_interface import IMSInterface
 from scheduler import configure_scheduler
 from webapp import WebApp
 
+from alppaca import util
 
-def run_scheduler_and_webserver(ims_host, ims_port):
+
+def run_scheduler_and_webserver(config_file_path):
     try:
+        config = util.load_config(config_file_path)
         # initialize the credentials provider
-        credentials_provider = IMSInterface('{0}:{1}'.format(ims_host, ims_port))
+        credentials_provider = IMSInterface('{0}:{1}'.format(config['ims_host'], config['ims_port']))
         scheduler = configure_scheduler()
         # initialize and run the webapp
         bottle_app = WebApp(credentials_provider, scheduler)

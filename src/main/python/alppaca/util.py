@@ -1,6 +1,8 @@
 import logging
 import numbers
 import random
+
+import yaml
 # from functools import wraps
 # from time import time
 
@@ -36,6 +38,12 @@ def is_prime(rand):
         if rand % i == 0 or rand % (i + 2) == 0:
             return False
     return True
+
+
+def load_config(config_file):
+    with open(config_file, 'r') as ymlfile:
+        config = yaml.load(ymlfile)
+    return config
 
 
 
