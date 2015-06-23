@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+import argparse
+
+from alppaca.main import run_scheduler_and_webserver
+
+
+def main():
+    args = parse_arguments()
+    run_scheduler_and_webserver(args.host, args.port)
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--host', help="Remote IMS server url", type=str, default='127.0.0.1')
+    parser.add_argument('-p', '--port', help="Remote IMS server port", type=int, default=8080)
+    return parser.parse_args()
+
+
+main()
