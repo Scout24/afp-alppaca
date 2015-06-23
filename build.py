@@ -21,6 +21,7 @@ version = '1.0'
 
 @init
 def set_properties(project):
+    project.set_property('install_dependencies_upgrade', True)
     if sys.version_info[0:2] < (2, 7):
         project.depends_on("ordereddict")
         project.depends_on("unittest2")
