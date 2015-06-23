@@ -30,6 +30,10 @@ def set_properties(project):
     project.build_depends_on("mock")
     project.build_depends_on("requests-mock")
     project.depends_on("webtest")
+    project.set_property('copy_resources_target', '$dir_dist')
+    project.get_property('copy_resources_glob').append('setup.cfg')
+    project.get_property('copy_resources_glob').append('pre-install.sh')
+    project.install_file('/etc/init', 'resources/alppaca.conf')
 
 
 @init(environments='teamcity')
