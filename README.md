@@ -18,6 +18,7 @@ To manually add the iptables rule, insert the following statement into your ipta
 ```
 
 # alppaca as a service
+
 Upstart is our weapon of choice to initialize alppaca during the boot phase as to ensure that credentials are cached before the application starts up.
 
 
@@ -50,10 +51,9 @@ And watch the logging info in the other two. Also, by default the credentials
 are refreshed every minute, so you should see some logging info about that.
 
 # Descriptive Haiku
-_Authentication_
 
-_Local doesn't work for you_
-
+_Authentication_<br />
+_Local doesn't work for you_<br />
 _Al's now got your back_
 
 # Schematic
