@@ -1,6 +1,9 @@
 from unittest import TestCase
+import datetime
 
-from alppaca.util import get_random_prime_wait_interval, is_prime
+import pytz
+
+from alppaca.util import get_random_prime_wait_interval, is_prime, convert_rfc3339_to_datetime, extract_min_expiration
 
 
 class GetRandomPrimeNumber(TestCase):
@@ -24,6 +27,38 @@ class GetRandomPrimeNumber(TestCase):
 
     def test_is_bad_prime_with_91(self):
         self.assertFalse(is_prime(91))
+
+
+class ExtractMinExpirationTest(TestCase):
+
+    def test_extract_min_expiration_for_single_credential(self):
+        input_ = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
+
+    def test_extract_min_expiration_for_multiple_credentials(self):
+        input_ = {'test_role1':  '{"Expiration": "1970-01-01T00:00:00Z"}',
+                  'test_role2':  '{"Expiration": "1970-01-01T00:00:01Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
+
+    def test_extract_min_expiration_for_multiple_identical_credentials(self):
+        input_ = {'test_role1':  '{"Expiration": "1970-01-01T00:00:00Z"}',
+                  'test_role2':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
+        expected = "1970-01-01T00:00:00Z"
+        received = extract_min_expiration(input_)
+        self.assertEqual(expected, received)
+
+
+class ConvertToDatetimeTest(TestCase):
+
+    def test(self):
+        input_ = "1970-01-01T00:00:00Z"
+        expected = datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc)
+        received = convert_rfc3339_to_datetime(input_)
+        self.assertEqual(expected, received)
 
 
 def _check_number_is_prime(number):
