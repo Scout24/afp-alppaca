@@ -51,7 +51,9 @@ are refreshed every minute, so you should see some logging info about that.
 
 # Descriptive Haiku
 _Authentication_
+
 _Local doesn't work for you_
+
 _Al's now got your back_
 
 # Schematic
