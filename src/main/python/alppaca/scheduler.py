@@ -1,12 +1,11 @@
-from datetime import datetime
+import datetime
 from random import uniform
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MISSED
 
-from alppaca.ims_interface import IMSInterface
-from alppaca.util import init_logging, convert_rfc3339_to_datetime, extract_min_expiration
-from alppaca.afterxminstrigger import AfterXMinsTrigger
+from alppaca.util import init_logging, convert_rfc3339_to_datetime, extract_min_expiration, total_seconds
+from alppaca.delaytrigger import DelayTrigger
 
 
 logger = init_logging(False)
@@ -38,7 +37,11 @@ class Scheduler(object):
         self.build_trigger(expiration)
     
     def build_trigger(self, expiration):
-        refresh_delta = expiration - datetime.utcnow()
-        refresh_delta -= (refresh_delta / uniform(1, 2))
+        refresh_delta = total_seconds(expiration - datetime.datetime.utcnow())
+        refresh_delta = int(round(refresh_delta / uniform(1.2, 2), 0))
+        if refresh_delta < 0:
+            #TODO: log this
+            refresh_delta = 0
     
-        self.scheduler.add_job(func=self.refresh_credentials, trigger=AfterXMinsTrigger(refresh_delta))
+        self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
+
