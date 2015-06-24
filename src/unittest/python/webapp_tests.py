@@ -1,8 +1,8 @@
-import mock
 import datetime
+
+import mock
 import pytz
 from webtest import TestApp
-
 from alppaca.compat import unittest, OrderedDict
 from alppaca.webapp import WebApp, extract_min_expiration, convert_rfc3339_to_datetime
 
@@ -80,15 +80,14 @@ class ConvertToDatetimeTest(unittest.TestCase):
 
 class RefreshCredentialsTest(unittest.TestCase):
     
-    @mock.patch('alppaca.webapp.DateTrigger')
-    def test_get_credentials_with_correct_date(self, date_trigger_mock):
+    @mock.patch('alppaca.webapp.WebApp.build_trigger')
+    def test_get_credentials_with_correct_date(self, build_trigger_mock):
         credentials_provider = mock.Mock()
         credentials_provider.get_credentials_for_all_roles.return_value \
             = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
         task_scheduler = mock.Mock()
-        
+
         web_app = WebApp(credentials_provider, task_scheduler)
         web_app.refresh_credentials()
-        
-        task_scheduler.add_job.assert_called_with(func=web_app.refresh_credentials, trigger=mock.ANY)
-        date_trigger_mock.assert_called_with(datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc))
+
+        build_trigger_mock.assert_called_with(datetime.datetime(1970, 1, 1, tzinfo=pytz.utc))
