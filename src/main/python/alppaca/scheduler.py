@@ -6,7 +6,7 @@ from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MI
 
 from alppaca.util import init_logging, convert_rfc3339_to_datetime, extract_min_expiration, total_seconds
 from alppaca.delaytrigger import DelayTrigger
-
+import pytz
 
 logger = init_logging(False)
 
@@ -44,7 +44,7 @@ class Scheduler(object):
         self.build_trigger(expiration)
     
     def build_trigger(self, expiration):
-        refresh_delta = total_seconds(expiration - datetime.datetime.utcnow())
+        refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         refresh_delta = int(round(refresh_delta / uniform(1.2, 2), 0))
         if refresh_delta < 0:
             logger.warn("Expiration date is in the past, triggering now!")
