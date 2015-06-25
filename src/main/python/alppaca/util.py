@@ -48,8 +48,7 @@ def load_config(config_file):
 
 
 def convert_rfc3339_to_datetime(timestamp):
-    return datetime(
-        *strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")[0:6], tzinfo=pytz.utc)
+    return datetime(*strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")[0:6], tzinfo=pytz.utc)
 
 
 def extract_min_expiration(credentials):

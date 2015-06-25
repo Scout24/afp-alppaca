@@ -8,12 +8,12 @@ a dummy json response.
 
 """
 
-json_response = '\'{"Code": "Success", ' \
+json_response = '{"Code": "Success", ' \
                 '"AccessKeyId": "ASIAI", ' \
                 '"SecretAccessKey": "oieDhF", ' \
                 '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
                 '"Expiration": "2015-04-17T13:40:18Z", ' \
-                '"Type": "AWS-HMAC"}\''
+                '"Type": "AWS-HMAC"}'
 
 path = '/latest/meta-data/iam/security-credentials/'
 

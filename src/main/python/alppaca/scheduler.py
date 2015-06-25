@@ -21,27 +21,35 @@ class Scheduler(object):
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
         self.scheduler.add_listener(self.job_failed_event_listener, EVENT_JOB_ERROR)
         self.scheduler.add_listener(self.job_missed_event_listener, EVENT_JOB_MISSED)
+        self.scheduler.start()
 
-    def job_executed_event_listener(_):
+    def job_executed_event_listener(self, event):
         logger.info("Successfully completed credentials refresh")
 
-    def job_failed_event_listener(event):
+    def job_failed_event_listener(self, event):
         logger.error("Failed to refresh credentials: {0}".format(event.exception))
     
-    def job_missed_event_listener(_):
+    def job_missed_event_listener(self, event):
         logger.warn('Credentials refresh was not executed in time!')
 
     def refresh_credentials(self):
+        logger.info("about to fetch credentials")
+
         self.credentials = self.ims_interface.get_credentials_for_all_roles()
         expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
+
+        logger.info("Got credentials: {0}".format(self.credentials))
+        logger.info("Calculated expiration: {0}".format(expiration))
+
         self.build_trigger(expiration)
     
     def build_trigger(self, expiration):
         refresh_delta = total_seconds(expiration - datetime.datetime.utcnow())
         refresh_delta = int(round(refresh_delta / uniform(1.2, 2), 0))
         if refresh_delta < 0:
-            #TODO: log this
+            logger.warn("Expiration date is in the past, triggering now!")
             refresh_delta = 0
-    
+
+        logger.info("Setting up trigger to fire in {0} seconds".format(refresh_delta))
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
 
