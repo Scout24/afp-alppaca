@@ -1,4 +1,4 @@
-from bottle import route, run, Bottle
+from bottle import Bottle
 
 """ Super simple IMS mock.
 
@@ -6,6 +6,7 @@ Just listens on localhost:8080 for the appropriate url, returns a test role and
 a dummy json response.
 
 """
+
 
 class MockIms(Bottle):
 
@@ -28,7 +29,6 @@ class MockIms(Bottle):
 
     def get_credentials(self, role):
         return self.json_response if role == 'test_role' else ''
-
 
 
 if __name__ == "__main__":
