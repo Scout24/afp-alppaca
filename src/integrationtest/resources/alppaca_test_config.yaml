@@ -1,2 +1,2 @@
-ims_host: 'localhost'
+ims_host: '127.0.0.1'
 ims_port: 8080
