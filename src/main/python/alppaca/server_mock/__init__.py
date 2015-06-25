@@ -9,6 +9,7 @@ a dummy json response.
 
 class MockIms(Bottle):
 
+    PATH = '/latest/meta-data/iam/security-credentials/'
     json_response = '{"Code": "Success", ' \
                     '"AccessKeyId": "ASIAI", ' \
                     '"SecretAccessKey": "oieDhF", ' \
@@ -16,18 +17,18 @@ class MockIms(Bottle):
                     '"Expiration": "2015-04-17T13:40:18Z", ' \
                     '"Type": "AWS-HMAC"}'
 
-    path = '/latest/meta-data/iam/security-credentials/'
+    def __init__(self):
+        super(MockIms, self).__init__()
 
-    @route(path)
+        self.route(self.PATH, callback=self.get_roles)
+        self.route(self.PATH + '<role>', callback=self.get_credentials)
+
     def get_roles(self):
         return 'test_role'
 
-    @route(path+'<role>')
     def get_credentials(self, role):
         return self.json_response if role == 'test_role' else ''
 
-    def run(self):
-        run(host='localhost', port=8080)
 
 
 if __name__ == "__main__":
