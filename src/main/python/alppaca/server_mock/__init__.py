@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from bottle import route, run, Bottle
 
 """ Super simple IMS mock.
