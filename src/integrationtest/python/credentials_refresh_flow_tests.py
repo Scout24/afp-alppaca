@@ -3,6 +3,7 @@ from alppaca.server_mock import MockIms
 from multiprocessing import Process
 import requests
 import time
+import sys
 
 
 def run_api_server_mock():
@@ -32,8 +33,10 @@ if __name__ == '__main__':
     try:
         time.sleep(2)
         test_alppaca_returns_given_role()
+        sys.exit(0)
     except AssertionError as e:
         print "Test failed: {0}".format(e)
+        sys.exit(1)
     finally:
         mock_job.terminate()
         alppaca_job.terminate()
