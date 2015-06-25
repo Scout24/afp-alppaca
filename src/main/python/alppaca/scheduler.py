@@ -35,7 +35,7 @@ class Scheduler(object):
     def refresh_credentials(self):
         logger.info("about to fetch credentials")
 
-        self.credentials = self.ims_interface.get_credentials_for_all_roles()
+        self.credentials.update(self.ims_interface.get_credentials_for_all_roles())
         expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
 
         logger.info("Got credentials: {0}".format(self.credentials))
