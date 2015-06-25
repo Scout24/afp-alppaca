@@ -20,7 +20,6 @@ class Scheduler(object):
         self.scheduler = BackgroundScheduler()
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
         self.scheduler.add_listener(self.job_failed_event_listener, EVENT_JOB_ERROR)
-        self.scheduler.add_listener(self.job_missed_event_listener, EVENT_JOB_MISSED)
         self.scheduler.start()
 
     def job_executed_event_listener(self, event):
@@ -28,9 +27,6 @@ class Scheduler(object):
 
     def job_failed_event_listener(self, event):
         logger.error("Failed to refresh credentials: {0}".format(event.exception))
-    
-    def job_missed_event_listener(self, event):
-        logger.warn('Credentials refresh was not executed in time!')
 
     def refresh_credentials(self):
         logger.info("about to fetch credentials")
