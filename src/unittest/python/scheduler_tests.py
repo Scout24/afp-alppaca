@@ -8,8 +8,8 @@ from alppaca.scheduler import Scheduler
 
 class FixedDateTime(datetime.datetime):
     @classmethod
-    def utcnow(cls):
-        return datetime.datetime(2015, 6, 22)
+    def now(cls, tz=None):
+        return datetime.datetime(2015, 6, 22, tzinfo=tz)
 
 
 class RefreshCredentialsTest(TestCase):
@@ -34,7 +34,7 @@ class RefreshCredentialsTest(TestCase):
         uniform_mock.return_value = 1.2
         
         scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 22, 0, 0, 12))
+        scheduler.build_trigger(datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc))
         
         trigger_mock.assert_called_with(10)
 
@@ -47,7 +47,7 @@ class RefreshCredentialsTest(TestCase):
         uniform_mock.return_value = 1.2
 
         scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 22))
+        scheduler.build_trigger(datetime.datetime(2015, 6, 22, tzinfo=pytz.utc))
 
         trigger_mock.assert_called_with(0)
 
@@ -60,7 +60,7 @@ class RefreshCredentialsTest(TestCase):
         uniform_mock.return_value = 1.2
 
         scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 23, 2))
+        scheduler.build_trigger(datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc))
 
         trigger_mock.assert_called_with(78000)
 
@@ -73,6 +73,6 @@ class RefreshCredentialsTest(TestCase):
         uniform_mock.return_value = 1.2
 
         scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 21, 2))
+        scheduler.build_trigger(datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc))
 
         trigger_mock.assert_called_with(0)
