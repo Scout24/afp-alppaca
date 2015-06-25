@@ -1,7 +1,4 @@
-import datetime
-
 import mock
-import pytz
 from webtest import TestApp
 from alppaca.compat import unittest, OrderedDict
 from alppaca.webapp import WebApp
