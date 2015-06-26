@@ -1,9 +1,9 @@
 from unittest import TestCase
+from mock import Mock
 import datetime
-
 import pytz
 
-from alppaca.util import get_random_prime_wait_interval, is_prime, convert_rfc3339_to_datetime, extract_min_expiration
+from alppaca.util import get_random_prime_wait_interval, is_prime, convert_rfc3339_to_datetime, extract_min_expiration, exponential_retry
 
 
 class GetRandomPrimeNumber(TestCase):
@@ -59,6 +59,32 @@ class ConvertToDatetimeTest(TestCase):
         expected = datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc)
         received = convert_rfc3339_to_datetime(input_)
         self.assertEqual(expected, received)
+
+
+class ExponentialRetryTests(TestCase):
+
+    @exponential_retry
+    def test_method(self, param):
+        param('foo')
+
+    def test_is_executed_once_on_success(self):
+        mock = Mock()
+        self.test_method(mock)
+        mock.assert_called_once_with('foo')
+
+    def test_is_executed_with_exception_is_retried_until_successful(self):
+        mock = Mock()
+        mock.side_effect = [Exception, 'foo']
+        self.test_method(mock)
+        mock.assert_called_with('foo')
+        self.assertEqual(mock.call_count, 2)
+
+    def test_raises_exception_if_retries_exhausted(self):
+        mock = Mock()
+        mock.side_effect = [Exception]
+        self.test_method(mock)
+        self.assertEqual(mock.call_count, 3)
+        # TODO: Test for exception
 
 
 def _check_number_is_prime(number):

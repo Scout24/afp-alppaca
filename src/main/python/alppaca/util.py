@@ -1,9 +1,10 @@
 from datetime import datetime
+from time import strptime
+from functools import wraps
+from time import time
 import json
 import logging
 import random
-from time import strptime
-
 import pytz
 import yaml
 
@@ -60,18 +61,35 @@ def total_seconds(timedelta):
     return (timedelta.microseconds + (timedelta.seconds + timedelta.days * 24 * 3600) * 10**6) / 10**6
 
 
-# from functools import wraps
-# from time import time
-# def timed(function):
-#
-#     logger = logging.getLogger(__name__)
-#
-#     @wraps(function)
-#     def wrapper(*args, **kwds):
-#         start = time()
-#         result = function(*args, **kwds)
-#         elapsed = time() - start
-#         logger.debug("{0} execution needed {1}s".format(function.__name__, round(elapsed, 3)))
-#         return result
-#
-#     return wrapper
+def timed(function):
+
+    logger = logging.getLogger(__name__)
+
+    @wraps(function)
+    def wrapper(*args, **kwds):
+        start = time()
+        result = function(*args, **kwds)
+        elapsed = time() - start
+        logger.debug("{0} execution needed {1}s".format(function.__name__, round(elapsed, 3)))
+        return result
+
+    return wrapper
+
+
+def exponential_retry(function):
+
+    logger = logging.getLogger(__name__)
+    retries = 3
+
+    @wraps(function)
+    def wrapper(*args, **kwds):
+        for i in range(1, retries+1):
+
+            try:
+                return function(*args, **kwds)
+            except Exception as e:
+                logger.error("Execution of {0} failed with exception {1}:{2}".format(function.__name__,
+                                                                                     e.__class__.__name__,
+                                                                                     e))
+
+    return wrapper
