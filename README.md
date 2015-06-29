@@ -29,7 +29,7 @@ Start ``tmux``.
 Launch the mock IMS service in one tmux window:
 
 ```
-$ PYTHONPATH=src/main/python python src/main/scripts/mock_ims.py
+$ PYTHONPATH=src/main/python python src/main/scripts/alppaca-server-mock
 ```
 
 Launch ``alppaca`` in another:

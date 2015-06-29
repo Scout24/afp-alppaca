@@ -21,4 +21,4 @@ def run_scheduler_and_webserver(config_file_path):
         print e
 
 if __name__ == '__main__':
-    run_scheduler_and_webserver('../resources/example_config.yaml')
+    run_scheduler_and_webserver('src/main/python/resources/example_config.yaml')
