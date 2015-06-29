@@ -12,10 +12,10 @@ logger = init_logging(False)
 
 
 class Scheduler(object):
-    
+
     def __init__(self, credentials, ims_interface):
         self.credentials = credentials
-        
+
         self.ims_interface = ims_interface
         self.scheduler = BackgroundScheduler()
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
@@ -38,7 +38,7 @@ class Scheduler(object):
         logger.info("Calculated expiration: {0}".format(expiration))
 
         self.build_trigger(expiration)
-    
+
     def build_trigger(self, expiration):
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         refresh_delta = int(round(refresh_delta / uniform(1.2, 2), 0))
