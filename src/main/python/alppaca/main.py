@@ -5,12 +5,13 @@ import pytz
 from scheduler import Scheduler
 from webapp import WebApp
 from alppaca import util
+from alppaca.compat import OrderedDict
 
 
 def run_scheduler_and_webserver(config_file_path):
     try:
         config = util.load_config(config_file_path)
-        credentials = {}
+        credentials = OrderedDict()
         # initialize the credentials provider
         ims_interface = IMSInterface('{0}:{1}'.format(config['ims_host'], config['ims_port']))
         Scheduler(credentials, ims_interface).build_trigger(datetime.datetime.now(tz=pytz.utc))
