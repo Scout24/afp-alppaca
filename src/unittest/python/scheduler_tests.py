@@ -23,56 +23,42 @@ class RefreshCredentialsTest(TestCase):
         
         scheduler = Scheduler(credentials_mock, ims_interface_mock)
         scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(datetime.datetime(1970, 1, 1, tzinfo=pytz.utc))
-        
-    @patch('alppaca.scheduler.BackgroundScheduler')
-    @patch('alppaca.scheduler.DelayTrigger')
-    @patch('alppaca.scheduler.uniform')
-    def test_build_trigger_calculates_time_delta(self, uniform_mock, trigger_mock, scheduler_mock):
+        build_trigger_mock.assert_called_with(0)
 
-        datetime.datetime = FixedDateTime
-        uniform_mock.return_value = 1.2
-        
-        scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc))
-        
-        trigger_mock.assert_called_with(10)
+class TestDetermineRefreshDelta(TestCase):
 
-    @patch('alppaca.scheduler.BackgroundScheduler')
-    @patch('alppaca.scheduler.DelayTrigger')
-    @patch('alppaca.scheduler.uniform')
-    def test_build_trigger_calculates_time_delta_with_zero_delta(self, uniform_mock, trigger_mock, scheduler_mock):
+    def utility(self, expected, expiration):
 
-        datetime.datetime = FixedDateTime
-        uniform_mock.return_value = 1.2
+        with patch('alppaca.scheduler.uniform') as uniform_mock:
+            datetime.datetime = FixedDateTime
+            uniform_mock.return_value = 1.2
 
-        scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 22, tzinfo=pytz.utc))
+            scheduler = Scheduler(Mock(), Mock())
 
-        trigger_mock.assert_called_with(0)
+            received = scheduler.determine_refresh_delta(expiration)
 
-    @patch('alppaca.scheduler.BackgroundScheduler')
-    @patch('alppaca.scheduler.DelayTrigger')
-    @patch('alppaca.scheduler.uniform')
-    def test_build_trigger_calculates_time_delta_with_more_than_one_day_delta(self, uniform_mock, trigger_mock, scheduler_mock):
+            self.assertEqual(expected, received)
 
-        datetime.datetime = FixedDateTime
-        uniform_mock.return_value = 1.2
+    def test_should_return_valid_refresh_delta(self):
 
-        scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc))
+        expiration = datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc)
+        expected = 10
+        self.utility(expected, expiration)
 
-        trigger_mock.assert_called_with(78000)
+    def test_build_trigger_calculates_time_delta_with_zero_delta(self):
 
-    @patch('alppaca.scheduler.BackgroundScheduler')
-    @patch('alppaca.scheduler.DelayTrigger')
-    @patch('alppaca.scheduler.uniform')
-    def test_build_trigger_calculates_time_delta_with_negative_delta(self, uniform_mock, trigger_mock, scheduler_mock):
+        expiration = datetime.datetime(2015, 6, 22, tzinfo=pytz.utc)
+        expected = 0
+        self.utility(expected, expiration)
 
-        datetime.datetime = FixedDateTime
-        uniform_mock.return_value = 1.2
+    def test_should_return_valid_refresh_delta_with_more_than_one_day_delta(self):
 
-        scheduler = Scheduler(Mock(), Mock())
-        scheduler.build_trigger(datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc))
+        expiration = datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc)
+        expected = 78000
+        self.utility(expected, expiration)
 
-        trigger_mock.assert_called_with(0)
+    def test_build_trigger_calculates_time_delta_with_negative_delta(self):
+
+        expiration= datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc)
+        expected = 0
+        self.utility(expected, expiration)
