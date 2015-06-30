@@ -4,7 +4,7 @@ from mock import Mock, patch
 import pytz
 from unittest import TestCase
 from alppaca.scheduler import Scheduler
-
+from alppaca.compat import OrderedDict
 
 class FixedDateTime(datetime.datetime):
     @classmethod
@@ -24,6 +24,18 @@ class RefreshCredentialsTest(TestCase):
         scheduler = Scheduler(credentials_mock, ims_interface_mock)
         scheduler.refresh_credentials()
         build_trigger_mock.assert_called_with(0)
+
+
+class AcquireValidCredentialsTest(TestCase):
+    @patch('alppaca.scheduler.BackgroundScheduler')
+    def test_should_acquire_valid_credentials(self, scheduler_mock):
+        credentials_mock = OrderedDict()
+        ims_interface_mock = Mock()
+        expected = OrderedDict({'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'})
+        ims_interface_mock.get_credentials_for_all_roles.return_value = expected
+        scheduler = Scheduler(credentials_mock, ims_interface_mock)
+        scheduler.refresh_credentials()
+        self.assertEqual(expected, credentials_mock)
 
 class TestDetermineRefreshDelta(TestCase):
 
