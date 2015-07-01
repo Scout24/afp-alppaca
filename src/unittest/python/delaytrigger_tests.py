@@ -18,7 +18,7 @@ class FixedDateTime(datetime.datetime):
 class DelayTriggerTest(TestCase):
 
     @patch('alppaca.delaytrigger.DateTrigger.__init__')
-    def test_computes_time_delta_for_datetrigger(self, datetrigger_mock):
+    def test_should_compute_time_delta_for_datetrigger_for_a_given_date(self, datetrigger_mock):
 
         datetime.datetime = FixedDateTime
 
@@ -27,7 +27,7 @@ class DelayTriggerTest(TestCase):
         datetrigger_mock.assert_called_with(run_date=datetime.datetime(1970, 01, 01, 0, 0, 10))
 
     @patch('alppaca.delaytrigger.DateTrigger.__init__')
-    def test_should_call_with_none_if_called_with_negative_delta(self, datetrigger_mock):
+    def test_should_call_datetrigger_with_none_if_called_with_negative_delta(self, datetrigger_mock):
 
         DelayTrigger(-10)
 

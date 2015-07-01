@@ -14,7 +14,7 @@ class FixedDateTime(datetime.datetime):
 
 class RefreshCredentialsTest(TestCase):
     @patch('alppaca.scheduler.Scheduler.build_trigger')
-    def test_get_credentials_with_correct_date(self, build_trigger_mock):
+    def test_should_get_valid_credentials_when_called_with_correct_date(self, build_trigger_mock):
         credentials_mock = {}
         ims_interface_mock = Mock()
         ims_interface_mock.get_credentials_for_all_roles.return_value = {
@@ -51,25 +51,25 @@ class TestDetermineRefreshDelta(TestCase):
 
             self.assertEqual(expected, received)
 
-    def test_should_return_valid_refresh_delta(self):
+    def test_should_return_positive_refresh_delta_when_expiration_is_in_the_future(self):
 
         expiration = datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc)
         expected = 10
         self.utility(expected, expiration)
 
-    def test_build_trigger_calculates_time_delta_with_zero_delta(self):
+    def test_should_return_zero_refresh_delta_when_expiration_is_now(self):
 
         expiration = datetime.datetime(2015, 6, 22, tzinfo=pytz.utc)
         expected = 0
         self.utility(expected, expiration)
 
-    def test_should_return_valid_refresh_delta_with_more_than_one_day_delta(self):
+    def test_should_return_refresh_delta_with_more_than_one_day_delta_when_called_one_day_in_the_future(self):
 
         expiration = datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc)
         expected = 78000
         self.utility(expected, expiration)
 
-    def test_build_trigger_calculates_time_delta_with_negative_delta(self):
+    def test_should_return_zero_time_delta_when_expiration_is_in_the_past(self):
 
         expiration= datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc)
         expected = 0
