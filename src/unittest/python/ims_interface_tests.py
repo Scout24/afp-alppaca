@@ -98,7 +98,7 @@ class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     @requests_mock.mock()
     def test_should_get_roles_and_valid_credentials_when_called_with_empty_role(self, mock_object):
         mock_object.get(requests_mock.ANY, [{'text': ''}])
-        self.assertRaises(NoRolesFoundException, self.imsi.get_credentials_for_all_roles)
+        self.assertEquals({}, self.imsi.get_credentials_for_all_roles())
 
     @requests_mock.mock()
     def test_should_get_roles_and_valid_credentials_when_called_with_empty_credentials(self, mock_object):
