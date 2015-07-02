@@ -39,7 +39,7 @@ class AcquireValidCredentialsTest(TestCase):
 
 class TestDetermineRefreshDelta(TestCase):
 
-    def utility(self, expected, expiration):
+    def helper(self, expected, expiration):
 
         with patch('alppaca.scheduler.uniform') as uniform_mock:
             datetime.datetime = FixedDateTime
@@ -55,23 +55,23 @@ class TestDetermineRefreshDelta(TestCase):
 
         expiration = datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc)
         expected = 10
-        self.utility(expected, expiration)
+        self.helper(expected, expiration)
 
     def test_should_return_zero_refresh_delta_when_expiration_is_now(self):
 
         expiration = datetime.datetime(2015, 6, 22, tzinfo=pytz.utc)
         expected = 0
-        self.utility(expected, expiration)
+        self.helper(expected, expiration)
 
     def test_should_return_refresh_delta_with_more_than_one_day_delta_when_called_one_day_in_the_future(self):
 
         expiration = datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc)
         expected = 78000
-        self.utility(expected, expiration)
+        self.helper(expected, expiration)
 
     def test_should_return_zero_time_delta_when_expiration_is_in_the_past(self):
 
         expiration= datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc)
         expected = 0
-        self.utility(expected, expiration)
+        self.helper(expected, expiration)
 
