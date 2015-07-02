@@ -51,6 +51,9 @@ class ExtractMinExpirationTest(TestCase):
         received = extract_min_expiration(input_)
         self.assertEqual(expected, received)
 
+    def test_should_raise_exception_on_empty_credentials(self):
+        input_ = {}
+        self.assertRaises(ValueError, extract_min_expiration, input_)
 
 class ConvertToDatetimeTest(TestCase):
 

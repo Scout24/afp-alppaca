@@ -31,8 +31,14 @@ class Scheduler(object):
     def refresh_credentials(self):
         logger.info("about to fetch credentials")
 
-        self.credentials.update(self.ims_interface.get_credentials_for_all_roles())
-        expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
+        cached_credentials = {}
+        cached_credentials = self.credentials.update(self.ims_interface.get_credentials_for_all_roles())
+
+        if not cached_credentials:
+            try:
+                expiration = convert_rfc3339_to_datetime(extract_min_expiration(cached_credentials))
+            except ValueError:
+                self.logger.exception("No credentials found!")
 
         logger.info("Got credentials: {0}".format(self.credentials))
         logger.info("Calculated expiration: {0}".format(expiration))
