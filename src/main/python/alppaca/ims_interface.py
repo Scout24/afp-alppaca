@@ -54,7 +54,10 @@ class IMSInterface(object):
 
         try:
             for role in self.get_roles():
-                results[role] = self.get_credentials(role)
-        except NoCredentialsFoundException:
-            self.logger.exception("Role {0} didn't have any credentials.".format(role))
+                try:
+                    results[role] = self.get_credentials(role)
+                except NoCredentialsFoundException:
+                    self.logger.exception("Role {0} didn't have any credentials.".format(role))
+        except NoRolesFoundException:
+            self.logger.exception("Could not find any roles")
         return results
