@@ -20,7 +20,7 @@ class RefreshCredentialsTest(TestCase):
         ims_interface_mock.get_credentials_for_all_roles.return_value = {
             'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'
         }
-        
+
         scheduler = Scheduler(credentials_mock, ims_interface_mock)
         scheduler.refresh_credentials()
         build_trigger_mock.assert_called_with(0)
@@ -74,3 +74,4 @@ class TestDetermineRefreshDelta(TestCase):
         expiration= datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc)
         expected = 0
         self.utility(expected, expiration)
+
