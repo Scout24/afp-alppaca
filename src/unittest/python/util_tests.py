@@ -15,7 +15,7 @@ class GetRandomPrimeNumber(TestCase):
     def test_get_first_prime_number_without_range(self):
         result = get_random_prime_wait_interval()
         self.assertTrue(_check_number_is_prime(result))
-        
+
     def test_is_bad_prime_with_1(self):
         self.assertFalse(is_prime(1))
 
@@ -96,3 +96,4 @@ def _check_number_is_prime(number):
         if number % i == 0:
             return False
     return True
+
