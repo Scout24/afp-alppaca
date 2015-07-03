@@ -36,6 +36,13 @@ class Scheduler(object):
     def job_failed_event_listener(self, event):
         logger.error("Failed to refresh credentials: {0}".format(event.exception))
 
+    def do_backoff(self):
+        if self.backoff is None:
+            logger.info("Initialize back-off and safety behaviour")
+            self.backoff = backoff_refresh_generator()
+        refresh_delta = self.backoff.next()
+        self.build_trigger(refresh_delta)
+
     def refresh_credentials(self):
         logger.info("about to fetch credentials")
 
@@ -43,29 +50,29 @@ class Scheduler(object):
 
         if not cached_credentials:
             logger.info("No credentials found!")
-            logger.info("Initialize back-off and safety behaviour")
-            if self.backoff is None:
-                self.backoff = backoff_refresh_generator()
-            refresh_delta = self.backoff.next()
-            self.build_trigger(refresh_delta)
-
+            self.do_backoff()
         else:
-            if self.backoff is not None:
-                self.backoff = None
             logger.info("Got credentials: {0}".format(self.credentials))
             self.credentials.update(cached_credentials)
-            expiration = convert_rfc3339_to_datetime(extract_min_expiration(cached_credentials))
-            logger.info("Calculated expiration: {0}".format(expiration))
-            refresh_delta = self.determine_refresh_delta(expiration)
-            self.build_trigger(refresh_delta)
+            refresh_delta = self.extract_refresh_delta()
+            if refresh_delta < 0:
+                logger.warn("Expiration date is in the past, enter backoff.")
+                self.do_backoff()
+            else:
+                if self.backoff is not None:
+                    self.backoff = None
+                    logger.info("Exit backoff state.")
+                refresh_delta = self.sample_new_refresh_delta(refresh_delta)
+                self.build_trigger(refresh_delta)
 
-    def determine_refresh_delta(self, expiration):
+    def extract_refresh_delta(self):
+        expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
+        logger.info("Calculated expiration: {0}".format(expiration))
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
-        if refresh_delta < 0:
-            logger.warn("Expiration date is in the past, triggering now!")
-            refresh_delta = 0
-        else:
-            refresh_delta = int(uniform(refresh_delta * .5, refresh_delta * .9))
+        return refresh_delta
+
+    def sample_new_refresh_delta(self, refresh_delta):
+        refresh_delta = int(uniform(refresh_delta * .5, refresh_delta * .9))
         return refresh_delta
 
     def build_trigger(self, refresh_delta):

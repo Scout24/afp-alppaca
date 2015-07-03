@@ -1,7 +1,6 @@
 import datetime
 
 from mock import Mock, patch
-import pytz
 from alppaca.scheduler import Scheduler, backoff_refresh_generator
 from alppaca.compat import OrderedDict
 from alppaca.compat import unittest
@@ -90,41 +89,13 @@ class AcquireValidCredentialsTest(unittest.TestCase):
         scheduler.refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
-class TestDetermineRefreshDelta(unittest.TestCase):
+class TestExtractRefreshDelta(unittest.TestCase):
 
-    def helper(self, expected, expiration):
-
-        with patch('alppaca.scheduler.uniform') as uniform_mock:
-            datetime.datetime = FixedDateTime
-            uniform_mock.return_value = expected
-
-            scheduler = Scheduler(Mock(), Mock())
-
-            received = scheduler.determine_refresh_delta(expiration)
-
-            self.assertEqual(expected, received)
-
-    def test_should_return_positive_refresh_delta_when_expiration_is_in_the_future(self):
-
-        expiration = datetime.datetime(1970, 1, 1, 0, 0, 12, tzinfo=pytz.utc)
-        expected = 12
-        self.helper(expected, expiration)
-
-    def test_should_return_zero_refresh_delta_when_expiration_is_now(self):
-
-        expiration = datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        expected = 0
-        self.helper(expected, expiration)
-
-    def test_should_return_refresh_delta_with_more_than_one_day_delta_when_called_one_day_in_the_future(self):
-
-        expiration = datetime.datetime(1970, 1, 2, 2, tzinfo=pytz.utc)
-        expected = 78000
-        self.helper(expected, expiration)
-
-    def test_should_return_zero_time_delta_when_expiration_is_in_the_past(self):
-
-        expiration= datetime.datetime(1969, 12, 24, tzinfo=pytz.utc)
-        expected = 0
-        self.helper(expected, expiration)
+    def test_should_extract_correct_seconds_from_credentials(self):
+        datetime.datetime =  FixedDateTime
+        credentials = {'test_role': '{"Expiration": "1970-01-01T00:00:59Z"}'}
+        scheduler = Scheduler(credentials, None)
+        expected = 59
+        received = scheduler.extract_refresh_delta()
+        self.assertEqual(expected, received)
 
