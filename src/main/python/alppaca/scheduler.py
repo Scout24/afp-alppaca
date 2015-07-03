@@ -67,7 +67,7 @@ class Scheduler(object):
 
     def extract_refresh_delta(self):
         expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
-        logger.info("Calculated expiration: {0}".format(expiration))
+        logger.info("Extracted expiration: {0}".format(expiration))
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         return refresh_delta
 
