@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from textwrap import dedent
 
 from bottle import Bottle
 import pytz
@@ -19,12 +20,14 @@ def expiration_10s_from_now():
 class MockIms(Bottle):
 
     PATH = '/latest/meta-data/iam/security-credentials/'
-    json_response = '{"Code": "Success", ' \
-                    '"AccessKeyId": "ASIAI", ' \
-                    '"SecretAccessKey": "oieDhF", ' \
-                    '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                    '"Expiration": "%s", ' \
-                    '"Type": "AWS-HMAC"}'
+    json_response = dedent("""
+                           {"Code": "Success",
+                           "AccessKeyId": "ASIAI",
+                           "SecretAccessKey": "XXYYZZ",
+                           "Token": "0123456789abcdefghijklmnopqrstuvwxyzAB",
+                           "Expiration": "%s",
+                           "Type": "AWS-HMAC"}
+                           """)
 
     def __init__(self):
         super(MockIms, self).__init__()
