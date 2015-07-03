@@ -52,8 +52,8 @@ class Scheduler(object):
             logger.info("No credentials found!")
             self.do_backoff()
         else:
-            logger.info("Got credentials: {0}".format(self.credentials))
             self.credentials.update(cached_credentials)
+            logger.info("Got credentials: {0}".format(self.credentials))
             refresh_delta = self.extract_refresh_delta()
             if refresh_delta < 0:
                 logger.warn("Expiration date is in the past, enter backoff.")
