@@ -2,10 +2,11 @@ import datetime
 
 from mock import Mock, patch
 import pytz
-from unittest import TestCase
 from alppaca.scheduler import Scheduler, backoff_refresh_generator
 from alppaca.compat import OrderedDict
+from alppaca.compat import unittest
 
+TestCase = unittest.TestCase
 
 class FixedDateTime(datetime.datetime):
     @classmethod
