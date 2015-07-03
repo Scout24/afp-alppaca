@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-import pytz
 
 from bottle import Bottle
+import pytz
 
 """ Super simple IMS mock.
 
