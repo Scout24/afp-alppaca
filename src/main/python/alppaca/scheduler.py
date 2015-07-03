@@ -50,7 +50,7 @@ class Scheduler(object):
             logger.warn("Expiration date is in the past, triggering now!")
             refresh_delta = 0
         else:
-            refresh_delta = int(round(refresh_delta / uniform(1.2, 2), 0))
+            refresh_delta = int(uniform(refresh_delta * .5, refresh_delta * .9))
         return refresh_delta
 
     def build_trigger(self, refresh_delta):

@@ -43,7 +43,7 @@ class TestDetermineRefreshDelta(TestCase):
 
         with patch('alppaca.scheduler.uniform') as uniform_mock:
             datetime.datetime = FixedDateTime
-            uniform_mock.return_value = 1.2
+            uniform_mock.return_value = expected
 
             scheduler = Scheduler(Mock(), Mock())
 
@@ -54,7 +54,7 @@ class TestDetermineRefreshDelta(TestCase):
     def test_should_return_positive_refresh_delta_when_expiration_is_in_the_future(self):
 
         expiration = datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc)
-        expected = 10
+        expected = 12
         self.helper(expected, expiration)
 
     def test_should_return_zero_refresh_delta_when_expiration_is_now(self):
