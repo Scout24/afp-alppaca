@@ -24,6 +24,7 @@ class Scheduler(object):
         self.credentials = credentials
 
         self.ims_interface = ims_interface
+        self.backoff = None
         self.scheduler = BackgroundScheduler()
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
         self.scheduler.add_listener(self.job_failed_event_listener, EVENT_JOB_ERROR)
@@ -41,9 +42,16 @@ class Scheduler(object):
         cached_credentials = self.ims_interface.get_credentials_for_all_roles()
 
         if not cached_credentials:
-            self.logger.exception("No credentials found!")
-            # initialize backoff
+            logger.info("No credentials found!")
+            logger.info("Initialize back-off and safety behaviour")
+            if self.backoff is None:
+                self.backoff = backoff_refresh_generator()
+            refresh_delta = self.backoff.next()
+            self.build_trigger(refresh_delta)
+
         else:
+            if self.backoff is not None:
+                self.backoff = None
             logger.info("Got credentials: {0}".format(self.credentials))
             self.credentials.update(cached_credentials)
             expiration = convert_rfc3339_to_datetime(extract_min_expiration(cached_credentials))
