@@ -10,7 +10,7 @@ from alppaca.compat import unittest
 class FixedDateTime(datetime.datetime):
     @classmethod
     def now(cls, tz=None):
-        return datetime.datetime(2015, 6, 22, tzinfo=tz)
+        return datetime.datetime(1970, 1, 1, tzinfo=tz)
 
 
 class TestBackoffRefereshGenerator(unittest.TestCase):
@@ -58,6 +58,7 @@ class RefreshCredentialsTest(unittest.TestCase):
         build_trigger_mock.assert_called_with(0)
 
 
+
 class AcquireValidCredentialsTest(unittest.TestCase):
     @patch('alppaca.scheduler.BackgroundScheduler')
     def test_should_acquire_valid_credentials(self, scheduler_mock):
@@ -85,25 +86,25 @@ class TestDetermineRefreshDelta(unittest.TestCase):
 
     def test_should_return_positive_refresh_delta_when_expiration_is_in_the_future(self):
 
-        expiration = datetime.datetime(2015, 6, 22, 0, 0, 12, tzinfo=pytz.utc)
+        expiration = datetime.datetime(1970, 1, 1, 0, 0, 12, tzinfo=pytz.utc)
         expected = 12
         self.helper(expected, expiration)
 
     def test_should_return_zero_refresh_delta_when_expiration_is_now(self):
 
-        expiration = datetime.datetime(2015, 6, 22, tzinfo=pytz.utc)
+        expiration = datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)
         expected = 0
         self.helper(expected, expiration)
 
     def test_should_return_refresh_delta_with_more_than_one_day_delta_when_called_one_day_in_the_future(self):
 
-        expiration = datetime.datetime(2015, 6, 23, 2, tzinfo=pytz.utc)
+        expiration = datetime.datetime(1970, 1, 2, 2, tzinfo=pytz.utc)
         expected = 78000
         self.helper(expected, expiration)
 
     def test_should_return_zero_time_delta_when_expiration_is_in_the_past(self):
 
-        expiration= datetime.datetime(2015, 6, 21, 2, tzinfo=pytz.utc)
+        expiration= datetime.datetime(1969, 12, 24, tzinfo=pytz.utc)
         expected = 0
         self.helper(expected, expiration)
 
