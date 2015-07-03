@@ -11,6 +11,13 @@ import pytz
 logger = init_logging(False)
 
 
+def backoff_refresh_generator():
+    count = 0
+    while True:
+        yield count if count < 10 else 10
+        count += 1
+
+
 class Scheduler(object):
 
     def __init__(self, credentials, ims_interface):

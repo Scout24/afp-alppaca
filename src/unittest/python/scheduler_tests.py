@@ -3,13 +3,23 @@ import datetime
 from mock import Mock, patch
 import pytz
 from unittest import TestCase
-from alppaca.scheduler import Scheduler
+from alppaca.scheduler import Scheduler, backoff_refresh_generator
 from alppaca.compat import OrderedDict
+
 
 class FixedDateTime(datetime.datetime):
     @classmethod
     def now(cls, tz=None):
         return datetime.datetime(2015, 6, 22, tzinfo=tz)
+
+
+class TestBackoffRefereshGenerator(TestCase):
+
+    def test_should_generate_correct_sequence(self):
+        expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 10]
+        brg = backoff_refresh_generator()
+        received = [brg.next() for _ in range(15)]
+        self.assertEqual(expected, received)
 
 
 class RefreshCredentialsTest(TestCase):
