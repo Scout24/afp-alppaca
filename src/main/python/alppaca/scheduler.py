@@ -31,20 +31,18 @@ class Scheduler(object):
     def refresh_credentials(self):
         logger.info("about to fetch credentials")
 
-        cached_credentials = {}
-        cached_credentials = self.credentials.update(self.ims_interface.get_credentials_for_all_roles())
+        cached_credentials = self.ims_interface.get_credentials_for_all_roles()
 
         if not cached_credentials:
-            try:
-                expiration = convert_rfc3339_to_datetime(extract_min_expiration(cached_credentials))
-            except ValueError:
-                self.logger.exception("No credentials found!")
-
-        logger.info("Got credentials: {0}".format(self.credentials))
-        logger.info("Calculated expiration: {0}".format(expiration))
-
-        refresh_delta = self.determine_refresh_delta(expiration)
-        self.build_trigger(refresh_delta)
+            self.logger.exception("No credentials found!")
+            # initialize backoff
+        else:
+            logger.info("Got credentials: {0}".format(self.credentials))
+            self.credentials.update(cached_credentials)
+            expiration = convert_rfc3339_to_datetime(extract_min_expiration(cached_credentials))
+            logger.info("Calculated expiration: {0}".format(expiration))
+            refresh_delta = self.determine_refresh_delta(expiration)
+            self.build_trigger(refresh_delta)
 
     def determine_refresh_delta(self, expiration):
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
