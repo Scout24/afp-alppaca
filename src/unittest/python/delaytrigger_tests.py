@@ -17,10 +17,9 @@ class FixedDateTime(datetime.datetime):
 
 class DelayTriggerTest(TestCase):
 
+    @patch('datetime.datetime', FixedDateTime)
     @patch('alppaca.delaytrigger.DateTrigger.__init__')
     def test_should_compute_time_delta_for_datetrigger_for_a_given_date(self, datetrigger_mock):
-
-        datetime.datetime = FixedDateTime
 
         DelayTrigger(10)
 

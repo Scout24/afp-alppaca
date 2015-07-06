@@ -88,8 +88,8 @@ class AcquireValidCredentialsTest(unittest.TestCase):
 
 class TestExtractRefreshDelta(unittest.TestCase):
 
+    @patch('datetime.datetime', FixedDateTime)
     def test_should_extract_correct_seconds_from_credentials(self):
-        datetime.datetime =  FixedDateTime
         credentials = {'test_role': '{"Expiration": "1970-01-01T00:00:59Z"}'}
         scheduler = Scheduler(credentials, None)
         expected = 59
