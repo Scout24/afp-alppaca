@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
-import pytz
+from textwrap import dedent
 
 from bottle import Bottle
+import pytz
 
 """ Super simple IMS mock.
 
@@ -10,19 +11,23 @@ a dummy json response.
 
 """
 
+
 def expiration_10s_from_now():
     n = datetime.now(tz=pytz.utc) + timedelta(seconds=10)
     return n.strftime("%Y-%m-%dT%H:%M:%SZ")
 
+
 class MockIms(Bottle):
 
     PATH = '/latest/meta-data/iam/security-credentials/'
-    json_response = '{"Code": "Success", ' \
-                    '"AccessKeyId": "ASIAI", ' \
-                    '"SecretAccessKey": "oieDhF", ' \
-                    '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                    '"Expiration": "%s", ' \
-                    '"Type": "AWS-HMAC"}'
+    json_response = dedent("""
+                           {"Code": "Success",
+                           "AccessKeyId": "ASIAI",
+                           "SecretAccessKey": "XXYYZZ",
+                           "Token": "0123456789abcdefghijklmnopqrstuvwxyzAB",
+                           "Expiration": "%s",
+                           "Type": "AWS-HMAC"}
+                           """)
 
     def __init__(self):
         super(MockIms, self).__init__()
@@ -35,8 +40,6 @@ class MockIms(Bottle):
 
     def get_credentials(self, role):
         return self.json_response % expiration_10s_from_now() if role == 'test_role' else ''
-
-
 
 if __name__ == "__main__":
     MockIms().run()
