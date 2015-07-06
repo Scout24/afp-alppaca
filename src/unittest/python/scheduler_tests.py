@@ -67,15 +67,12 @@ class RefreshCredentialsTest(unittest.TestCase):
 
     @patch('alppaca.scheduler.Scheduler.build_trigger')
     def test_should_enter_backoff_state_on_expired_credentials(self, build_trigger_mock):
-        credentials_mock = {}
-        ims_interface_mock = Mock()
-        scheduler = Scheduler(credentials_mock,ims_interface_mock)
-        ims_interface_mock.get_credentials_for_all_roles.return_value = {
+        self.ims_interface_mock.get_credentials_for_all_roles.return_value = {
             'test_role': '{"Expiration": "1969-12-24T00:00:00Z"}'
         }
-        scheduler.refresh_credentials()
+        self.scheduler.refresh_credentials()
 
-        self.assertIsNotNone(scheduler.backoff)
+        self.assertIsNotNone(self.scheduler.backoff)
 
 
 class AcquireValidCredentialsTest(unittest.TestCase):
