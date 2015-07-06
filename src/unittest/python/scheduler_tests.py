@@ -56,6 +56,7 @@ class RefreshCredentialsTest(unittest.TestCase):
         self.scheduler.refresh_credentials()
         build_trigger_mock.assert_called_with(2)
 
+    @patch('datetime.datetime', FixedDateTime)
     @patch('alppaca.scheduler.Scheduler.build_trigger')
     def test_should_exit_backoff_state_on_valid_credentials(self, build_trigger_mock):
         self.ims_interface_mock.get_credentials_for_all_roles.return_value = {
