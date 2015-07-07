@@ -1,11 +1,14 @@
 import datetime
-from unittest import TestCase
 
 from mock import Mock, patch
 import pytz
-from alppaca.scheduler import Scheduler, backoff_refresh_generator, convert_rfc3339_to_datetime, extract_min_expiration
-from alppaca.compat import OrderedDict
-from alppaca.compat import unittest
+
+from alppaca.scheduler import (Scheduler,
+                               backoff_refresh_generator,
+                               convert_rfc3339_to_datetime,
+                               extract_min_expiration,
+                               )
+from alppaca.compat import OrderedDict, unittest
 from test_utils import FixedDateTime
 
 

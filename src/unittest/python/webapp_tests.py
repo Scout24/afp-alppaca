@@ -1,7 +1,8 @@
 import mock
 from webtest import TestApp
-from alppaca.compat import unittest, OrderedDict
+
 from alppaca.webapp import WebApp
+from alppaca.compat import unittest, OrderedDict
 
 json_response = '\'{"Code": "Success", ' \
                 '"AccessKeyId": "ASIAI", ' \

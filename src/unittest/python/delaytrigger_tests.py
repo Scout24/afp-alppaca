@@ -1,12 +1,13 @@
-from unittest import TestCase
 import datetime
 
-from alppaca.delaytrigger import DelayTrigger
-from test_utils import FixedDateTime
 from mock import patch
 
+from alppaca.delaytrigger import DelayTrigger
+from alppaca.compat import unittest
+from test_utils import FixedDateTime
 
-class DelayTriggerTest(TestCase):
+
+class DelayTriggerTest(unittest.TestCase):
 
     @patch('datetime.datetime', FixedDateTime)
     @patch('alppaca.delaytrigger.DateTrigger.__init__')
