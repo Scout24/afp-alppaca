@@ -39,6 +39,7 @@ def set_properties(project):
     project.get_property('copy_resources_glob').append('pre-install.sh')
     project.install_file('/etc/init', 'resources/alppaca.conf')
     project.install_file('/etc/iptables.d/nat.d', 'resources/10_alppaca')
+    project.get_property('coverage_exceptions').append('alppaca.util')
 
 
 @init(environments='teamcity')
