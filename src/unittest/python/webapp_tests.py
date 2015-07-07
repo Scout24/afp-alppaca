@@ -1,14 +1,9 @@
 import mock
 from webtest import TestApp
-from alppaca.compat import unittest, OrderedDict
-from alppaca.webapp import WebApp
 
-json_response = '\'{"Code": "Success", ' \
-                '"AccessKeyId": "ASIAI", ' \
-                '"SecretAccessKey": "oieDhF", ' \
-                '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                '"Expiration": "2015-04-17T13:40:18Z", ' \
-                '"Type": "AWS-HMAC"}\''
+from alppaca.webapp import WebApp
+from alppaca.compat import unittest, OrderedDict
+from test_utils import json_response
 
 
 class WebAppTest(unittest.TestCase):

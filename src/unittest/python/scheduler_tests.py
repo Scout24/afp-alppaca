@@ -1,17 +1,15 @@
 import datetime
-from unittest import TestCase
 
 from mock import Mock, patch
 import pytz
-from alppaca.scheduler import Scheduler, backoff_refresh_generator, convert_rfc3339_to_datetime, extract_min_expiration
-from alppaca.compat import OrderedDict
-from alppaca.compat import unittest
 
-
-class FixedDateTime(datetime.datetime):
-    @classmethod
-    def now(cls, tz=None):
-        return datetime.datetime(1970, 1, 1, tzinfo=tz)
+from alppaca.scheduler import (Scheduler,
+                               backoff_refresh_generator,
+                               convert_rfc3339_to_datetime,
+                               extract_min_expiration,
+                               )
+from alppaca.compat import OrderedDict, unittest
+from test_utils import FixedDateTime
 
 
 class TestBackoffRefereshGenerator(unittest.TestCase):
@@ -89,6 +87,7 @@ class AcquireValidCredentialsTest(unittest.TestCase):
         scheduler.refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
+
 class TestExtractRefreshDelta(unittest.TestCase):
 
     @patch('datetime.datetime', FixedDateTime)
@@ -100,7 +99,7 @@ class TestExtractRefreshDelta(unittest.TestCase):
         self.assertEqual(expected, received)
 
 
-class ConvertToDatetimeTest(TestCase):
+class ConvertToDatetimeTest(unittest.TestCase):
 
     def test(self):
         input_ = "1970-01-01T00:00:00Z"
@@ -109,7 +108,7 @@ class ConvertToDatetimeTest(TestCase):
         self.assertEqual(expected, received)
 
 
-class ExtractMinExpirationTest(TestCase):
+class ExtractMinExpirationTest(unittest.TestCase):
 
     def test_extract_min_expiration_for_single_credential(self):
         input_ = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
