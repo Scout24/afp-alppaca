@@ -87,6 +87,7 @@ class AcquireValidCredentialsTest(unittest.TestCase):
         scheduler.refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
+
 class TestExtractRefreshDelta(unittest.TestCase):
 
     @patch('datetime.datetime', FixedDateTime)
