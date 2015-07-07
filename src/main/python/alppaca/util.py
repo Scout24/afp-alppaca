@@ -4,7 +4,6 @@ from functools import wraps
 from time import time
 import json
 import logging
-import random
 import pytz
 import yaml
 
@@ -20,26 +19,6 @@ def init_logging(debug):
                         level=level)
 
     return logging.getLogger(__name__)
-
-
-def get_random_prime_wait_interval(min_value=1, max_value=100):
-    while True:
-        rand = random.randrange(min_value, max_value)
-        if is_prime(rand):
-            return rand
-        else:
-            continue
-
-
-def is_prime(rand):
-    if rand <= 3:
-        return rand >= 2
-    if rand % 2 == 0 or rand % 3 == 0:
-        return False
-    for i in range(5, int(rand ** 0.5) + 1, 6):
-        if rand % i == 0 or rand % (i + 2) == 0:
-            return False
-    return True
 
 
 def load_config(config_file):
