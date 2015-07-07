@@ -3,13 +3,7 @@ from webtest import TestApp
 
 from alppaca.webapp import WebApp
 from alppaca.compat import unittest, OrderedDict
-
-json_response = '\'{"Code": "Success", ' \
-                '"AccessKeyId": "ASIAI", ' \
-                '"SecretAccessKey": "oieDhF", ' \
-                '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                '"Expiration": "2015-04-17T13:40:18Z", ' \
-                '"Type": "AWS-HMAC"}\''
+from test_utils import json_response
 
 
 class WebAppTest(unittest.TestCase):

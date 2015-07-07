@@ -4,6 +4,7 @@ import requests
 
 from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
 from alppaca.compat import unittest
+from test_utils import json_response
 
 
 class IMSInterfaceTestGetRoles(unittest.TestCase):
@@ -49,9 +50,7 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
 class IMSInterfaceTestGetCredentials(unittest.TestCase):
     def setUp(self):
         self.imsi = IMSInterface("no-such-host.com")
-        self.json_response ='\'{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", ' \
-                            '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                            '"Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}\''
+        self.json_response = json_response
 
     @requests_mock.mock()
     def test_should_get_valid_credentials_when_called_with_single_role(self, mock_object):
@@ -73,9 +72,7 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
 class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     def setUp(self):
         self.imsi = IMSInterface("no-such-host.com")
-        self.json_response ='\'{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", ' \
-                        '"Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", ' \
-                        '"Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}\''
+        self.json_response = json_response
 
     @requests_mock.mock()
     def test_should_get_valid_roles_and_credentials_when_called_with_single_role(self, mock_object):

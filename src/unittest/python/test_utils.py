@@ -1,4 +1,5 @@
 import datetime
+from textwrap import dedent
 
 
 class FixedDateTime(datetime.datetime):
@@ -11,3 +12,12 @@ class FixedDateTime(datetime.datetime):
     @classmethod
     def now(cls, tz=None):
         return datetime.datetime(1970, 01, 01, tzinfo=tz)
+
+json_response = dedent("""
+                {"Code": "Success",
+                "AccessKeyId": "ASIAI",
+                "SecretAccessKey": "oieDhF",
+                "Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej",
+                "Expiration": "2015-04-17T13:40:18Z",
+                "Type": "AWS-HMAC"}
+                """)
