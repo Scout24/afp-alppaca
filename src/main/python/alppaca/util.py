@@ -75,21 +75,3 @@ def timed(function):
 
     return wrapper
 
-
-def exponential_retry(function):
-
-    logger = logging.getLogger(__name__)
-    retries = 3
-
-    @wraps(function)
-    def wrapper(*args, **kwds):
-        for i in range(1, retries+1):
-
-            try:
-                return function(*args, **kwds)
-            except Exception as e:
-                logger.error("Execution of {0} failed with exception {1}:{2}".format(function.__name__,
-                                                                                     e.__class__.__name__,
-                                                                                     e))
-
-    return wrapper
