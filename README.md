@@ -14,7 +14,13 @@ This setup is not yet generic since the /etc/iptables.d/nat.d directory is speci
 To manually add the iptables rule, insert the following statement into your iptables config: 
 
 ```
--A OUTPUT -p tcp -i lo -d 169.254.169.254 --dport 80 -j DNAT --to 127.0.0.1:5000
+-A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:5000 
+```
+
+And maybe you have to add:
+
+```
+-t nat
 ```
 
 # alppaca as a service
