@@ -98,7 +98,7 @@ class TestExtractRefreshDelta(unittest.TestCase):
         self.assertEqual(expected, received)
 
 
-class ConvertToDatetimeTest(TestCase):
+class ConvertToDatetimeTest(unittest.TestCase):
 
     def test(self):
         input_ = "1970-01-01T00:00:00Z"
@@ -107,7 +107,7 @@ class ConvertToDatetimeTest(TestCase):
         self.assertEqual(expected, received)
 
 
-class ExtractMinExpirationTest(TestCase):
+class ExtractMinExpirationTest(unittest.TestCase):
 
     def test_extract_min_expiration_for_single_credential(self):
         input_ = {'test_role':  '{"Expiration": "1970-01-01T00:00:00Z"}'}
