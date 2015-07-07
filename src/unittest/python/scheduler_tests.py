@@ -6,12 +6,7 @@ import pytz
 from alppaca.scheduler import Scheduler, backoff_refresh_generator, convert_rfc3339_to_datetime, extract_min_expiration
 from alppaca.compat import OrderedDict
 from alppaca.compat import unittest
-
-
-class FixedDateTime(datetime.datetime):
-    @classmethod
-    def now(cls, tz=None):
-        return datetime.datetime(1970, 1, 1, tzinfo=tz)
+from test_utils import FixedDateTime
 
 
 class TestBackoffRefereshGenerator(unittest.TestCase):
