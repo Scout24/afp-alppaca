@@ -1,10 +1,12 @@
 import datetime
+import json
 from random import uniform
+from time import strptime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 
-from alppaca.util import init_logging, convert_rfc3339_to_datetime, extract_min_expiration, total_seconds
+from alppaca.util import init_logging
 from alppaca.delaytrigger import DelayTrigger
 import pytz
 
@@ -79,3 +81,15 @@ class Scheduler(object):
         logger.info("Setting up trigger to fire in {0} seconds".format(refresh_delta))
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
 
+
+def convert_rfc3339_to_datetime(timestamp):
+    return datetime.datetime(*strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")[0:6], tzinfo=pytz.utc)
+
+
+def extract_min_expiration(credentials):
+    return min([json.loads(value)['Expiration']
+                for value in credentials.values()])
+
+
+def total_seconds(timedelta):
+    return (timedelta.microseconds + (timedelta.seconds + timedelta.days * 24 * 3600) * 10**6) / 10**6
