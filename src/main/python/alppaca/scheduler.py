@@ -5,10 +5,10 @@ from time import strptime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
-
-from alppaca.util import init_logging
-from alppaca.delaytrigger import DelayTrigger
 import pytz
+
+from util import init_logging
+from delaytrigger import DelayTrigger
 
 logger = init_logging(False)
 
