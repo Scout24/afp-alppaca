@@ -7,6 +7,23 @@ This prefeteches and proxies AWS temporary credentials from the [Instance
 Metadata Server
 (IMS)](https://github.com/ImmobilienScout24/aws-instance-metadata-server).
 
+On any Amazon EC2 instance there is a special webserver that listens on a
+link-local address and provides so-called [Instance
+Metadata](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html).
+When running applications on servers inside a private cloud that should
+authenticate against AWS, this metadata server isn't available. Hence, we have
+to build a bridge into AWS to provide temporary credentials for that
+application, so that it believes it is being executed in the cloud even though
+it is not. The first part of that bridge is the aforementioned IMS which
+connects the private cloud to AWS. The second part is alppaca, pre-fetches the
+credentials for an application via the IMS, caches them locally in memory and
+exposes them via a HTTP service on the same server as the application. The main
+reason for pre-fetching and caching is to ensure a response time below one
+second, which is the AWS-SDK default. The webservice listens on
+`localhost:5000` and an iptables rule is used to have it serve requests on
+`169.254.169.254:80`. It is up to the IMS to decide which account and role to
+use in order to obtain temporary credentials for the application/server.
+
 # The how the internal redirect works
 
 An iptables rule snippet redirect ensures that all requests to IP
