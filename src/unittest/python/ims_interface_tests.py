@@ -1,3 +1,5 @@
+import textwrap
+
 import mock
 import requests_mock
 import requests
@@ -68,6 +70,23 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
         mock_object.get(requests_mock.ANY, status_code=400)
         self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
 
+    @requests_mock.mock()
+    def test_should_raise_no_credentials_found_exception_when_role_can_not_be_assumed(self, mock_object):
+        response = textwrap.dedent("""
+                                   {"timestamp":1436349287404,
+                                    "status":500,
+                                    "error":"Internal Server Error",
+                                    "exception":"com.amazonaws.AmazonServiceException",
+                                    "message":"User: arn:aws:iam::XXXXXXXXXXXX:user/federation-user-proxy
+                                     is not authorized to perform: sts:AssumeRole
+                                     on resource: arn:aws:iam::XXXXXXXXXXXX:role/rz_devesc
+                                     (Service: AWSSecurityTokenService; Status Code: 403; 
+                                      Error Code: AccessDenied; Request ID:
+                                      5df35a2d-2557-11e5-8899-b7abe26301a6)",
+                                    "path":"/latest/meta-data/iam/security-credentials/rz_devesc"}
+                                   """)
+        mock_object.get(requests_mock.ANY, status_code=500, text=response)
+        self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
 
 class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     def setUp(self):
