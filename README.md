@@ -24,6 +24,10 @@ second, which is the AWS-SDK default. The webservice listens on
 `169.254.169.254:80`. It is up to the IMS to decide which account and role to
 use in order to obtain temporary credentials for the application/server.
 
+# Schematic
+
+![schematic](schematic.png "Schematic")
+
 # The how the internal redirect works
 
 An iptables rule snippet redirect ensures that all requests to IP
@@ -81,10 +85,6 @@ are refreshed every minute, so you should see some logging info about that.
 _Authentication_<br />
 _Local doesn't work for you_<br />
 _Al's now got your back_
-
-# Schematic
-
-![schematic](schematic.png "Schematic")
 
 # License
 
