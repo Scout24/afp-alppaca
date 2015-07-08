@@ -60,7 +60,7 @@ _Al's now got your back_
 
 ![schematic](schematic.png "Schematic")
 
-# Licence
+# License
 
 Copyright 2015 Immobilienscout24 GmbH
 
