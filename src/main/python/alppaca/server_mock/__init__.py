@@ -7,7 +7,7 @@ import pytz
 """ Super simple IMS mock.
 
 Just listens on localhost:8080 for the appropriate url, returns a test role and
-a dummy json response.
+a dummy JSON response.
 
 """
 

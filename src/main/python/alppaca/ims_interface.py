@@ -19,6 +19,7 @@ class IMSInterface(object):
         self.logger = init_logging(debug)
 
     def get_roles(self):
+        """ Obtain a role. """
         try:
             response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/".format(self.ims_host))
 
@@ -36,6 +37,7 @@ class IMSInterface(object):
             raise NoRolesFoundException(e.message)
 
     def get_credentials(self, role):
+        """" Obtain a set of temporary credentials given a role. """
         try:
             response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(
                 self.ims_host, role))
@@ -50,6 +52,7 @@ class IMSInterface(object):
             raise NoCredentialsFoundException(e.message)
 
     def get_credentials_for_all_roles(self):
+        """ Obtain all credentials for all roles. """
         results = OrderedDict()
 
         try:

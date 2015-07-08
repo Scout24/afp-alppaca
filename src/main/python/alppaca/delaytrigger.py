@@ -4,6 +4,7 @@ from apscheduler.triggers.date import DateTrigger
 
 
 class DelayTrigger(DateTrigger):
+    """ Trigger for events to be run in X seconds. """
 
     def __init__(self, seconds):
         if seconds > 0:

@@ -8,6 +8,9 @@ from compat import OrderedDict
 def run_scheduler_and_webserver(config_file_path):
     try:
         config = load_config(config_file_path)
+        # Credentials is a shared object that connects the scheduler and the
+        # bottle_app. The scheduler writes into it and the bottle_app reads
+        # from it.
         credentials = OrderedDict()
         # initialize the credentials provider
         ims_interface = IMSInterface('{0}:{1}'.format(config['ims_host'], config['ims_port']))

@@ -1,3 +1,5 @@
+""" Compatability module for different Python versions. """
+
 try:
     import unittest2 as unittest
 except ImportError:  # pragma: no cover
