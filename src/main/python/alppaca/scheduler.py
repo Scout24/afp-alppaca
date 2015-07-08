@@ -13,13 +13,6 @@ from delaytrigger import DelayTrigger
 logger = init_logging(False)
 
 
-def backoff_refresh_generator():
-    count = 0
-    while True:
-        yield count if count < 10 else 10
-        count += 1
-
-
 class Scheduler(object):
 
     def __init__(self, credentials, ims_interface):
@@ -80,6 +73,13 @@ class Scheduler(object):
     def build_trigger(self, refresh_delta):
         logger.info("Setting up trigger to fire in {0} seconds".format(refresh_delta))
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
+
+
+def backoff_refresh_generator():
+    count = 0
+    while True:
+        yield count if count < 10 else 10
+        count += 1
 
 
 def convert_rfc3339_to_datetime(timestamp):
