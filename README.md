@@ -49,9 +49,9 @@ $ PYTHONPATH=src/main/python python src/main/python/alppaca/main.py
 Use ``curl`` to perform some requests in a third one:
 
 ```
-$ curl localhost:8080/latest/meta-data/iam/security-credentials/
+$ curl localhost:5000/latest/meta-data/iam/security-credentials/
 test_role
-$ curl localhost:8080/latest/meta-data/iam/security-credentials/test_role
+$ curl localhost:5000/latest/meta-data/iam/security-credentials/test_role
 '{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", "Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", "Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}'
 ```
 
