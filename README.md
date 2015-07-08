@@ -44,7 +44,8 @@ And maybe you have to add:
 
 # alppaca as a service
 
-Upstart is our weapon of choice to initialize alppaca during the boot phase as to ensure that credentials are cached before the application starts up.
+Upstart is our weapon of choice to initialize alppaca during the boot phase as
+to ensure that credentials are cached before the application starts up.
 
 
 # Playing around
