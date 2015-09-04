@@ -80,7 +80,7 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
                                     "message":"User: arn:aws:iam::XXXXXXXXXXXX:user/federation-user-proxy
                                      is not authorized to perform: sts:AssumeRole
                                      on resource: arn:aws:iam::XXXXXXXXXXXX:role/rz_devesc
-                                     (Service: AWSSecurityTokenService; Status Code: 403; 
+                                     (Service: AWSSecurityTokenService; Status Code: 403;
                                       Error Code: AccessDenied; Request ID:
                                       5df35a2d-2557-11e5-8899-b7abe26301a6)",
                                     "path":"/latest/meta-data/iam/security-credentials/rz_devesc"}
@@ -119,7 +119,7 @@ class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     @requests_mock.mock()
     def test_should_get_roles_and_valid_credentials_when_called_with_empty_credentials(self, mock_object):
         mock_object.get(requests_mock.ANY, [{'text': 'test_role1\n test_role2'},
-                                            {'text': self.json_response}, 
+                                            {'text': self.json_response},
                                             {'text': ''}])
         received_credentials = self.imsi.get_credentials_for_all_roles()
         self.assertEqual({'test_role1': self.json_response}, received_credentials)
