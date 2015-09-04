@@ -12,7 +12,7 @@ from test_utils import json_response
 class IMSInterfaceTestGetRoles(unittest.TestCase):
 
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.com")
+        self.imsi = IMSInterface("no-such-host.invalid")
 
     @requests_mock.mock()
     def test_should_get_valid_role_when_single_role_is_given(self, mock_object):
@@ -40,7 +40,7 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
 
     @requests_mock.mock()
     def test_should_get_role_url(self, mock_object):
-        mock_object.get("http://no-such-host.com/latest/meta-data/iam/security-credentials/", text="test_role")
+        mock_object.get("http://no-such-host.invalid/latest/meta-data/iam/security-credentials/", text="test_role")
         self.imsi.get_roles()
 
     @requests_mock.mock()
@@ -51,7 +51,7 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
 
 class IMSInterfaceTestGetCredentials(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.com")
+        self.imsi = IMSInterface("no-such-host.invalid")
         self.json_response = json_response
 
     @requests_mock.mock()
@@ -90,7 +90,7 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
 
 class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.com")
+        self.imsi = IMSInterface("no-such-host.invalid")
         self.json_response = json_response
 
     @requests_mock.mock()
