@@ -12,7 +12,7 @@ from test_utils import json_response
 class IMSInterfaceTestGetRoles(unittest.TestCase):
 
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid")
+        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
 
     @requests_mock.mock()
     def test_should_get_valid_role_when_single_role_is_given(self, mock_object):
@@ -51,7 +51,7 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
 
 class IMSInterfaceTestGetCredentials(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid")
+        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
         self.json_response = json_response
 
     @requests_mock.mock()
@@ -90,7 +90,7 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
 
 class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid")
+        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
         self.json_response = json_response
 
     @requests_mock.mock()

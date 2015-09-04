@@ -14,14 +14,19 @@ class NoCredentialsFoundException(Exception):
 
 class IMSInterface(object):
 
-    def __init__(self, ims_url, debug=False):
+    def __init__(self, ims_url, ims_protocol="https", debug=False):
         self.ims_host = ims_url
+        self.ims_protocol = ims_protocol
         self.logger = init_logging(debug)
 
     def get_roles(self):
         """ Obtain a role. """
         try:
-            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/".format(self.ims_host))
+            request_template = "{protocol}://{host}/latest/meta-data/iam/security-credentials/"
+            request_url = request_template.format(
+                protocol=self.ims_protocol,
+                host=self.ims_host)
+            response = requests.get(request_url)
 
             if response.status_code == 200:
                 if not response.content:
@@ -31,6 +36,8 @@ class IMSInterface(object):
                 self.logger.debug("Loaded roles: {0}".format(roles_list))
                 return roles_list
             else:
+                self.logger.error('Request to "{0}" failed'.format(
+                    request_url))
                 response.raise_for_status()
         except Exception as e:
             self.logger.exception("Due to following cause:")
@@ -39,8 +46,11 @@ class IMSInterface(object):
     def get_credentials(self, role):
         """" Obtain a set of temporary credentials given a role. """
         try:
-            response = requests.get("http://{0}/latest/meta-data/iam/security-credentials/{1}".format(
-                self.ims_host, role))
+            request_template = "{protocol}://{host}/latest/meta-data/iam/security-credentials/{role}"
+            response = requests.get(request_template.format(
+                protocol=self.ims_protocol,
+                host=self.ims_host,
+                role=role))
             if response.status_code == 200:
                 if not response.content:
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role?")

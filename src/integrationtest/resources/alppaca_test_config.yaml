@@ -1,2 +1,3 @@
 ims_host: '127.0.0.1'
 ims_port: 8080
+ims_protocol: 'http'

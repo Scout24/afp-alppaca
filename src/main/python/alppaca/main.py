@@ -13,7 +13,9 @@ def run_scheduler_and_webserver(config_file_path):
         # from it.
         credentials = OrderedDict()
         # initialize the credentials provider
-        ims_interface = IMSInterface('{0}:{1}'.format(config['ims_host'], config['ims_port']))
+        ims_host_port = '%s:%s' % (config['ims_host'], config['ims_port'])
+        ims_protocol = config.get('ims_protocol', 'https')
+        ims_interface = IMSInterface(ims_host_port, ims_protocol=ims_protocol)
         Scheduler(credentials, ims_interface).refresh_credentials()
         # initialize and run the web app
         webapp = WebApp(credentials)
