@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from mock import Mock, patch
 import pytz
@@ -10,6 +11,11 @@ from alppaca.scheduler import (Scheduler,
                                )
 from alppaca.compat import OrderedDict, unittest
 from test_utils import FixedDateTime
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s %(module)s: %(message)s',
+    datefmt='%d.%m.%Y %H:%M:%S',
+    level=logging.DEBUG)
 
 
 class TestBackoffRefereshGenerator(unittest.TestCase):

@@ -1,6 +1,6 @@
 import requests
+import logging
 
-from util import init_logging
 from compat import OrderedDict
 
 
@@ -17,7 +17,7 @@ class IMSInterface(object):
     def __init__(self, ims_url, ims_protocol="https", debug=False):
         self.ims_host = ims_url
         self.ims_protocol = ims_protocol
-        self.logger = init_logging(debug)
+        self.logger = logging.getLogger(__name__)
 
     def get_roles(self):
         """ Obtain a role. """

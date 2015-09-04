@@ -3,10 +3,17 @@ import textwrap
 import mock
 import requests_mock
 import requests
+import logging
 
 from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
 from alppaca.compat import unittest
 from test_utils import json_response
+
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s %(module)s: %(message)s',
+    datefmt='%d.%m.%Y %H:%M:%S',
+    level=logging.DEBUG)
 
 
 class IMSInterfaceTestGetRoles(unittest.TestCase):

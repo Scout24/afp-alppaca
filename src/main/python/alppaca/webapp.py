@@ -1,9 +1,5 @@
 from bottle import Bottle
 
-from util import init_logging
-
-logger = init_logging(False)
-
 
 class WebApp(Bottle):
     """ Main web application that handles HTTP requests. """

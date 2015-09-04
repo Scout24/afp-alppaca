@@ -1,9 +1,16 @@
 import mock
+import logging
 from webtest import TestApp
 
 from alppaca.webapp import WebApp
 from alppaca.compat import unittest, OrderedDict
 from test_utils import json_response
+
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s %(module)s: %(message)s',
+    datefmt='%d.%m.%Y %H:%M:%S',
+    level=logging.DEBUG)
 
 
 class WebAppTest(unittest.TestCase):
@@ -36,8 +43,3 @@ class WebAppTest(unittest.TestCase):
         response = self.app.get('/latest/meta-data/iam/security-credentials/no_role')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.text, "")
-
-
-
-
-
