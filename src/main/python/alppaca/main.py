@@ -1,13 +1,27 @@
+import sys
 from ims_interface import IMSInterface
 from scheduler import Scheduler
 from webapp import WebApp
-from util import load_config
+from util import load_config, setup_logging
 from compat import OrderedDict
 
 
 def run_scheduler_and_webserver(config_file_path):
     try:
         config = load_config(config_file_path)
+    except Exception:
+        print >>sys.stderr, "Could not load configuration from '{0}'".format(
+            config_file_path)
+        raise
+    logging_config = None
+    try:
+        logging_config = config.get('logging_handler')
+        logger = setup_logging(logging_config)
+    except Exception:
+        print >>sys.stderr, "Could not setup logging with config '{0}'".format(
+            logging_config)
+        raise
+    try:
         # Credentials is a shared object that connects the scheduler and the
         # bottle_app. The scheduler writes into it and the bottle_app reads
         # from it.
@@ -20,8 +34,8 @@ def run_scheduler_and_webserver(config_file_path):
         # initialize and run the web app
         webapp = WebApp(credentials)
         webapp.run(host='127.0.0.1', port=5000)
-    except Exception, e:
-        print e
+    except Exception:
+        logger.exception("Cannot start Alppaca")
 
 if __name__ == '__main__':
     configpath = 'src/main/python/resources/example_config.yaml'
