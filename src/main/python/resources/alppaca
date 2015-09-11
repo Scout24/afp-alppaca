@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 #
 # /etc/rc.d/init.d/alppaca
 #
@@ -7,9 +7,10 @@
 # Source function library.
 . /etc/init.d/functions
 
-# where am I?
 
-proc="alppacad"
+application="alppaca"
+proc="${application}d"
+logdir=/var/log/$application
 
 start() {
   local retval=1
@@ -18,7 +19,6 @@ start() {
 
   echo -n "Starting ${proc}: "
   
-  logdir=/var/log/${proc}
   daemonize -u alppaca -l /var/lock/subsys/${proc} \
     -o $logdir/${proc}_init.log \
     -e $logdir/${proc}_err.log \
@@ -48,8 +48,9 @@ stop() {
 }
 
 status() {
-   retval=pgrep ${proc}
-   if [ $retval -gt 0 ]; then
+   pgrep ${proc}
+   retval=$?
+   if [ $retval -eq 0 ]; then
      echo "${proc} is running"
      retval=0
    else
