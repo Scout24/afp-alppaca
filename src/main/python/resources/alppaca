@@ -17,7 +17,7 @@ start() {
   local starttimeout=${starttimeout:=60}
   local path="/usr/bin"
 
-  echo -n "Starting ${proc}: "
+  echo -n "Starting ${application}: "
   
   daemonize -u alppaca -l /var/lock/subsys/${proc} \
     -o $logdir/${proc}_init.log \
@@ -40,7 +40,7 @@ start() {
 } 
 
 stop() {
-  echo -n "Shutting down ${proc}:"
+  echo -n "Shutting down ${application}:"
   killproc ${proc} 
   retval=$?
   rm -f /var/lock/subsys/${proc}
@@ -51,10 +51,10 @@ status() {
    pgrep ${proc}
    retval=$?
    if [ $retval -eq 0 ]; then
-     echo "${proc} is running"
+     echo "${application} is running"
      retval=0
    else
-     echo "${proc} isn't running"
+     echo "${application} isn't running"
      retval=1
    fi
    return $retval
