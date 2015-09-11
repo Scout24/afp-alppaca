@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+# /etc/rc.d/init.d/alppaca
+#
+# Alppaca - A(mazing)LocalPrefetchProxyforAmazonCredentiAls
+#
+# Source function library.
+. /etc/init.d/functions
+
+# where am I?
+
+proc="alppacad"
+
+start() {
+  local retval=1
+  local starttimeout=${starttimeout:=60}
+  local path="/usr/bin"
+
+  echo -n "Starting ${proc}: "
+  
+  logdir=/var/log/${proc}
+  daemonize -u alppaca -l /var/lock/subsys/${proc} \
+    -o $logdir/${proc}_init.log \
+    -e $logdir/${proc}_err.log \
+    -c $path \
+    "${path}"/${proc} 
+ 
+  while [ "$retval" -eq '1' -a "$starttimeout" -ge '0' ]; do
+    sleep 1
+    echo -n "."
+    starttimeout=$(( starttimeout - 1 ))
+    status >/dev/null
+    retval=$?
+  done
+
+  echo "."
+  [ $retval -eq 0 ] && success || failure
+  echo 
+  return $retval
+} 
+
+stop() {
+  echo -n "Shutting down ${proc}:"
+  killproc ${proc} 
+  retval=$?
+  rm -f /var/lock/subsys/${proc}
+  return $retval
+}
+
+status() {
+   retval=pgrep ${proc}
+   if [ $retval -gt 0 ]; then
+     echo "${proc} is running"
+     retval=0
+   else
+     echo "${proc} isn't running"
+     retval=1
+   fi
+   return $retval
+}
+
+case "$1" in
+    start)
+  start
+  ;;
+    stop)
+  stop
+  ;;
+    status)
+  status 
+  ;;
+    restart)
+  stop
+  start
+  ;;
+    *)
+  echo "Usage: <servicename> {start|stop|status|restart}"
+  exit 1
+  ;;
+esac
+exit $?
+
