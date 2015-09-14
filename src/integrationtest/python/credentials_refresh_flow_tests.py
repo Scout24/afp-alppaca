@@ -1,49 +1,72 @@
 from alppaca.main import run_scheduler_and_webserver
 from alppaca.server_mock import MockIms
+from alppaca.compat import unittest
 from multiprocessing import Process
 import requests
 import time
 import sys
 
 
-TEST_CONFIG = {
+DEFAULT_TEST_CONFIG = {
     'ims_host': '127.0.0.1',
     'ims_port': 8080,
-    'ims_protocol': 'http'
+    'ims_protocol': 'http',
+    'bind_ip': '127.0.0.1',
+    'bind_port': 5000,
 }
 
 
-def run_api_server_mock():
-    MockIms().run()
+class AlppacaIntegrationTest(object):
+    def __init__(self, config):
+        self.config = config
+        self.mock_job = Process(target=self.run_api_server_mock)
+        self.alppaca_job = Process(target=self.run_alppaca)
 
+    def __enter__(self):
+        self.mock_job.start()
+        self.alppaca_job.start()
+        return self
 
-def run_alppaca():
-    run_scheduler_and_webserver(TEST_CONFIG)
+    def __exit__(self, *args):
+        self.mock_job.terminate()
+        self.alppaca_job.terminate()
 
+    def run_alppaca(self):
+        run_scheduler_and_webserver(self.config)
 
-def test_alppaca_returns_given_role():
-    response = requests.get('http://localhost:5000/latest/meta-data/iam/security-credentials/')
+    def run_api_server_mock(self):
+        MockIms().run()
 
-    assert response.status_code == 200, \
-        "Response status code should be 200, was: '{0}'".format(response.status_code)
-    assert(response.content == 'test_role'), \
-        "Response content should be 'test_role', was: '{0}'".format(response.content)
+    def test_alppaca_returns_given_role(self):
+        url = 'http://{host}:{ip}/latest/meta-data/iam/security-credentials/'.format(
+            host=self.config['bind_ip'], ip=self.config['bind_port'])
+        response = requests.get(url)
 
+        assert response.status_code == 200, \
+            "Response status code should be 200, was: '{0}'".format(response.status_code)
+        assert(response.content == 'test_role'), \
+            "Response content should be 'test_role', was: '{0}'".format(response.content)
+
+    def execute(self):
+        time.sleep(2)
+        self.test_alppaca_returns_given_role()
+
+class RunAlppacaTests(unittest.TestCase):
+
+    def _helper(self, config):
+        with AlppacaIntegrationTest(config) as ait:
+            try:
+                ait.execute()
+            except AssertionError as e:
+                self.fail(e)
+
+    def test_default_credentials(self):
+        self._helper(DEFAULT_TEST_CONFIG)
+
+    def test_should_use_custom_bind_ip_and_port(self):
+        config = DEFAULT_TEST_CONFIG.copy()
+        config['bind_port'] = 5001
+        self._helper(config)
 
 if __name__ == '__main__':
-    mock_job = Process(target=run_api_server_mock)
-    alppaca_job = Process(target=run_alppaca)
-
-    mock_job.start()
-    alppaca_job.start()
-
-    try:
-        time.sleep(2)
-        test_alppaca_returns_given_role()
-        sys.exit(0)
-    except AssertionError as e:
-        print "Test failed: {0}".format(e)
-        sys.exit(1)
-    finally:
-        mock_job.terminate()
-        alppaca_job.terminate()
+    unittest.main()
