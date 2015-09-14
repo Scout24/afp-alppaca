@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import yaml
 
@@ -49,6 +50,11 @@ def setup_logging(handler_config):
 
 
 def load_config(config_file):
-    with open(config_file, 'r') as ymlfile:
-        config = yaml.load(ymlfile)
-    return config
+    try:
+        with open(config_file, 'r') as ymlfile:
+            config = yaml.load(ymlfile)
+        return config
+    except Exception:
+        print >>sys.stderr, "Could not load configuration from '{0}'".format(
+            config_file)
+        raise

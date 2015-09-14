@@ -4,17 +4,13 @@ from multiprocessing import Process
 import requests
 import time
 import sys
-import os
 
 
-ALPPACA_TEST_CONFIG = 'alppaca_test_config.yaml'
-
-
-def get_alppaca_test_config():
-    script_path = os.path.realpath(__file__)
-    script_dir = os.path.split(script_path)[0]
-    test_base_dir = os.path.split(script_dir)[0]
-    return os.path.join(test_base_dir, 'resources', ALPPACA_TEST_CONFIG)
+TEST_CONFIG = {
+    'ims_host': '127.0.0.1',
+    'ims_port': 8080,
+    'ims_protocol': 'http'
+}
 
 
 def run_api_server_mock():
@@ -22,7 +18,7 @@ def run_api_server_mock():
 
 
 def run_alppaca():
-    run_scheduler_and_webserver(get_alppaca_test_config())
+    run_scheduler_and_webserver(TEST_CONFIG)
 
 
 def test_alppaca_returns_given_role():
@@ -35,7 +31,6 @@ def test_alppaca_returns_given_role():
 
 
 if __name__ == '__main__':
-    print get_alppaca_test_config()
     mock_job = Process(target=run_api_server_mock)
     alppaca_job = Process(target=run_alppaca)
 

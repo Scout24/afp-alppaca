@@ -6,13 +6,7 @@ from util import load_config, setup_logging
 from compat import OrderedDict
 
 
-def run_scheduler_and_webserver(config_file_path):
-    try:
-        config = load_config(config_file_path)
-    except Exception:
-        print >>sys.stderr, "Could not load configuration from '{0}'".format(
-            config_file_path)
-        raise
+def run_scheduler_and_webserver(config):
     logging_config = None
     try:
         logging_config = config.get('logging_handler')

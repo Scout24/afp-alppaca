@@ -2,11 +2,13 @@
 import argparse
 
 from alppaca.main import run_scheduler_and_webserver
+from alppaca.utils import load_config
 
 
 def main():
     args = parse_arguments()
-    run_scheduler_and_webserver(config_file_path=args.config)
+    config = load_config(config_file_path=args.config)
+    run_scheduler_and_webserver(config)
 
 
 def parse_arguments():
