@@ -47,8 +47,30 @@ Configuration
 You can change the following values in ``/etc/alppaca/config.yaml`` to modify
 alppacas behaviour.
 
-.. include:: src/main/python/resources/example_config.yaml
-  :code: yaml
+.. code:: yaml
+
+  # Set Instance Metadata Service host, port and protocol for e.g. AFP
+  ims_host: 'localhost'
+  ims_port: 8080
+  ims_protocol: 'https'
+
+  # Bind to the following address.
+  bind_ip: 127.0.0.1
+  bind_port: 5000
+  # Use these settings if no iptables is used:
+  # bind_ip: 169.254.169.254
+  # bind_port: 80
+
+  # Import Python logging handler and configure.
+  # Uses syslog by default.
+  logging_handler:
+    'module': 'logging.handlers'
+    'class': 'SysLogHandler'
+    'args': []
+    'kwargs':
+      'address': '/dev/log'
+
+Source: ``src/main/python/resources/example_config.yaml``
 
 iptables configuration
 ----------------------
