@@ -1,3 +1,4 @@
+=======
 alppaca
 =======
 
@@ -36,22 +37,34 @@ Schematic
    :alt: Schematic
 
    schematic
-The how the internal redirect works
-===================================
+
+Integration
+===========
+
+Configuration
+-------------
+
+You can change the following values in ``/etc/alppaca/config.yaml`` to modify
+alppacas behaviour.
+
+.. include:: src/main/python/resources/example_config.yaml
+  :code: yaml
+
+iptables configuration
+----------------------
 
 An iptables rule snippet redirect ensures that all requests to IP
-``169.254.169.254:80`` are redirected to ``localhost:5000``. To manually
-add the iptables rule, insert the following statement into your iptables
-config:
+``169.254.169.254:80`` are redirected to ``localhost:5000``. You can use the
+following statement in your iptables config:
 
 ::
 
     iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:5000
 
 alppaca as a service
-====================
+--------------------
 
-Find the init script in the /etc/init.d directory and start the alppaca
+Find the init script in the ``/etc/init.d`` directory and start the alppaca
 service with ``sudo service alppaca start``.
 
 Usage of the init script: ``alppaca <start|restart|stop|status>``
