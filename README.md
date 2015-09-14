@@ -31,19 +31,12 @@ use in order to obtain temporary credentials for the application/server.
 # The how the internal redirect works
 
 An iptables rule snippet redirect ensures that all requests to IP
-`169.254.169.254:80` are redirected to `localhost:5000`.  This setup is not yet
-generic since the /etc/iptables.d/nat.d directory is specific to IS24.  To
+`169.254.169.254:80` are redirected to `localhost:5000`.  To
 manually add the iptables rule, insert the following statement into your
 iptables config:
 
 ```
--A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:5000
-```
-
-And maybe you have to add:
-
-```
--t nat
+iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:5000
 ```
 
 # alppaca as a service
