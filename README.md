@@ -41,8 +41,10 @@ iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LO
 
 # alppaca as a service
 
-Upstart is our weapon of choice to initialize alppaca during the boot phase as
-to ensure that credentials are cached before the application starts up.
+Find the init script in the /etc/init.d directory and start the alppaca service
+with ``sudo service alppaca start``.
+
+Usage of the init script: ``alppaca <start|restart|stop|status>``
 
 
 # Playing around
