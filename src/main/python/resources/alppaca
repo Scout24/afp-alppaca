@@ -17,25 +17,27 @@ start() {
   local starttimeout=${starttimeout:=60}
   local path="/usr/bin"
 
-  echo -n "Starting ${application}: "
+  if ! status > /dev/null; then
+    echo -n "Starting ${application}: "
   
-  daemonize -u alppaca -l /var/lock/subsys/${proc} \
-    -o $logdir/${proc}_init.log \
-    -e $logdir/${proc}_err.log \
-    -c $path \
-    "${path}"/${proc} 
+    daemonize -u alppaca -l /var/lock/subsys/${proc} \
+      -o $logdir/${proc}_init.log \
+      -e $logdir/${proc}_err.log \
+      -c $path \
+      "${path}"/${proc} 
  
-  while [ "$retval" -eq '1' -a "$starttimeout" -ge '0' ]; do
-    sleep 1
-    echo -n "."
-    starttimeout=$(( starttimeout - 1 ))
-    status >/dev/null
-    retval=$?
-  done
+    while [ "$retval" -eq '1' -a "$starttimeout" -ge '0' ]; do
+      sleep 1
+      echo -n "."
+      starttimeout=$(( starttimeout - 1 ))
+      status >/dev/null
+      retval=$?
+    done
 
-  echo "."
-  [ $retval -eq 0 ] && success || failure
-  echo 
+    echo "."
+    [ $retval -eq 0 ] && success || failure
+    echo 
+  fi
   return $retval
 } 
 
