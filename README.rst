@@ -55,11 +55,11 @@ alppacas behaviour.
   ims_protocol: 'https'
 
   # Bind to the following address.
-  bind_ip: 127.0.0.1
-  bind_port: 5000
   # Use these settings if no iptables is used:
   # bind_ip: 169.254.169.254
   # bind_port: 80
+  bind_ip: 127.0.0.1
+  bind_port: 5000
 
   # Import Python logging handler and configure.
   # Uses syslog by default.
