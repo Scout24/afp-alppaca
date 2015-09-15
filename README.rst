@@ -75,7 +75,7 @@ Source: ``src/main/python/resources/example_config.yaml``
 iptables configuration
 ----------------------
 
-An iptables rule snippet redirect ensures that all requests to IP
+When you can't bind your application on port 80 you can use this iptables rule snippet that ensures that all requests to IP
 ``169.254.169.254:80`` are redirected to ``localhost:5000``. You can use the
 following statement in your iptables config:
 
