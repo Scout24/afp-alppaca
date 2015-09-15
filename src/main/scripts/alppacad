@@ -2,7 +2,7 @@
 import argparse
 
 from alppaca.main import run_scheduler_and_webserver
-from alppaca.utils import load_config
+from alppaca.util import load_config
 
 
 def main():
