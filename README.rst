@@ -106,7 +106,7 @@ Launch ``alppaca`` in another:
 
 ::
 
-    $ PYTHONPATH=src/main/python python src/main/python/alppaca/main.py
+    $ PYTHONPATH=src/main/python python src/main/scripts/alppacad -c src/main/python/resources/example_config.yaml
 
 Use ``curl`` to perform some requests in a third one:
 

@@ -1,7 +1,7 @@
 # Set Instance Metadata Service host, port and protocol for e.g. AFP
 ims_host: 'localhost'
 ims_port: 8080
-ims_protocol: 'https'
+ims_protocol: 'http'
 
 # Bind to the following address.
 bind_ip: 127.0.0.1

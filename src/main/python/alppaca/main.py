@@ -2,7 +2,7 @@ import sys
 from ims_interface import IMSInterface
 from scheduler import Scheduler
 from webapp import WebApp
-from util import load_config, setup_logging
+from util import setup_logging
 from compat import OrderedDict
 
 
@@ -32,7 +32,3 @@ def run_scheduler_and_webserver(config):
         webapp.run(host=bind_ip, port=bind_port)
     except Exception:
         logger.exception("Cannot start Alppaca")
-
-if __name__ == '__main__':
-    configpath = 'src/main/python/resources/example_config.yaml'
-    run_scheduler_and_webserver(configpath)
