@@ -25,7 +25,7 @@ def run_scheduler_and_webserver(config):
         ims_protocol = config.get('ims_protocol', 'https')
         ims_interface = IMSInterface(ims_host_port, ims_protocol=ims_protocol)
         bind_ip = config.get('bind_ip', '127.0.0.1')
-        bind_port = config.get('bind_port', '5000')
+        bind_port = config.get('bind_port', '25772')
         Scheduler(credentials, ims_interface).refresh_credentials()
         # initialize and run the web app
         webapp = WebApp(credentials)

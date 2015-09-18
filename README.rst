@@ -24,7 +24,7 @@ part is alppaca, pre-fetches the credentials for an application via the
 IMS, caches them locally in memory and exposes them via a HTTP service
 on the same server as the application. The main reason for pre-fetching
 and caching is to ensure a response time below one second, which is the
-AWS-SDK default. The webservice listens on ``localhost:5000`` and an
+AWS-SDK default. The webservice listens on ``localhost:25772`` and an
 iptables rule is used to have it serve requests on
 ``169.254.169.254:80``. It is up to the IMS to decide which account and
 role to use in order to obtain temporary credentials for the
@@ -59,7 +59,7 @@ alppacas behaviour.
   # bind_ip: 169.254.169.254
   # bind_port: 80
   bind_ip: 127.0.0.1
-  bind_port: 5000
+  bind_port: 25772
 
   # Import Python logging handler and configure.
   # Uses syslog by default.
@@ -76,12 +76,12 @@ iptables configuration
 ----------------------
 
 When you can't bind your application on port 80 you can use this iptables rule snippet that ensures that all requests to IP
-``169.254.169.254:80`` are redirected to ``localhost:5000``. You can use the
+``169.254.169.254:80`` are redirected to ``localhost:25772``. You can use the
 following statement in your iptables config:
 
 ::
 
-    iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:5000
+    iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:25772
 
 alppaca as a service
 --------------------
@@ -112,9 +112,9 @@ Use ``curl`` to perform some requests in a third one:
 
 ::
 
-    $ curl localhost:5000/latest/meta-data/iam/security-credentials/
+    $ curl localhost:25772/latest/meta-data/iam/security-credentials/
     test_role
-    $ curl localhost:5000/latest/meta-data/iam/security-credentials/test_role
+    $ curl localhost:25772/latest/meta-data/iam/security-credentials/test_role
     '{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", "Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", "Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}'
 
 And watch the logging info in the other two. Also, by default the

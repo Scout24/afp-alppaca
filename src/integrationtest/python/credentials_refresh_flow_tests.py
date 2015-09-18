@@ -12,7 +12,7 @@ DEFAULT_TEST_CONFIG = {
     'ims_port': 8080,
     'ims_protocol': 'http',
     'bind_ip': '127.0.0.1',
-    'bind_port': 5000,
+    'bind_port': 25772,
 }
 
 
