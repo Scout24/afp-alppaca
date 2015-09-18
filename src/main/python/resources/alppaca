@@ -2,11 +2,18 @@
 #
 # /etc/rc.d/init.d/alppaca
 #
-# Alppaca - A(mazing)LocalPrefetchProxyforAmazonCredentiAls
+### BEGIN INIT INFO
+# Provides: alppaca 
+# Required-Start:
+# Required-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Alppaca
+# Description: A(mazing)LocalPrefetchProxyforAmazonCredentiAls
+### END INIT INFO
 #
 # Source function library.
 . /etc/init.d/functions
-
 
 application="alppaca"
 proc="${application}d"
