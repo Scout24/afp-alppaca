@@ -1,7 +1,7 @@
 import logging
 import sys
 
-import yaml
+import yamlreader
 
 
 def _get_item_from_module(module_name, item_name):
@@ -49,12 +49,10 @@ def setup_logging(handler_config):
     return logger
 
 
-def load_config(config_file):
+def load_config(config_dir):
     try:
-        with open(config_file, 'r') as ymlfile:
-            config = yaml.load(ymlfile)
-        return config
+        return yamlreader.yaml_load(config_dir)
     except Exception:
         print >>sys.stderr, "Could not load configuration from '{0}'".format(
-            config_file)
+            config_dir)
         raise

@@ -33,7 +33,7 @@ def set_properties(project):
     project.build_depends_on("requests-mock")
     project.depends_on("webtest")
     project.depends_on("argparse")
-    project.depends_on("pyyaml")
+    project.depends_on("yamlreader")
     project.set_property('copy_resources_target', '$dir_dist')
     project.get_property('copy_resources_glob').append('setup.cfg')
     project.get_property('copy_resources_glob').append('pre-install.sh')

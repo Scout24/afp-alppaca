@@ -14,8 +14,8 @@ def main():
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-c', '--config', help="Alppaca YAML config file", type=str,
-        default='/etc/alppaca/config.yaml')
+        '-c', '--config', help="Alppaca YAML config directory", type=str,
+        default='/etc/alppaca')
 
     return parser.parse_args()
 
