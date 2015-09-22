@@ -1,8 +1,8 @@
 import datetime
+import isodate
 import json
 import logging
 from random import uniform
-from time import strptime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
@@ -73,7 +73,7 @@ class Scheduler(object):
 
     def extract_refresh_delta(self):
         """ Return shortest expiration time in seconds. """
-        expiration = convert_rfc3339_to_datetime(extract_min_expiration(self.credentials))
+        expiration = isodate.parse_datetime(extract_min_expiration(self.credentials))
         self.logger.info("Extracted expiration: {0}".format(expiration))
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         return refresh_delta
@@ -95,11 +95,6 @@ def backoff_refresh_generator():
     while True:
         yield count if count < 10 else 10
         count += 1
-
-
-def convert_rfc3339_to_datetime(timestamp):
-    """ Convert AWS timestamp to datetime object. """
-    return datetime.datetime(*strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")[0:6], tzinfo=pytz.utc)
 
 
 def extract_min_expiration(credentials):

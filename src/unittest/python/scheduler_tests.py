@@ -1,4 +1,5 @@
 import datetime
+import isodate
 import logging
 
 from mock import Mock, patch
@@ -6,7 +7,6 @@ import pytz
 
 from alppaca.scheduler import (Scheduler,
                                backoff_refresh_generator,
-                               convert_rfc3339_to_datetime,
                                extract_min_expiration,
                                )
 from alppaca.compat import OrderedDict, unittest
@@ -104,13 +104,22 @@ class TestExtractRefreshDelta(unittest.TestCase):
         received = scheduler.extract_refresh_delta()
         self.assertEqual(expected, received)
 
+    @patch('datetime.datetime', FixedDateTime)
+    def test_should_allow_milliseconds_in_expiration(self):
+        """Moto has milliseconds in the expiration date, AWS does not"""
+        credentials = {'test_role': '{"Expiration": "1970-01-01T00:00:59.123Z"}'}
+        scheduler = Scheduler(credentials, None)
+        expected = 59
+        received = scheduler.extract_refresh_delta()
+        self.assertEqual(expected, received)
+
 
 class ConvertToDatetimeTest(unittest.TestCase):
 
     def test(self):
         input_ = "1970-01-01T00:00:00Z"
         expected = datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc)
-        received = convert_rfc3339_to_datetime(input_)
+        received = isodate.parse_datetime(input_)
         self.assertEqual(expected, received)
 
 
