@@ -38,8 +38,8 @@ class AlppacaIntegrationTest(object):
         MockIms().run()
 
     def test_alppaca_returns_given_role(self):
-        url = 'http://{host}:{ip}/latest/meta-data/iam/security-credentials/'.format(
-            host=self.config['bind_ip'], ip=self.config['bind_port'])
+        url = 'http://{host}:{port}/latest/meta-data/iam/security-credentials/'.format(
+            host=self.config['bind_ip'], port=self.config['bind_port'])
         response = requests.get(url)
 
         assert response.status_code == 200, \
