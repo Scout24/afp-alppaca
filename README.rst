@@ -45,7 +45,8 @@ Configuration
 -------------
 
 You can change the following values in ``/etc/alppaca/config.yaml`` to modify
-alppacas behaviour.
+alppacas behaviour. You can also add more yaml files to the directory, they
+are loaded and merged in alphabetical order by yamlreader.
 
 .. code:: yaml
 
