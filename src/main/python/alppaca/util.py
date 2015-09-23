@@ -1,3 +1,5 @@
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 import logging
 import sys
 
@@ -53,6 +55,6 @@ def load_config(config_dir):
     try:
         return yamlreader.yaml_load(config_dir)
     except Exception:
-        print >>sys.stderr, "Could not load configuration from '{0}'".format(
-            config_dir)
+        print("Could not load configuration from '{0}'".format(
+            config_dir), file=sys.stderr)
         raise

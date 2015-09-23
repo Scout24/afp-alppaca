@@ -1,3 +1,5 @@
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 import datetime
 import isodate
 import json
@@ -8,7 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 import pytz
 
-from delaytrigger import DelayTrigger
+from alppaca.delaytrigger import DelayTrigger
 
 
 class Scheduler(object):
@@ -105,4 +107,4 @@ def extract_min_expiration(credentials):
 
 def total_seconds(timedelta):
     """ Convert timedelta to seconds as an integer. """
-    return (timedelta.microseconds + (timedelta.seconds + timedelta.days * 24 * 3600) * 10**6) / 10**6
+    return (timedelta.microseconds + (timedelta.seconds + timedelta.days * 24 * 3600) * 10**6) // 10**6

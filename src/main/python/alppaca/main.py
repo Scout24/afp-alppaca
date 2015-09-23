@@ -1,9 +1,11 @@
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 import sys
-from ims_interface import IMSInterface
-from scheduler import Scheduler
-from webapp import WebApp
-from util import setup_logging
-from compat import OrderedDict
+from alppaca.ims_interface import IMSInterface
+from alppaca.scheduler import Scheduler
+from alppaca.webapp import WebApp
+from alppaca.util import setup_logging
+from alppaca.compat import OrderedDict
 
 
 def run_scheduler_and_webserver(config):
@@ -12,8 +14,8 @@ def run_scheduler_and_webserver(config):
         logging_config = config.get('logging_handler')
         logger = setup_logging(logging_config)
     except Exception:
-        print >>sys.stderr, "Could not setup logging with config '{0}'".format(
-            logging_config)
+        print("Could not setup logging with config '{0}'".format(
+            logging_config), file=sys.stderr)
         raise
     try:
         # Credentials is a shared object that connects the scheduler and the

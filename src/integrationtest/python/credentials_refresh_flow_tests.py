@@ -1,3 +1,5 @@
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 from alppaca.main import run_scheduler_and_webserver
 from alppaca.server_mock import MockIms
 from alppaca.compat import unittest

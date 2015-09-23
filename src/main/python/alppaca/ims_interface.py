@@ -1,7 +1,9 @@
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 import requests
 import logging
 
-from compat import OrderedDict
+from alppaca.compat import OrderedDict
 
 
 class NoRolesFoundException(Exception):
