@@ -13,7 +13,7 @@ class FixedDateTime(datetime.datetime):
     """
     @classmethod
     def now(cls, tz=None):
-        return datetime.datetime(1970, 01, 01, tzinfo=tz)
+        return datetime.datetime(1970, 1, 1, tzinfo=tz)
 
 json_response = dedent("""
                 {"Code": "Success",

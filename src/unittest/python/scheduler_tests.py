@@ -120,7 +120,7 @@ class ConvertToDatetimeTest(unittest.TestCase):
 
     def test(self):
         input_ = "1970-01-01T00:00:00Z"
-        expected = datetime.datetime(1970, 01, 01, 00, 00, 00, tzinfo=pytz.utc)
+        expected = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=pytz.utc)
         received = isodate.parse_datetime(input_)
         self.assertEqual(expected, received)
 
