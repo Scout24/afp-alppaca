@@ -29,7 +29,7 @@ def setup_logging(handler_config):
     if logger.handlers:
         # Was already initialized, nothing to do.
         return logger
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.WARNING)
     default_config = {
         'module': 'logging.handlers',
         'class': 'SysLogHandler',
