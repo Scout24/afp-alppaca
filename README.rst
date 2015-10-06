@@ -2,6 +2,10 @@
 alppaca
 =======
 
+.. image:: https://travis-ci.org/ImmobilienScout24/alppaca.png?branch=master
+   :alt: Travis build status image
+   :target: https://travis-ci.org/ImmobilienScout24/alppaca
+
 A(mazing) Local Prefetch Proxy for Amazon CredentiAls
 
 About
