@@ -8,6 +8,6 @@ install:
   - pip install coveralls
   - pyb install_dependencies
   
-script: "pyb verify analyze"
+script: "pyb -X verify analyze"
 after_success:
   - coveralls --verbose
