@@ -1,9 +1,9 @@
-#!/bin/bash 
+#!/bin/bash
 #
 # /etc/rc.d/init.d/alppaca
 #
 ### BEGIN INIT INFO
-# Provides: alppaca 
+# Provides: alppaca
 # Required-Start:
 # Required-Stop:
 # Default-Start: 2 3 4 5
@@ -12,81 +12,85 @@
 # Description: A(mazing)LocalPrefetchProxyforAmazonCredentiAls
 ### END INIT INFO
 #
-# Source function library.
-. /etc/init.d/functions
+# Source function library
+. /etc/rc.d/init.d/functions
 
-application="alppaca"
-proc="${application}d"
-logdir=/var/log/$application
+APPLICATION="alppaca"
+PROC="${APPLICATION}d"
+LOGDIR="/var/log/$APPLICATION"
 
 start() {
-  local retval=1
-  local starttimeout=${starttimeout:=60}
-  local path="/usr/bin"
+    local RETVAL=1
+    local STARTTIMEOUT=${STARTTIMEOUT:=60}
+    local BINPATH="/usr/bin"
 
-  if ! status > /dev/null; then
-    echo -n "Starting ${application}: "
-  
-    daemonize -u alppaca -l /var/lock/subsys/${proc} \
-      -o $logdir/${proc}_init.log \
-      -e $logdir/${proc}_err.log \
-      -c $path \
-      "${path}"/${proc} 
- 
-    while [ "$retval" -eq '1' -a "$starttimeout" -ge '0' ]; do
-      sleep 1
-      echo -n "."
-      starttimeout=$(( starttimeout - 1 ))
-      status >/dev/null
-      retval=$?
-    done
+    if ! status $PROC > /dev/null 2>&1; then
+        echo -n $"Starting ${APPLICATION}: "
 
-    echo "."
-    [ $retval -eq 0 ] && success || failure
-    echo 
-  fi
-  return $retval
-} 
+        daemonize -u alppaca -l /var/lock/subsys/$PROC \
+            -o $LOGDIR/${PROC}_init.log \
+            -e $LOGDIR/${PROC}_err.log \
+            -c $BINPATH \
+            "${BINPATH}"/${PROC}
 
-stop() {
-  echo -n "Shutting down ${application}:"
-  killproc ${proc} 
-  retval=$?
-  rm -f /var/lock/subsys/${proc}
-  return $retval
+        while [ "$RETVAL" -eq '1' -a "$STARTTIMEOUT" -ge '0' ]; do
+            sleep 1
+            STARTTIMEOUT=$(( STARTTIMEOUT - 1 ))
+            status $PROC > /dev/null 2>&1
+            RETVAL=$?
+        done
+
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+    fi
+    return $RETVAL
 }
 
-status() {
-   pgrep ${proc}
-   retval=$?
-   if [ $retval -eq 0 ]; then
-     echo "${application} is running"
-     retval=0
-   else
-     echo "${application} isn't running"
-     retval=1
-   fi
-   return $retval
+stop() {
+    echo -n "Shutting down ${APPLICATION}:"
+    killproc $PROC
+    RETVAL=$?
+    rm -f /var/lock/subsys/$PROC
+    echo
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
 }
 
 case "$1" in
     start)
-  start
-  ;;
+        $1
+        ;;
     stop)
-  stop
-  ;;
+        stop
+        ;;
     status)
-  status 
-  ;;
+        status $PROC
+        ;;
     restart)
-  stop
-  start
-  ;;
+        $1
+        ;;
+    reload)
+        status $PROC > /dev/null 2>&1 || exit 7
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
     *)
-  echo "Usage: <servicename> {start|stop|status|restart}"
-  exit 1
-  ;;
+        echo "Usage: <servicename> {start|stop|status|restart|reload|force-reload}"
+        exit 1
+        ;;
 esac
 exit $?
-
