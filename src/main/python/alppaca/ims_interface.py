@@ -31,10 +31,10 @@ class IMSInterface(object):
             response = requests.get(request_url)
 
             if response.status_code == 200:
-                if not response.content:
+                if not response.text:
                     raise NoRolesFoundException("Server response was empty; host has no roles?")
 
-                roles_list = [line.strip() for line in response.content.split("\n")] if response.content else []
+                roles_list = [line.strip() for line in response.text.split("\n")] if response.text else []
                 self.logger.debug("Loaded roles: {0}".format(roles_list))
                 return roles_list
             else:
@@ -54,9 +54,9 @@ class IMSInterface(object):
                 host=self.ims_host,
                 role=role))
             if response.status_code == 200:
-                if not response.content:
+                if not response.text:
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
-                return response.content
+                return response.text
             else:
                 response.raise_for_status()
         except Exception as e:
