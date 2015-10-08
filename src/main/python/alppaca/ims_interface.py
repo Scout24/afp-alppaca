@@ -43,7 +43,7 @@ class IMSInterface(object):
                 response.raise_for_status()
         except Exception as e:
             self.logger.exception("Due to following cause:")
-            raise NoRolesFoundException(e.message)
+            raise NoRolesFoundException(str(e))
 
     def get_credentials(self, role):
         """" Obtain a set of temporary credentials given a role. """
@@ -61,7 +61,7 @@ class IMSInterface(object):
                 response.raise_for_status()
         except Exception as e:
             self.logger.exception("Due to following cause:")
-            raise NoCredentialsFoundException(e.message)
+            raise NoCredentialsFoundException(str(e))
 
     def get_credentials_for_all_roles(self):
         """ Obtain all credentials for all roles. """
