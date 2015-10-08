@@ -6,6 +6,7 @@ import logging
 
 from mock import Mock, patch
 import pytz
+import six
 
 from alppaca.scheduler import (Scheduler,
                                backoff_refresh_generator,
@@ -25,7 +26,7 @@ class TestBackoffRefereshGenerator(unittest.TestCase):
     def test_should_generate_correct_sequence(self):
         expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 10]
         brg = backoff_refresh_generator()
-        received = [brg.next() for _ in range(15)]
+        received = [six.next(brg) for _ in range(15)]
         self.assertEqual(expected, received)
 
 

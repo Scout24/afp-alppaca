@@ -4,6 +4,7 @@ import datetime
 import isodate
 import json
 import logging
+import six
 from random import uniform
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -47,7 +48,7 @@ class Scheduler(object):
         if self.backoff is None:
             self.logger.info("Initialize back-off and safety behaviour")
             self.backoff = backoff_refresh_generator()
-        refresh_delta = self.backoff.next()
+        refresh_delta = six.next(self.backoff)
         self.build_trigger(refresh_delta)
 
     def refresh_credentials(self):
