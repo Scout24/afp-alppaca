@@ -52,8 +52,8 @@ class AlppacaIntegrationTest(object):
 
         assert response.status_code == 200, \
             "Response status code should be 200, was: '{0}'".format(response.status_code)
-        assert(response.content == 'test_role'), \
-            "Response content should be 'test_role', was: '{0}'".format(response.content)
+        assert(response.text == 'test_role'), \
+            "Response text should be 'test_role', was: '{0}'".format(response.text)
 
     def execute(self):
         time.sleep(2)
