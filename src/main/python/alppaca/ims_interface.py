@@ -14,7 +14,7 @@ class NoCredentialsFoundException(Exception):
     pass
 
 
-class IMSInterface(object):
+class IMSCredentialsProvider(object):
 
     def __init__(self, ims_url, ims_protocol="https", debug=False):
         self.ims_host = ims_url

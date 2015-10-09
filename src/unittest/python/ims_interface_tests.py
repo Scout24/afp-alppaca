@@ -7,7 +7,7 @@ import requests_mock
 import requests
 import logging
 
-from alppaca import IMSInterface, NoRolesFoundException, NoCredentialsFoundException
+from alppaca import IMSCredentialsProvider, NoRolesFoundException, NoCredentialsFoundException
 from alppaca.compat import unittest
 from test_utils import json_response
 
@@ -18,10 +18,10 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 
-class IMSInterfaceTestGetRoles(unittest.TestCase):
+class IMSCredentialsProviderTestGetRoles(unittest.TestCase):
 
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
+        self.imsi = IMSCredentialsProvider("no-such-host.invalid", ims_protocol="http")
 
     @requests_mock.mock()
     def test_should_get_valid_role_when_single_role_is_given(self, mock_object):
@@ -58,9 +58,9 @@ class IMSInterfaceTestGetRoles(unittest.TestCase):
         self.assertRaises(NoRolesFoundException, self.imsi.get_roles)
 
 
-class IMSInterfaceTestGetCredentials(unittest.TestCase):
+class IMSCredentialsProviderTestGetCredentials(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
+        self.imsi = IMSCredentialsProvider("no-such-host.invalid", ims_protocol="http")
         self.json_response = json_response
 
     @requests_mock.mock()
@@ -97,9 +97,9 @@ class IMSInterfaceTestGetCredentials(unittest.TestCase):
         mock_object.get(requests_mock.ANY, status_code=500, text=response)
         self.assertRaises(NoCredentialsFoundException, self.imsi.get_credentials, "test_role")
 
-class IMSInterfaceTestGetCredentialsForAllRoles(unittest.TestCase):
+class IMSCredentialsProviderTestGetCredentialsForAllRoles(unittest.TestCase):
     def setUp(self):
-        self.imsi = IMSInterface("no-such-host.invalid", ims_protocol="http")
+        self.imsi = IMSCredentialsProvider("no-such-host.invalid", ims_protocol="http")
         self.json_response = json_response
 
     @requests_mock.mock()

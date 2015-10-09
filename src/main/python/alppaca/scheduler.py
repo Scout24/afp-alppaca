@@ -26,11 +26,11 @@ class Scheduler(object):
 
     """
 
-    def __init__(self, credentials, ims_interface):
+    def __init__(self, credentials, credentials_provider):
         self.logger = logging.getLogger(__name__)
         self.credentials = credentials
 
-        self.ims_interface = ims_interface
+        self.credentials_provider = credentials_provider
         self.backoff = None
         self.scheduler = BackgroundScheduler()
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
@@ -55,7 +55,7 @@ class Scheduler(object):
         """ Refresh credentials and schedule next refresh."""
         self.logger.info("about to fetch credentials")
 
-        cached_credentials = self.ims_interface.get_credentials_for_all_roles()
+        cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
 
         if not cached_credentials:
             self.logger.info("No credentials found!")

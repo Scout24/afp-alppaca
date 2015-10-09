@@ -1,7 +1,7 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
 import sys
-from alppaca.ims_interface import IMSInterface
+from alppaca.ims_interface import IMSCredentialsProvider
 from alppaca.scheduler import Scheduler
 from alppaca.webapp import WebApp
 from alppaca.util import setup_logging
@@ -25,10 +25,10 @@ def run_scheduler_and_webserver(config):
         # initialize the credentials provider
         ims_host_port = '%s:%s' % (config['ims_host'], config['ims_port'])
         ims_protocol = config.get('ims_protocol', 'https')
-        ims_interface = IMSInterface(ims_host_port, ims_protocol=ims_protocol)
+        credentials_provider = IMSCredentialsProvider(ims_host_port, ims_protocol=ims_protocol)
         bind_ip = config.get('bind_ip', '127.0.0.1')
         bind_port = config.get('bind_port', '25772')
-        Scheduler(credentials, ims_interface).refresh_credentials()
+        Scheduler(credentials, credentials_provider).refresh_credentials()
         # initialize and run the web app
         webapp = WebApp(credentials)
         webapp.run(host=bind_ip, port=bind_port)
