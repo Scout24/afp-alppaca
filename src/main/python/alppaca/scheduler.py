@@ -61,18 +61,22 @@ class Scheduler(object):
             self.logger.info("No credentials found!")
             self.do_backoff()
         else:
-            self.credentials.update(cached_credentials)
-            self.logger.info("Got credentials: {0}".format(self.credentials))
-            refresh_delta = self.extract_refresh_delta()
-            if refresh_delta < 0:
-                self.logger.warn("Expiration date is in the past, enter backoff.")
-                self.do_backoff()
-            else:
-                if self.backoff is not None:
-                    self.backoff = None
-                    self.logger.info("Exit backoff state.")
-                refresh_delta = self.sample_new_refresh_delta(refresh_delta)
-                self.build_trigger(refresh_delta)
+            self.update_credentials(cached_credentials)
+
+    def update_credentials(self, cached_credentials):
+        """ Update credentials and retrigger refresh """
+        self.credentials.update(cached_credentials)
+        self.logger.info("Got credentials: {0}".format(self.credentials))
+        refresh_delta = self.extract_refresh_delta()
+        if refresh_delta < 0:
+            self.logger.warn("Expiration date is in the past, enter backoff.")
+            self.do_backoff()
+        else:
+            if self.backoff is not None:
+                self.backoff = None
+                self.logger.info("Exit backoff state.")
+            refresh_delta = self.sample_new_refresh_delta(refresh_delta)
+            self.build_trigger(refresh_delta)
 
     def extract_refresh_delta(self):
         """ Return shortest expiration time in seconds. """
