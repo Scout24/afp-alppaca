@@ -6,7 +6,7 @@ alppaca
    :alt: Travis build status image
    :target: https://travis-ci.org/ImmobilienScout24/alppaca
 
-.. image:: https://coveralls.io/repos/ImmobilienScout24/alpaca/badge.png?branch=master
+.. image:: https://coveralls.io/repos/ImmobilienScout24/alppaca/badge.png?branch=master
     :alt: Coverage status
     :target: https://coveralls.io/r/ImmobilienScout24/alppaca?branch=master
 
