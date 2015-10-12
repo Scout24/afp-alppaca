@@ -1,0 +1,4 @@
+[report]
+# server_mock is a test server for the integration tests. It's not intended
+# to be unit-tested.
+omit = src/main/python/alppaca/server_mock/*
