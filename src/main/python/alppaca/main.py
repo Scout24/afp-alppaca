@@ -1,6 +1,8 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
 import sys
+
+from alppaca.assume_role import AssumedRoleCredentialsProvider
 from alppaca.ims_interface import IMSCredentialsProvider
 from alppaca.scheduler import Scheduler
 from alppaca.webapp import WebApp
@@ -28,6 +30,11 @@ def run_scheduler_and_webserver(config):
         credentials_provider = IMSCredentialsProvider(ims_host_port, ims_protocol=ims_protocol)
         bind_ip = config.get('bind_ip', '127.0.0.1')
         bind_port = config.get('bind_port', '25772')
+
+        role_to_assume = config.get('assume_role')
+        if role_to_assume:
+            credentials_provider = AssumedRoleCredentialsProvider(credentials_provider, role_to_assume)
+
         Scheduler(credentials, credentials_provider).refresh_credentials()
         # initialize and run the web app
         webapp = WebApp(credentials)

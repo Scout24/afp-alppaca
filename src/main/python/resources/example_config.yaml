@@ -13,8 +13,10 @@ bind_port: 25772
 # Import Python logging handler and configure.
 # Uses syslog by default.
 logging_handler:
-  'module': 'logging.handlers'
-  'class': 'SysLogHandler'
-  'args': []
-  'kwargs':
-    'address': '/dev/log'
+  module: logging.handlers
+  class: SysLogHandler
+  args: []
+  kwargs:
+    address: /dev/log
+
+assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
