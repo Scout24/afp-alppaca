@@ -33,7 +33,12 @@ def run_scheduler_and_webserver(config):
 
         role_to_assume = config.get('assume_role')
         if role_to_assume:
-            credentials_provider = AssumedRoleCredentialsProvider(credentials_provider, role_to_assume)
+            credentials_provider = AssumedRoleCredentialsProvider(
+                credentials_provider,
+                role_to_assume,
+                config.get('aws_proxy_host'),
+                config.get('aws_proxy_port')
+            )
 
         Scheduler(credentials, credentials_provider).refresh_credentials()
         # initialize and run the web app

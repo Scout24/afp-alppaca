@@ -19,4 +19,9 @@ logging_handler:
   kwargs:
     address: /dev/log
 
+# Allows to automatically switch to another role
 assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
+
+# Proxy settings for assume_role call to aws
+aws_proxy_host: my_proxy.local
+aws_proxy_port: 3128
