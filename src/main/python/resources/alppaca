@@ -44,7 +44,12 @@ start() {
             RETVAL=$?
         done
 
-        [ $RETVAL -eq 0 ] && success || failure
+        if [ $RETVAL -eq 0 ]; then
+                success
+        else
+                rm -f $LOCKFILE
+                failure
+        fi
         echo
     fi
     return $RETVAL
