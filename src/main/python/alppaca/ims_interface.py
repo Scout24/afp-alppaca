@@ -38,8 +38,7 @@ class IMSCredentialsProvider(object):
                 self.logger.debug("Loaded roles: {0}".format(roles_list))
                 return roles_list
             else:
-                self.logger.error('Request to "{0}" failed'.format(
-                    request_url))
+                self.logger.error('Request to "%s" failed', request_url)
                 response.raise_for_status()
         except Exception as e:
             self.logger.exception("Due to following cause:")
@@ -55,7 +54,7 @@ class IMSCredentialsProvider(object):
                 role=role))
             if response.status_code == 200:
                 if not response.text:
-                    raise NoCredentialsFoundException("Server response was empty; no credentials for role?")
+                    raise NoCredentialsFoundException("Server response was empty; no credentials for role: {0}".format(role))
                 return response.text
             else:
                 response.raise_for_status()
@@ -72,7 +71,7 @@ class IMSCredentialsProvider(object):
                 try:
                     results[role] = self.get_credentials(role)
                 except NoCredentialsFoundException:
-                    self.logger.exception("Role {0} didn't have any credentials.".format(role))
+                    self.logger.exception("Role %s didn't have any credentials.", role)
         except NoRolesFoundException:
             self.logger.exception("Could not find any roles")
         return results

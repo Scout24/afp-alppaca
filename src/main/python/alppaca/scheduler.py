@@ -41,7 +41,7 @@ class Scheduler(object):
         self.logger.info("Successfully completed credentials refresh")
 
     def job_failed_event_listener(self, event):
-        self.logger.error("Failed to refresh credentials: {0}".format(event.exception))
+        self.logger.error("Failed to refresh credentials: %s", event.exception)
 
     def do_backoff(self):
         """ Perform back-off and safety. """
@@ -66,7 +66,7 @@ class Scheduler(object):
     def update_credentials(self, cached_credentials):
         """ Update credentials and retrigger refresh """
         self.credentials.update(cached_credentials)
-        self.logger.info("Got credentials: {0}".format(self.credentials))
+        self.logger.info("Got credentials: %s", self.credentials)
         refresh_delta = self.extract_refresh_delta()
         if refresh_delta < 0:
             self.logger.warn("Expiration date is in the past, enter backoff.")
@@ -81,7 +81,7 @@ class Scheduler(object):
     def extract_refresh_delta(self):
         """ Return shortest expiration time in seconds. """
         expiration = isodate.parse_datetime(extract_min_expiration(self.credentials))
-        self.logger.info("Extracted expiration: {0}".format(expiration))
+        self.logger.info("Extracted expiration: %s", expiration)
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         return refresh_delta
 
@@ -92,7 +92,7 @@ class Scheduler(object):
 
     def build_trigger(self, refresh_delta):
         """ Actually add the trigger to the apscheduler. """
-        self.logger.info("Setting up trigger to fire in {0} seconds".format(refresh_delta))
+        self.logger.info("Setting up trigger to fire in %s seconds", refresh_delta)
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
 
 
