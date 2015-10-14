@@ -57,11 +57,11 @@ class Scheduler(object):
 
         cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
 
-        if not cached_credentials:
+        if cached_credentials:
+            self.update_credentials(cached_credentials)
+        else:
             self.logger.info("No credentials found!")
             self.do_backoff()
-        else:
-            self.update_credentials(cached_credentials)
 
     def update_credentials(self, cached_credentials):
         """ Update credentials and retrigger refresh """
