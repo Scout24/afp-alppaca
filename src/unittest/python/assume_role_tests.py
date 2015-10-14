@@ -1,13 +1,16 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
+
 import json
-from boto.sts.credentials import Credentials
-from boto.sts.credentials import AssumedRole
-from alppaca import NoCredentialsFoundException
 
 from mock import patch, Mock
 
-from alppaca.compat import unittest
+from alppaca import NoCredentialsFoundException
+from alppaca.compat import OrderedDict, unittest
 from alppaca.assume_role import AssumedRoleCredentialsProvider
+
+from boto.sts.credentials import AssumedRole
+from boto.sts.credentials import Credentials
+
 
 ROLE = 'my_role'
 ROLE_ARN = 'arn:aws:iam::123456789012:role/%s' % ROLE
@@ -15,6 +18,7 @@ ANOTHER_EXPIRATION = "NEW_EXPI"
 ANOTHER_TOKEN = "NEW_TOKEN"
 ANOTHER_SECRET = "NEW_SECRET"
 ANOTHER_KEY = "NEW_KEY"
+DUMMY_CREDENTIALS = {'ims_role': '{"AccessKeyId": "ACCESS_KEY", "SecretAccessKey": "SECRET", "Token": "MY_TOKEN"}'}
 
 
 class AssumeRoleCredentialsProviderTest(unittest.TestCase):
@@ -31,9 +35,7 @@ class AssumeRoleCredentialsProviderTest(unittest.TestCase):
 
     @patch('alppaca.assume_role.connect_to_region')
     def test_should_give_credentials(self, sts_mock):
-        self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {
-            'ims_role': '{"AccessKeyId": "ACCESS_KEY", "SecretAccessKey": "SECRET", "Token": "MY_TOKEN"}'
-        }
+        self.credentials_provider_mock.get_credentials_for_all_roles.return_value = DUMMY_CREDENTIALS
 
         given_credentials = Credentials()
         given_credentials.access_key = ANOTHER_KEY
@@ -51,6 +53,13 @@ class AssumeRoleCredentialsProviderTest(unittest.TestCase):
 
         credentials = self.provider.get_credentials_for_all_roles()
         self.assertEqual(given_credentials_string, credentials[ROLE])
+
+    @patch('alppaca.assume_role.connect_to_region')
+    def test_should_return_empty_dict_for_failed_boto_call(self, sts_mock):
+        self.credentials_provider_mock.get_credentials_for_all_roles.return_value = DUMMY_CREDENTIALS
+        sts_mock.return_value.assume_role.side_effect = Exception('Boom!')
+        result = self.provider.get_credentials_for_all_roles()
+        self.assertEqual(result, OrderedDict())
 
 if __name__ == '__main__':
     unittest.main()

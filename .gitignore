@@ -60,3 +60,7 @@ venv
 # IDEA project files
 *.iml
 .idea/
+
+# VirtualEnv
+bin/
+include/
