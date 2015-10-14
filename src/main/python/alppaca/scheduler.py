@@ -55,7 +55,11 @@ class Scheduler(object):
         """ Refresh credentials and schedule next refresh."""
         self.logger.info("about to fetch credentials")
 
-        cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
+        try:
+            cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
+        except Exception:
+            self.logger.exception("Error in credential provider:")
+            cached_credentials = None
 
         if cached_credentials:
             self.update_credentials(cached_credentials)
