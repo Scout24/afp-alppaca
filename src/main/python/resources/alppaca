@@ -17,6 +17,10 @@
 
 APPLICATION="alppaca"
 PROC="${APPLICATION}d"
+# LOCKFILE must have the same basename as the init script, otherwise the
+# script /etc/rc will be confused, at least on RHEL 6. One symptom is
+# that the service is not stopped on reboot.
+LOCKFILE="/var/lock/subsys/$(basename $0)"
 LOGDIR="/var/log/$APPLICATION"
 
 start() {
@@ -27,7 +31,7 @@ start() {
     if ! status $PROC > /dev/null 2>&1; then
         echo -n $"Starting ${APPLICATION}: "
 
-        daemonize -u alppaca -l /var/lock/subsys/$PROC \
+        daemonize -u alppaca -l $LOCKFILE \
             -o $LOGDIR/${PROC}_init.log \
             -e $LOGDIR/${PROC}_err.log \
             -c $BINPATH \
@@ -40,7 +44,12 @@ start() {
             RETVAL=$?
         done
 
-        [ $RETVAL -eq 0 ] && success || failure
+        if [ $RETVAL -eq 0 ]; then
+                success
+        else
+                rm -f $LOCKFILE
+                failure
+        fi
         echo
     fi
     return $RETVAL
@@ -50,7 +59,7 @@ stop() {
     echo -n "Shutting down ${APPLICATION}:"
     killproc $PROC
     RETVAL=$?
-    rm -f /var/lock/subsys/$PROC
+    rm -f $LOCKFILE
     echo
     return $RETVAL
 }
