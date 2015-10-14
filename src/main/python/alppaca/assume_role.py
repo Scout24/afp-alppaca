@@ -34,18 +34,22 @@ class AssumedRoleCredentialsProvider():
 
     def get_credentials_for_assumed_role(self, access_key, secret_key, token):
         self.logger.info("Connecting to AWS region eu-central-1 ...")
-        conn = connect_to_region('eu-central-1',
-                                 aws_access_key_id=access_key,
-                                 aws_secret_access_key=secret_key,
-                                 security_token=token,
-                                 proxy=self.aws_proxy_host,
-                                 proxy_port=self.aws_proxy_port
-                                 )
         try:
-            response = conn.assume_role(role_arn=self.role_to_assume, role_session_name=self.get_session_name())
-            self.logger.info("Successfully got credentials for role: %s", self.role_to_assume)
-        finally:
-            conn.close()
+            conn = connect_to_region('eu-central-1',
+                                     aws_access_key_id=access_key,
+                                     aws_secret_access_key=secret_key,
+                                     security_token=token,
+                                     proxy=self.aws_proxy_host,
+                                     proxy_port=self.aws_proxy_port
+                                     )
+            try:
+                response = conn.assume_role(role_arn=self.role_to_assume, role_session_name=self.get_session_name())
+                self.logger.info("Successfully got credentials for role: %s", self.role_to_assume)
+            finally:
+                conn.close()
+        except Exception as e:
+            self.logger.exception("Could not assume the AWS role:")
+            raise NoCredentialsFoundException(str(e))
 
         results = OrderedDict()
         results[self.get_role_name()] = self.create_credentials_json(response)
