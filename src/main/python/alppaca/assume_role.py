@@ -10,7 +10,7 @@ from alppaca.compat import OrderedDict
 from boto.sts import connect_to_region
 
 
-class AssumedRoleCredentialsProvider():
+class AssumedRoleCredentialsProvider(object):
     def __init__(self, credentials_provider, role_to_assume, aws_proxy_host=None, aws_proxy_port=None):
         self.credentials_provider = credentials_provider
         self.role_to_assume = role_to_assume

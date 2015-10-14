@@ -84,6 +84,13 @@ class RefreshCredentialsTest(unittest.TestCase):
 
         self.assertIsNotNone(self.scheduler.backoff)
 
+    @patch('alppaca.scheduler.Scheduler.build_trigger')
+    def test_should_enter_backoff_state_on_exception(self, build_trigger_mock):
+        self.credentials_provider_mock.get_credentials_for_all_roles.side_effect = Exception()
+        self.scheduler.refresh_credentials()
+
+        self.assertIsNotNone(self.scheduler.backoff)
+
 
 class AcquireValidCredentialsTest(unittest.TestCase):
     @patch('alppaca.scheduler.BackgroundScheduler')
