@@ -8,7 +8,6 @@ from alppaca import NoCredentialsFoundException
 from alppaca.compat import OrderedDict, unittest
 from alppaca.assume_role import AssumedRoleCredentialsProvider
 
-from boto.exception import BotoServerError
 from boto.sts.credentials import AssumedRole
 from boto.sts.credentials import Credentials
 
