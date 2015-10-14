@@ -6,7 +6,7 @@ from alppaca import NoCredentialsFoundException
 
 from mock import patch, Mock
 
-from alppaca.compat import OrderedDict, unittest
+from alppaca.compat import unittest
 from alppaca.assume_role import AssumedRoleCredentialsProvider
 
 ROLE = 'my_role'
