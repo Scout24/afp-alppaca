@@ -57,7 +57,7 @@ class AssumedRoleCredentialsProvider():
 
     @staticmethod
     def get_session_name():
-        return 'alppaca-session-of-' + socket.gethostname()
+        return 'alppaca-on-' + socket.gethostname()
 
     def get_role_name(self):
         return self.role_to_assume.split('/')[1]
