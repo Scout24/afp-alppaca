@@ -56,11 +56,11 @@ class AssumeRoleCredentialsProviderTest(unittest.TestCase):
         self.assertEqual(given_credentials_string, credentials[ROLE])
 
     @patch('alppaca.assume_role.connect_to_region')
-    def test_should_raise_exception_for_failed_boto_call(self, sts_mock):
+    def test_should_return_empty_dict_for_failed_boto_call(self, sts_mock):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = DUMMY_CREDENTIALS
         sts_mock.return_value.assume_role.side_effect = Exception('Boom!')
-        with self.assertRaises(NoCredentialsFoundException):
-            self.provider.get_credentials_for_all_roles()
+        result = self.provider.get_credentials_for_all_roles()
+        self.assertEqual(result, OrderedDict())
 
 if __name__ == '__main__':
     unittest.main()
