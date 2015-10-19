@@ -24,7 +24,7 @@ LOCKFILE="/var/lock/subsys/$(basename $0)"
 LOGDIR="/var/log/$APPLICATION"
 
 start() {
-    local RETVAL=1
+    local RETVAL=0
     local STARTTIMEOUT=${STARTTIMEOUT:=60}
     local BINPATH="/usr/bin"
 
