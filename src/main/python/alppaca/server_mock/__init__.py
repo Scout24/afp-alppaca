@@ -1,3 +1,9 @@
+""" Super simple IMS mock.
+
+Just listens on localhost:8080 for the appropriate url, returns a test role and
+a dummy JSON response.
+
+"""
 from __future__ import print_function, absolute_import, unicode_literals, division
 
 from datetime import datetime, timedelta
@@ -6,12 +12,6 @@ from textwrap import dedent
 from bottle import Bottle
 import pytz
 
-""" Super simple IMS mock.
-
-Just listens on localhost:8080 for the appropriate url, returns a test role and
-a dummy JSON response.
-
-"""
 
 
 def expiration_10s_from_now():
