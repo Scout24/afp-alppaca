@@ -16,8 +16,8 @@ About
 =====
 
 This prefeteches and proxies AWS temporary credentials from the
-`Instance Metadata Server
-(IMS) <https://github.com/ImmobilienScout24/aws-instance-metadata-server>`__.
+`AWS Federation Proxy
+(AFP) <https://github.com/ImmobilienScout24/afp-core>`__.
 
 On any Amazon EC2 instance there is a special webserver that listens on
 a link-local address and provides so-called `Instance
