@@ -139,6 +139,13 @@ Descriptive Haiku
 
 *Al's now got your back*
 
+See also
+========
+
+See Hologram_ for another solution that brings temporary AWS credentials onto Developer desktops.
+
+.. _Hologram: https://github.com/AdRoll/hologram
+
 License
 =======
 
