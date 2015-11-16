@@ -3,6 +3,7 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 import datetime
 
 from mock import patch
+import pytz
 
 from alppaca.delaytrigger import DelayTrigger
 from alppaca.compat import unittest
@@ -17,7 +18,8 @@ class DelayTriggerTest(unittest.TestCase):
 
         DelayTrigger(10)
 
-        datetrigger_mock.assert_called_with(run_date=datetime.datetime(1970, 1, 1, 0, 0, 10))
+        expected_run_date = datetime.datetime(1970, 1, 1, 0, 0, 10, tzinfo=pytz.utc,)
+        datetrigger_mock.assert_called_with(run_date=expected_run_date)
 
     @patch('alppaca.delaytrigger.DateTrigger.__init__')
     def test_should_call_datetrigger_with_none_if_called_with_negative_delta(self, datetrigger_mock):
