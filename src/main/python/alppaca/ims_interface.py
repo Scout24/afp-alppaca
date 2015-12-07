@@ -28,14 +28,16 @@ class IMSCredentialsProvider(object):
             request_url = request_template.format(
                 protocol=self.ims_protocol,
                 host=self.ims_host)
+            self.logger.debug("Requesting Roles from '%s'", request_url)
             response = requests.get(request_url)
 
             if response.status_code == 200:
                 if not response.text:
+                    self.logger.debug("Request for roles successfull, but empty response")
                     raise NoRolesFoundException("Server response was empty; host has no roles?")
 
                 roles_list = [line.strip() for line in response.text.split("\n")] if response.text else []
-                self.logger.debug("Loaded roles: {0}".format(roles_list))
+                self.logger.debug("Received roles: {0}".format(roles_list))
                 return roles_list
             else:
                 self.logger.error('Request to "%s" failed', request_url)
@@ -48,15 +50,20 @@ class IMSCredentialsProvider(object):
         """" Obtain a set of temporary credentials given a role. """
         try:
             request_template = "{protocol}://{host}/latest/meta-data/iam/security-credentials/{role}"
-            response = requests.get(request_template.format(
+            request_url = request_template.format(
                 protocol=self.ims_protocol,
                 host=self.ims_host,
-                role=role))
+                role=role)
+            self.logger.debug("Requesting Roles from '%s'", request_url)
+            response = requests.get(request_url)
             if response.status_code == 200:
                 if not response.text:
+                    self.logger.debug("Request for credentials successfull, but empty response")
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role: {0}".format(role))
+                self.logger.debug("Request for credentials successfull")
                 return response.text
             else:
+                self.logger.error('Request for credentials to "%s" failed', request_url)
                 response.raise_for_status()
         except Exception as e:
             self.logger.exception("Due to following cause:")
