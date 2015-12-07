@@ -23,13 +23,20 @@ def _get_item_from_module(module_name, item_name):
             e=error))
     return klass
 
+def levelname_to_integer(levelname):
+    levelname = levelname.lower()
+    level_translation = {'debug': logging.DEBUG, 'info': logging.INFO,
+                         'warning': logging.WARNING, 'error': logging.ERROR}
+    return level_translation[levelname]
 
-def setup_logging(handler_config):
+def setup_logging(config):
+    handler_config = config.get('logging_handler')
+    levelname = config.get('log_level', 'warning')
     logger = logging.getLogger('alppaca')
     if logger.handlers:
         # Was already initialized, nothing to do.
         return logger
-    logger.setLevel(logging.WARNING)
+    logger.setLevel(levelname_to_integer(levelname))
     default_config = {
         'module': 'logging.handlers',
         'class': 'SysLogHandler',
