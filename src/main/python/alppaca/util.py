@@ -54,6 +54,11 @@ def setup_logging(config):
                    "with args '{args}', kwargs '{kwargs}': {exc}")
         raise Exception(message.format(klass=klass, args=args,
                                        kwargs=kwargs, exc=exc))
+
+    log_format = config.get('log_format', 'alppaca: [%(levelname)s] %(message)s')
+    formatter = logging.Formatter(log_format)
+    handler.setFormatter(formatter)
+
     logger.addHandler(handler)
     return logger
 

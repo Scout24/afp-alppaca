@@ -88,6 +88,16 @@ class RunAlppacaTests(unittest.TestCase):
         content = tmpfile.read()
         self.assertGreater(len(content), 0)
 
+    def test_log_with_content_log_level_debug(self):
+        tmpfile = tempfile.NamedTemporaryFile()
+        DEFAULT_TEST_CONFIG['logging_handler']['args'] = [tmpfile.name]
+        DEFAULT_TEST_CONFIG['log_level'] = 'debug'
+        DEFAULT_TEST_CONFIG['log_format'] = 'foobar: hello world'
+
+        self._helper(DEFAULT_TEST_CONFIG)
+
+        content = tmpfile.read()
+        self.assertIn(b'foobar: hello world', content)
 
 if __name__ == '__main__':
     unittest.main()

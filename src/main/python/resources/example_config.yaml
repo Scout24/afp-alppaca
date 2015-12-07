@@ -9,9 +9,16 @@ ims_protocol: 'http'
 # bind_port: 80
 bind_ip: 127.0.0.1
 bind_port: 25772
-  
+
 # Possible log levels are debug, info, warning (default), error
-log_level: warning 
+log_level: warning
+
+# How the log messages are formatted. See https://docs.python.org/2/library/logging.html#logrecord-attributes for details
+# Example for syslog:
+log_format: 'alppaca: [%(levelname)s] %(message)s'
+# Example for filelogging:
+# log_format: '%(asctime)s [%(levelname)s] %(message)s'
+
 # Import Python logging handler and configure.
 # Uses syslog by default.
 logging_handler:
