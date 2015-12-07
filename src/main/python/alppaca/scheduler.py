@@ -46,14 +46,14 @@ class Scheduler(object):
     def do_backoff(self):
         """ Perform back-off and safety. """
         if self.backoff is None:
-            self.logger.info("Initialize back-off and safety behaviour")
+            self.logger.debug("Initialize back-off and safety behaviour")
             self.backoff = backoff_refresh_generator()
         refresh_delta = six.next(self.backoff)
         self.build_trigger(refresh_delta)
 
     def refresh_credentials(self):
         """ Refresh credentials and schedule next refresh."""
-        self.logger.info("about to fetch credentials")
+        self.logger.debug("about to fetch credentials")
 
         try:
             cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
@@ -70,7 +70,8 @@ class Scheduler(object):
     def update_credentials(self, cached_credentials):
         """ Update credentials and retrigger refresh """
         self.credentials.update(cached_credentials)
-        self.logger.info("Got credentials: %s", self.credentials)
+        self.logger.info("Got credentials")
+        self.logger.debug(self.credentials)
         refresh_delta = self.extract_refresh_delta()
         if refresh_delta < 0:
             self.logger.warn("Expiration date is in the past, enter backoff.")
@@ -78,14 +79,14 @@ class Scheduler(object):
         else:
             if self.backoff is not None:
                 self.backoff = None
-                self.logger.info("Exit backoff state.")
+                self.logger.debug("Exit backoff state.")
             refresh_delta = self.sample_new_refresh_delta(refresh_delta)
             self.build_trigger(refresh_delta)
 
     def extract_refresh_delta(self):
         """ Return shortest expiration time in seconds. """
         expiration = isodate.parse_datetime(extract_min_expiration(self.credentials))
-        self.logger.info("Extracted expiration: %s", expiration)
+        self.logger.debug("Extracted expiration: %s", expiration)
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
         return refresh_delta
 
@@ -96,7 +97,7 @@ class Scheduler(object):
 
     def build_trigger(self, refresh_delta):
         """ Actually add the trigger to the apscheduler. """
-        self.logger.info("Setting up trigger to fire in %s seconds", refresh_delta)
+        self.logger.debug("Setting up trigger to fire in %s seconds", refresh_delta)
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
 
 
