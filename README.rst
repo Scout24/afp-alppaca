@@ -69,7 +69,9 @@ are loaded and merged in alphabetical order by yamlreader.
   # bind_port: 80
   bind_ip: 127.0.0.1
   bind_port: 25772
-
+  
+  # Possible log levels are debug, info, warning (default), error
+  log_level: warning 
   # Import Python logging handler and configure.
   # Uses syslog by default.
   logging_handler:
