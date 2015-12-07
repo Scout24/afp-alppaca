@@ -76,7 +76,7 @@ class RunAlppacaTests(unittest.TestCase):
         self._helper(DEFAULT_TEST_CONFIG)
 
         content = tmpfile.read()
-        self.assertEqual(content, '')
+        self.assertEqual(content, b'')
 
     def test_log_with_content_log_level_debug(self):
         tmpfile = tempfile.NamedTemporaryFile()
