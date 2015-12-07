@@ -33,7 +33,7 @@ class IMSCredentialsProvider(object):
 
             if response.status_code == 200:
                 if not response.text:
-                    self.logger.debug("Request for roles successfull, but empty response")
+                    self.logger.debug("Request for roles successful, but empty response")
                     raise NoRolesFoundException("Server response was empty; host has no roles?")
 
                 roles_list = [line.strip() for line in response.text.split("\n")] if response.text else []
@@ -43,7 +43,7 @@ class IMSCredentialsProvider(object):
                 self.logger.error('Request to "%s" failed', request_url)
                 response.raise_for_status()
         except Exception as e:
-            self.logger.exception("Due to following cause:")
+            self.logger.exception("Error getting roles:")
             raise NoRolesFoundException(str(e))
 
     def get_credentials(self, role):
@@ -54,19 +54,19 @@ class IMSCredentialsProvider(object):
                 protocol=self.ims_protocol,
                 host=self.ims_host,
                 role=role)
-            self.logger.debug("Requesting Roles from '%s'", request_url)
+            self.logger.debug("Requesting Credentials from '%s'", request_url)
             response = requests.get(request_url)
             if response.status_code == 200:
                 if not response.text:
-                    self.logger.debug("Request for credentials successfull, but empty response")
+                    self.logger.debug("Request for credentials successful, but empty response")
                     raise NoCredentialsFoundException("Server response was empty; no credentials for role: {0}".format(role))
-                self.logger.debug("Request for credentials successfull")
+                self.logger.debug("Request for credentials successful")
                 return response.text
             else:
                 self.logger.error('Request for credentials to "%s" failed', request_url)
                 response.raise_for_status()
         except Exception as e:
-            self.logger.exception("Due to following cause:")
+            self.logger.exception("Error getting credentials:")
             raise NoCredentialsFoundException(str(e))
 
     def get_credentials_for_all_roles(self):
