@@ -19,12 +19,17 @@ class AssumedRoleCredentialsProvider(object):
         self.logger = logging.getLogger(__name__)
 
     def get_credentials_for_all_roles(self):
+        self.logger.debug("Getting credentials for all roles...")
         original_credentials = self.credentials_provider.get_credentials_for_all_roles()
         if not original_credentials:
             raise NoCredentialsFoundException("Got no credentials from: " + str(self.credentials_provider))
 
         for role in original_credentials:
+            self.logger.debug("Got credentials for role '%s':", role)
             access_key, secret_key, token = self.parse_credentials_json(original_credentials[role])
+            self.logger.debug("Access Key: %s", access_key)
+            self.logger.debug("Secret Key (partial): %s...", secret_key[:10])
+            self.logger.debug("Token (partial): %s...", token[:10])
             return self.get_credentials_for_assumed_role(access_key, secret_key, token)
 
     @staticmethod
@@ -34,10 +39,10 @@ class AssumedRoleCredentialsProvider(object):
 
     def get_credentials_for_assumed_role(self, access_key, secret_key, token):
         results = OrderedDict()
-
-        self.logger.info("Connecting to AWS region eu-central-1 ...")
+        region = "eu-central-1"
+        self.logger.debug("Connecting to AWS region %s ...", region)
         try:
-            conn = connect_to_region('eu-central-1',
+            conn = connect_to_region(region,
                                      aws_access_key_id=access_key,
                                      aws_secret_access_key=secret_key,
                                      security_token=token,
