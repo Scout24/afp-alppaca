@@ -34,7 +34,7 @@ def levelname_to_integer(levelname):
 def setup_logging(config):
     handler_config = config.get('logging_handler')
     levelname = config.get('log_level', 'warning')
-    logger = logging.getLogger('alppaca')
+    logger = logging.getLogger()
     if logger.handlers:
         # Was already initialized, nothing to do.
         return logger
