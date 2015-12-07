@@ -27,8 +27,6 @@ def run_scheduler_and_webserver(config):
         ims_host_port = '%s:%s' % (config['ims_host'], config['ims_port'])
         ims_protocol = config.get('ims_protocol', 'https')
         credentials_provider = IMSCredentialsProvider(ims_host_port, ims_protocol=ims_protocol)
-        bind_ip = config.get('bind_ip', '127.0.0.1')
-        bind_port = config.get('bind_port', '25772')
 
         role_to_assume = config.get('assume_role')
         if role_to_assume:
@@ -41,6 +39,8 @@ def run_scheduler_and_webserver(config):
 
         Scheduler(credentials, credentials_provider).refresh_credentials()
         # initialize and run the web app
+        bind_ip = config.get('bind_ip', '127.0.0.1')
+        bind_port = config.get('bind_port', '25772')
         webapp = WebApp(credentials)
         webapp.run(host=bind_ip, port=bind_port)
     except Exception:
