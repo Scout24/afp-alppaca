@@ -24,9 +24,9 @@ logging.basicConfig(
 class TestBackoffRefereshGenerator(unittest.TestCase):
 
     def test_should_generate_correct_sequence(self):
-        expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 10]
-        brg = backoff_refresh_generator(0, 1, 10)
-        received = [six.next(brg) for _ in range(15)]
+        expected = [1.5, 2.25, 3.375, 5.0625, 7.59375, 10, 10, 10, 10, 10]
+        brg = backoff_refresh_generator(1.5, 10)
+        received = [six.next(brg) for _ in range(10)]
         self.assertEqual(expected, received)
 
 
@@ -45,7 +45,7 @@ class RefreshCredentialsTest(unittest.TestCase):
         }
 
         self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(0)
+        build_trigger_mock.assert_called_with(1.5)
 
     @patch('alppaca.scheduler.Scheduler.build_trigger')
     def test_should_enter_backoff_state_on_empty_credentials(self, build_trigger_mock):
@@ -59,11 +59,11 @@ class RefreshCredentialsTest(unittest.TestCase):
     def test_should_increment_refresh_delta_when_in_backoff_state(self, build_trigger_mock):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {}
         self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(0)
+        build_trigger_mock.assert_called_with(1.5)
         self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(1)
+        build_trigger_mock.assert_called_with(2.25)
         self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(2)
+        build_trigger_mock.assert_called_with(3.375)
 
     @patch('datetime.datetime', FixedDateTime)
     @patch('alppaca.scheduler.Scheduler.build_trigger')
