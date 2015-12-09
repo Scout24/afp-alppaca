@@ -25,7 +25,7 @@ class TestBackoffRefereshGenerator(unittest.TestCase):
 
     def test_should_generate_correct_sequence(self):
         expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 10]
-        brg = backoff_refresh_generator()
+        brg = backoff_refresh_generator(0, 1, 10)
         received = [six.next(brg) for _ in range(15)]
         self.assertEqual(expected, received)
 

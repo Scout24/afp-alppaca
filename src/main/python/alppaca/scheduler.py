@@ -47,7 +47,7 @@ class Scheduler(object):
         """ Perform back-off and safety. """
         if self.backoff is None:
             self.logger.debug("Initialize back-off and safety behaviour")
-            self.backoff = backoff_refresh_generator()
+            self.backoff = backoff_refresh_generator(0, 1, 10)
         refresh_delta = six.next(self.backoff)
         self.build_trigger(refresh_delta)
 
@@ -101,12 +101,12 @@ class Scheduler(object):
         self.scheduler.add_job(func=self.refresh_credentials, trigger=DelayTrigger(refresh_delta))
 
 
-def backoff_refresh_generator():
+def backoff_refresh_generator(start, increment, end):
     """ Generate refresh deltas when in back-off and safety mode. """
-    count = 0
+    count = start
     while True:
-        yield count if count < 10 else 10
-        count += 1
+        yield count if count < end else end
+        count += increment
 
 
 def extract_min_expiration(credentials):
