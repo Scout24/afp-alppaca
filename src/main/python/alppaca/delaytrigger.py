@@ -3,14 +3,15 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 import datetime
 
 from apscheduler.triggers.date import DateTrigger
+import pytz
 
 
 class DelayTrigger(DateTrigger):
     """ Trigger for events to be run in X seconds. """
 
     def __init__(self, seconds):
-        if seconds > 0:
-            run_date = datetime.datetime.now() + datetime.timedelta(seconds=seconds)
+        if seconds >= 0:
+            run_date = datetime.datetime.now(pytz.utc) + datetime.timedelta(seconds=seconds)
         else:
             run_date = None
 

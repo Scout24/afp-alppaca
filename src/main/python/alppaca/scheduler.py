@@ -33,7 +33,7 @@ class Scheduler(object):
 
         self.credentials_provider = credentials_provider
         self.backoff = None
-        self.scheduler = BackgroundScheduler()
+        self.scheduler = BackgroundScheduler(timezone=pytz.utc)
         self.scheduler.add_listener(self.job_executed_event_listener, EVENT_JOB_EXECUTED)
         self.scheduler.add_listener(self.job_failed_event_listener, EVENT_JOB_ERROR)
         self.scheduler.start()
