@@ -13,6 +13,7 @@ from alppaca.scheduler import (Scheduler,
                                extract_min_expiration,
                                )
 from alppaca.compat import OrderedDict, unittest
+from alppaca.ims_interface import NoRolesFoundException
 from test_utils import FixedDateTime
 
 logging.basicConfig(
@@ -90,6 +91,13 @@ class RefreshCredentialsTest(unittest.TestCase):
         self.scheduler.refresh_credentials()
 
         self.assertIsNotNone(self.scheduler.backoff)
+
+    @patch('alppaca.scheduler.Scheduler.build_trigger')
+    @patch('alppaca.scheduler.Scheduler.do_backoff')
+    def test_should_enter_backoff_state_on_no_roles_found_exception(self, do_backoff_mock, build_trigger_mock):
+        self.credentials_provider_mock.get_credentials_for_all_roles.side_effect = NoRolesFoundException()
+        self.scheduler.refresh_credentials()
+        do_backoff_mock.assert_called_with(factor=3, max_interval=300)
 
 
 class AcquireValidCredentialsTest(unittest.TestCase):
