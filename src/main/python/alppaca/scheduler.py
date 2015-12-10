@@ -110,8 +110,11 @@ def backoff_refresh_generator(factor, max_interval):
     """ Generate refresh deltas when in back-off and safety mode. """
     count = factor
     while True:
-        yield count if count < max_interval else max_interval
-        count *= factor
+        if count < max_interval:
+            yield count
+            count *= factor
+        else:
+            yield max_interval
 
 
 def extract_min_expiration(credentials):
