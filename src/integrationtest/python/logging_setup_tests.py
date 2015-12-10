@@ -90,7 +90,7 @@ class RunAlppacaTests(unittest.TestCase):
         content = tmpfile.read()
         self.assertGreater(len(content), 0)
 
-    def test_log_with_content_log_level_debug(self):
+    def test_log_format_is_applied(self):
         tmpfile = tempfile.NamedTemporaryFile()
         DEFAULT_TEST_CONFIG['logging_handler']['args'] = [tmpfile.name]
         DEFAULT_TEST_CONFIG['log_level'] = 'debug'
