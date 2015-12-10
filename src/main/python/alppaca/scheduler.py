@@ -47,7 +47,7 @@ class Scheduler(object):
     def do_backoff(self, factor=1.5, max_interval=10):
         """ Perform back-off and safety. """
         if self.backoff is None:
-            self.logger.debug("Initialize back-off and safety behaviour with factor %i and a max interval %i", factor,
+            self.logger.debug("Initialize back-off and safety behaviour with factor %s and a max interval %s", factor,
                               max_interval)
             self.backoff = backoff_refresh_generator(factor, max_interval)
         refresh_delta = six.next(self.backoff)
