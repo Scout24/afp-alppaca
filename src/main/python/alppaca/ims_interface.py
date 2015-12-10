@@ -81,4 +81,5 @@ class IMSCredentialsProvider(object):
                     self.logger.exception("Role %s didn't have any credentials.", role)
         except NoRolesFoundException:
             self.logger.exception("Could not find any roles")
+            raise
         return results

@@ -9,6 +9,7 @@ from random import uniform
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
+from alppaca.ims_interface import NoRolesFoundException
 import pytz
 
 from alppaca.delaytrigger import DelayTrigger
@@ -43,29 +44,33 @@ class Scheduler(object):
     def job_failed_event_listener(self, event):
         self.logger.error("Failed to refresh credentials: %s", event.exception)
 
-    def do_backoff(self):
+    def do_backoff(self, factor=1.5, max_interval=10):
         """ Perform back-off and safety. """
         if self.backoff is None:
-            self.logger.debug("Initialize back-off and safety behaviour")
-            self.backoff = backoff_refresh_generator(1.5, 10)
+            self.logger.debug("Initialize back-off and safety behaviour with factor %i and a max interval %i", factor,
+                              max_interval)
+            self.backoff = backoff_refresh_generator(factor, max_interval)
         refresh_delta = six.next(self.backoff)
         self.build_trigger(refresh_delta)
 
     def refresh_credentials(self):
         """ Refresh credentials and schedule next refresh."""
         self.logger.debug("about to fetch credentials")
+        cached_credentials = None
+        factor, max_interval = 1.5, 10
 
         try:
             cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
+        except NoRolesFoundException:
+            factor, max_interval = 3, 300
         except Exception:
             self.logger.exception("Error in credential provider:")
-            cached_credentials = None
 
         if cached_credentials:
             self.update_credentials(cached_credentials)
         else:
             self.logger.info("No credentials found!")
-            self.do_backoff()
+            self.do_backoff(factor=factor, max_interval=max_interval)
 
     def update_credentials(self, cached_credentials):
         """ Update credentials and retrigger refresh """
