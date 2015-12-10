@@ -37,6 +37,7 @@ def set_properties(project):
     project.depends_on("yamlreader")
     project.depends_on("six")
     project.depends_on("boto")
+    project.depends_on("datetime")
     project.set_property('copy_resources_target', '$dir_dist')
     project.get_property('copy_resources_glob').append('setup.cfg')
     project.get_property('copy_resources_glob').append('pre-install.sh')
