@@ -16,7 +16,7 @@ from test_utils import FixedDateTime
 
 
 class DelayTriggerTest(unittest.TestCase):
-    def scheduler_backoff_duration(self, steps):
+    def scheduler_backoff_duration(self, steps, factor, max_interval):
         """Return how long the backoff algorithm needs for given steps
 
         This ensures the tests keep working even if the backoff algorithm is
@@ -25,7 +25,8 @@ class DelayTriggerTest(unittest.TestCase):
         seconds = 0
         # The scheduler makes the first step immediately.
         steps -= 1
-        generator = backoff_refresh_generator()
+
+        generator = backoff_refresh_generator(factor, max_interval)
         for x in range(steps):
             seconds += six.next(generator)
 
@@ -85,8 +86,8 @@ class DelayTriggerTest(unittest.TestCase):
         fake_provider = FakeProvider()
         scheduler = Scheduler({}, fake_provider)
 
-        expected_call_count = 4
-        sleep_time = self.scheduler_backoff_duration(expected_call_count)
+        expected_call_count = 3
+        sleep_time = self.scheduler_backoff_duration(expected_call_count, 1.5, 10)
 
         scheduler.refresh_credentials()
         time.sleep(sleep_time)
