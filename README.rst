@@ -15,7 +15,7 @@ A(mazing) Local Prefetch Proxy for Amazon CredentiAls
 About
 =====
 
-This prefeteches and proxies AWS temporary credentials from the
+This prefetches and proxies AWS temporary credentials from the
 `AWS Federation Proxy
 (AFP) <https://github.com/ImmobilienScout24/afp-core>`__.
 
@@ -28,11 +28,11 @@ we have to build a bridge into AWS to provide temporary credentials for
 that application, so that it believes it is being executed in the cloud
 even though it is not. The first part of that bridge is the
 aforementioned IMS which connects the private cloud to AWS. The second
-part is alppaca, pre-fetches the credentials for an application via the
+part is alppaca, which pre-fetches the credentials for an application via the
 IMS, caches them locally in memory and exposes them via a HTTP service
 on the same server as the application. The main reason for pre-fetching
 and caching is to ensure a response time below one second, which is the
-AWS-SDK default. The webservice listens on ``localhost:25772`` and an
+AWS-SDK default timeout. The webservice listens on ``localhost:25772`` and an
 iptables rule is used to have it serve requests on
 ``169.254.169.254:80``. It is up to the IMS to decide which account and
 role to use in order to obtain temporary credentials for the
@@ -53,7 +53,7 @@ Configuration
 -------------
 
 You can change the following values in ``/etc/alppaca/config.yaml`` to modify
-alppacas behaviour. You can also add more yaml files to the directory, they
+alppaca's behaviour. You can also add more yaml files to the directory, they
 are loaded and merged in alphabetical order by yamlreader.
 
 .. code:: yaml
@@ -110,7 +110,7 @@ Usage of the init script: ``alppaca <start|restart|stop|status>``
 redirecting alppaca logs in rsyslog
 -----------------------------------
 
-With the default log formating and handler, you can configure rsyslog to filter using the syslogtag "alppaca:"::
+With the default log formatting and handler, you can configure rsyslog to filter using the syslogtag "alppaca:"::
 
     :syslogtag, isequal, "alppaca:"  -/var/log/alppaca.log
 
