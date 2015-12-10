@@ -39,6 +39,8 @@ class AlppacaIntegrationTest(object):
     def __exit__(self, *args):
         self.mock_job.terminate()
         self.alppaca_job.terminate()
+        self.mock_job.join()
+        self.alppaca_job.join()
 
     def run_alppaca(self):
         run_scheduler_and_webserver(self.config)
