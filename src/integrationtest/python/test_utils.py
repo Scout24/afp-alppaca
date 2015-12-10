@@ -15,7 +15,12 @@ class AlppacaIntegrationTest(object):
 
     def __enter__(self):
         self.mock_job.start()
+        # Ensure the mock IMS fully(!) up and running before starting Alppaca.
+        # Otherwise, Alppaca will see the failure and start its backoff
+        # behaviour.
+        time.sleep(0.5)
         self.alppaca_job.start()
+        time.sleep(0.5)
         return self
 
     def __exit__(self, *args):
@@ -41,5 +46,4 @@ class AlppacaIntegrationTest(object):
             "Response text should be 'test_role', was: '{0}'".format(response.text)
 
     def execute(self):
-        time.sleep(2)
         self.test_alppaca_returns_given_role()
