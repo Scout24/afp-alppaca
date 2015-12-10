@@ -42,9 +42,10 @@ class IMSCredentialsProvider(object):
             else:
                 self.logger.error('Request to "%s" failed', request_url)
                 response.raise_for_status()
-        except Exception as e:
-            self.logger.exception("Error getting roles:")
-            raise NoRolesFoundException(str(e))
+        except Exception as error:
+            self.logger.warn("Error getting roles")
+            self.logger.debug(str(error))
+            raise NoRolesFoundException(str(error))
 
     def get_credentials(self, role):
         """" Obtain a set of temporary credentials given a role. """
@@ -79,7 +80,8 @@ class IMSCredentialsProvider(object):
                     results[role] = self.get_credentials(role)
                 except NoCredentialsFoundException:
                     self.logger.exception("Role %s didn't have any credentials.", role)
-        except NoRolesFoundException:
-            self.logger.exception("Could not find any roles")
+        except NoRolesFoundException as error:
+            self.logger.warn("Could not find any roles")
+            self.logger.debug(str(error))
             raise
         return results
