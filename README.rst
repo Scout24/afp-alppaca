@@ -95,9 +95,7 @@ iptables configuration
 
 When you can't bind your application on port 80 you can use this iptables rule snippet that ensures that all requests to IP
 ``169.254.169.254:80`` are redirected to ``localhost:25772``. You can use the
-following statement in your iptables config:
-
-::
+following statement in your iptables config::
 
     iptables -t nat -A OUTPUT -d 169.254.169.254/32 -p tcp -m addrtype --src-type LOCAL -j DNAT --to-destination 127.0.0.1:25772
 
@@ -109,26 +107,27 @@ service with ``sudo service alppaca start``.
 
 Usage of the init script: ``alppaca <start|restart|stop|status>``
 
+redirecting alppaca logs in rsyslog
+-----------------------------------
+
+With the default log formating and handler, you can configure rsyslog to filter using the syslogtag "alppaca:"::
+
+    :syslogtag, isequal, "alppaca:"  -/var/log/alppaca.log
+
 Playing around
 ==============
 
 Start ``tmux``.
 
-Launch the mock IMS service in one tmux window:
-
-::
+Launch the mock IMS service in one tmux window::
 
     $ PYTHONPATH=src/main/python python src/main/scripts/alppaca-server-mock
 
-Launch ``alppaca`` in another:
-
-::
+Launch ``alppaca`` in another::
 
     $ PYTHONPATH=src/main/python python src/main/scripts/alppacad -c src/main/python/resources/example_config.yaml
 
-Use ``curl`` to perform some requests in a third one:
-
-::
+Use ``curl`` to perform some requests in a third one::
 
     $ curl localhost:25772/latest/meta-data/iam/security-credentials/
     test_role
@@ -162,9 +161,7 @@ Copyright 2015 Immobilienscout24 GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
 not use this file except in compliance with the License. You may obtain
-a copy of the License at
-
-::
+a copy of the License at::
 
     http://www.apache.org/licenses/LICENSE-2.0
 
