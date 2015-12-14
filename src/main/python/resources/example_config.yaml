@@ -1,26 +1,26 @@
-# Set Instance Metadata Service host, port and protocol for e.g. AFP
+## Set Instance Metadata Service host, port and protocol for e.g. AFP
 ims_host: 'localhost'
 ims_port: 8080
 ims_protocol: 'http'
 
-# Bind to the following address.
-# Use these settings if no iptables is used:
-# bind_ip: 169.254.169.254
-# bind_port: 80
+## Bind to the following address.
 bind_ip: 127.0.0.1
 bind_port: 25772
+## Use these settings if no iptables is used:
+# bind_ip: 169.254.169.254
+# bind_port: 80
 
-# Possible log levels are debug, info, warning (default), error
+## Possible log levels are debug, info, warning (default), error
 log_level: warning
 
-# How the log messages are formatted. See https://docs.python.org/2/library/logging.html#logrecord-attributes for details
-# Example for syslog:
+## How the log messages are formatted. See https://docs.python.org/2/library/logging.html#logrecord-attributes for details
+## Example for syslog:
 log_format: 'alppaca: [%(levelname)s] %(message)s'
-# Example for filelogging:
+## Example for filelogging:
 # log_format: '%(asctime)s [%(levelname)s] %(message)s'
 
-# Import Python logging handler and configure.
-# Uses syslog by default.
+## Import Python logging handler and configure.
+## Uses syslog by default.
 logging_handler:
   module: logging.handlers
   class: SysLogHandler
@@ -28,9 +28,9 @@ logging_handler:
   kwargs:
     address: /dev/log
 
-# Allows to automatically switch to another role
-assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
+## Allows to automatically switch to another role
+# assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
 
-# Proxy settings for assume_role call to aws
-aws_proxy_host: my_proxy.local
-aws_proxy_port: 3128
+## Proxy settings for assume_role call to aws
+# aws_proxy_host: my_proxy.local
+# aws_proxy_port: 3128
