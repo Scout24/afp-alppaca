@@ -124,9 +124,9 @@ With the default log formatting and handler, you can configure rsyslog to filter
 Playing around
 ==============
 
-Start ``tmux``.
+If you do not want to install the dependencies system wide, use `virtualenv <http://virtualenv.readthedocs.org/en/latest/>`__ and `pybuilder <https://pybuilder.github.io/>`__.
 
-Launch the mock IMS service in one tmux window::
+Launch the mock IMS service in one terminal::
 
     $ PYTHONPATH=src/main/python python src/main/scripts/alppaca-server-mock
 
@@ -141,7 +141,7 @@ Use ``curl`` to perform some requests in a third one::
     $ curl localhost:25772/latest/meta-data/iam/security-credentials/test_role
     '{"Code": "Success", "AccessKeyId": "ASIAI", "SecretAccessKey": "oieDhF", "Token": "6jmePdXNehjPVt7CZ1WMkKrqB6zDc34d2vpLej", "Expiration": "2015-04-17T13:40:18Z", "Type": "AWS-HMAC"}'
 
-And watch the logging info in the other two. Also, by default the
+And watch the request logging in the other two terminals and in your syslog. Also, by default the
 credentials are refreshed every minute, so you should see some logging
 info about that.
 
