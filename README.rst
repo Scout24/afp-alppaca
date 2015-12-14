@@ -114,6 +114,18 @@ service with ``sudo service alppaca start``.
 
 Usage of the init script: ``alppaca <start|restart|stop|status>``
 
+set alppaca to assume a different role
+--------------------------------------
+You can configure alppaca to issue a assume_role API call using the configuration.
+This can be useful when you want to assume the role of another account::
+
+  assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
+
+In case a proxy is required in order to connect to AWS, use this config::
+
+  aws_proxy_host: my_proxy.local
+  aws_proxy_port: 3128
+
 redirecting alppaca logs in rsyslog
 -----------------------------------
 
