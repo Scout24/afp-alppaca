@@ -6,9 +6,10 @@ AFP-alppaca
    :alt: Travis build status image
    :target: https://travis-ci.org/ImmobilienScout24/afp-alppaca
 
-.. image:: https://coveralls.io/repos/ImmobilienScout24/afp-alppaca/badge.png?branch=master
+.. image:: https://coveralls.io/repos/ImmobilienScout24/afp-alppaca/badge.svg?branch=master
     :alt: Coverage status
     :target: https://coveralls.io/r/ImmobilienScout24/afp-alppaca?branch=master
+
 
 A(mazing) Local Prefetch Proxy for Amazon CredentiAls (using AFP)
 
