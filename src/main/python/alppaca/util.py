@@ -3,7 +3,7 @@ from __future__ import print_function, absolute_import, division
 import logging
 import sys
 import yamlreader
-from pils import _get_item_from_module
+from pils import get_item_from_module
 
 
 def levelname_to_integer(levelname):
@@ -27,7 +27,7 @@ def setup_logging(config):
         'args': [],
         'kwargs': {'address': '/dev/log'}}
     handler_config = handler_config or default_config
-    klass = _get_item_from_module(handler_config['module'],
+    klass = get_item_from_module(handler_config['module'],
                                   handler_config['class'])
     args = handler_config.get('args', ())
     kwargs = handler_config.get('kwargs', {})
