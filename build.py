@@ -30,6 +30,7 @@ def set_properties(project):
     project.depends_on("apscheduler")
     project.depends_on("bottle")
     project.depends_on("isodate")
+    project.depends_on("pils")
     project.build_depends_on("mock")
     project.build_depends_on("requests-mock")
     project.depends_on("webtest")
