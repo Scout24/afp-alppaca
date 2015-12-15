@@ -9,10 +9,10 @@ from random import uniform
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
-from alppaca.ims_interface import NoRolesFoundException
+from afp_alppaca.ims_interface import NoRolesFoundException
 import pytz
 
-from alppaca.delaytrigger import DelayTrigger
+from afp_alppaca.delaytrigger import DelayTrigger
 
 
 class Scheduler(object):

@@ -9,7 +9,7 @@ python:
   - "pypy3"
 
 install:
-  # Work around for https://github.com/ImmobilienScout24/alppaca/issues/13
+  # Work around for https://github.com/ImmobilienScout24/afp-alppaca/issues/13
   # With setup.cfg present, pip does not work.
   - rm -f setup.cfg
   - pip install pybuilder

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import argparse
 
-from alppaca.main import run_scheduler_and_webserver
-from alppaca.util import load_config
+from afp_alppaca.main import run_scheduler_and_webserver
+from afp_alppaca.util import load_config
 
 
 def main():

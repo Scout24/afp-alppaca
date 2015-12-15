@@ -4,8 +4,8 @@ import json
 import logging
 import socket
 
-from alppaca import NoCredentialsFoundException
-from alppaca.compat import OrderedDict
+from afp_alppaca import NoCredentialsFoundException
+from afp_alppaca.compat import OrderedDict
 
 from boto.sts import connect_to_region
 

@@ -3,7 +3,7 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 import requests
 import logging
 
-from alppaca.compat import OrderedDict
+from afp_alppaca.compat import OrderedDict
 
 
 class NoRolesFoundException(Exception):

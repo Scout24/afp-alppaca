@@ -2,12 +2,12 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 
 import sys
 
-from alppaca.assume_role import AssumedRoleCredentialsProvider
-from alppaca.ims_interface import IMSCredentialsProvider
-from alppaca.scheduler import Scheduler
-from alppaca.webapp import WebApp
-from alppaca.util import setup_logging
-from alppaca.compat import OrderedDict
+from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
+from afp_alppaca.ims_interface import IMSCredentialsProvider
+from afp_alppaca.scheduler import Scheduler
+from afp_alppaca.webapp import WebApp
+from afp_alppaca.util import setup_logging
+from afp_alppaca.compat import OrderedDict
 
 
 def run_scheduler_and_webserver(config):

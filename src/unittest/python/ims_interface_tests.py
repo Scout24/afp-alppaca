@@ -7,8 +7,8 @@ import requests_mock
 import requests
 import logging
 
-from alppaca import IMSCredentialsProvider, NoRolesFoundException, NoCredentialsFoundException
-from alppaca.compat import unittest
+from afp_alppaca import IMSCredentialsProvider, NoRolesFoundException, NoCredentialsFoundException
+from afp_alppaca.compat import unittest
 from test_utils import json_response
 
 

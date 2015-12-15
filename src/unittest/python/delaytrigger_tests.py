@@ -9,9 +9,9 @@ import time
 from mock import patch
 import pytz
 
-from alppaca.delaytrigger import DelayTrigger
-from alppaca.compat import unittest
-from alppaca.scheduler import Scheduler, backoff_refresh_generator
+from afp_alppaca.delaytrigger import DelayTrigger
+from afp_alppaca.compat import unittest
+from afp_alppaca.scheduler import Scheduler, backoff_refresh_generator
 from test_utils import FixedDateTime
 
 
@@ -36,7 +36,7 @@ class DelayTriggerTest(unittest.TestCase):
         return seconds
 
     @patch('datetime.datetime', FixedDateTime)
-    @patch('alppaca.delaytrigger.DateTrigger.__init__')
+    @patch('afp_alppaca.delaytrigger.DateTrigger.__init__')
     def test_should_compute_time_delta_for_datetrigger_for_a_given_date(self, datetrigger_mock):
         DelayTrigger(10)
 
@@ -44,14 +44,14 @@ class DelayTriggerTest(unittest.TestCase):
         datetrigger_mock.assert_called_with(run_date=expected_run_date)
 
     @patch('datetime.datetime', FixedDateTime)
-    @patch('alppaca.delaytrigger.DateTrigger.__init__')
+    @patch('afp_alppaca.delaytrigger.DateTrigger.__init__')
     def test_zero_is_a_valid_delay(self, datetrigger_mock):
         DelayTrigger(0)
 
         expected_run_date = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=pytz.utc,)
         datetrigger_mock.assert_called_with(run_date=expected_run_date)
 
-    @patch('alppaca.delaytrigger.DateTrigger.__init__')
+    @patch('afp_alppaca.delaytrigger.DateTrigger.__init__')
     def test_should_call_datetrigger_with_none_if_called_with_negative_delta(self, datetrigger_mock):
         DelayTrigger(-10)
 

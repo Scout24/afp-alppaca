@@ -4,8 +4,8 @@ import mock
 import logging
 from webtest import TestApp
 
-from alppaca.webapp import WebApp
-from alppaca.compat import unittest, OrderedDict
+from afp_alppaca.webapp import WebApp
+from afp_alppaca.compat import unittest, OrderedDict
 from test_utils import json_response
 
 

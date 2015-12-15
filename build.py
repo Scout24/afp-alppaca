@@ -12,7 +12,7 @@ use_plugin("python.integrationtest")
 use_plugin('copy_resources')
 
 
-name = "alppaca"
+name = "afp-alppaca"
 description = """
     alppaca is a client-side daemon that mimics the AWS meta-data service on link-local 169.254.169.254.
     It is useful for fetching IAM role based credentials for instances not based in Amazon.
@@ -44,7 +44,7 @@ def set_properties(project):
     project.get_property('copy_resources_glob').append('pre-install.sh')
     project.get_property('copy_resources_glob').append('post-install.sh')
     project.install_file('/etc/init.d', 'resources/alppaca')
-    project.get_property('coverage_exceptions').append('alppaca.util')
+    project.get_property('coverage_exceptions').append('afp_alppaca.util')
 
 
 @init(environments='teamcity')

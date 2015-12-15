@@ -4,8 +4,8 @@ import requests
 import time
 from multiprocessing import Process
 
-from alppaca.main import run_scheduler_and_webserver
-from alppaca.server_mock import MockIms
+from afp_alppaca.main import run_scheduler_and_webserver
+from afp_alppaca.server_mock import MockIms
 
 class AlppacaIntegrationTest(object):
     def __init__(self, config):
