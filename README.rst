@@ -1,5 +1,5 @@
 =======
-alppaca
+AFP-alppaca
 =======
 
 .. image:: https://travis-ci.org/ImmobilienScout24/alppaca.png?branch=master
@@ -10,7 +10,7 @@ alppaca
     :alt: Coverage status
     :target: https://coveralls.io/r/ImmobilienScout24/alppaca?branch=master
 
-A(mazing) Local Prefetch Proxy for Amazon CredentiAls
+A(mazing) Local Prefetch Proxy for Amazon CredentiAls (using AFP)
 
 About
 =====
