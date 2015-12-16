@@ -95,6 +95,8 @@ are loaded and merged in alphabetical order by yamlreader.
   ## Proxy settings for assume_role call to aws
   # aws_proxy_host: my_proxy.local
   # aws_proxy_port: 3128
+  ## Connect to specified region for assume_role call
+  # aws_region: eu-central-1
 
 Source: ``src/main/python/resources/example_config.yaml``
 

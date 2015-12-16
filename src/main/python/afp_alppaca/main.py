@@ -37,7 +37,8 @@ def run_scheduler_and_webserver(config):
                 credentials_provider,
                 role_to_assume,
                 config.get('aws_proxy_host'),
-                config.get('aws_proxy_port')
+                config.get('aws_proxy_port'),
+                config.get('aws_region')
             )
 
         Scheduler(credentials, credentials_provider).refresh_credentials()

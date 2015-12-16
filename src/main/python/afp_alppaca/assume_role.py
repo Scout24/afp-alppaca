@@ -11,12 +11,13 @@ from boto.sts import connect_to_region
 
 
 class AssumedRoleCredentialsProvider(object):
-    def __init__(self, credentials_provider, role_to_assume, aws_proxy_host=None, aws_proxy_port=None):
+    def __init__(self, credentials_provider, role_to_assume, aws_proxy_host=None, aws_proxy_port=None, aws_region=None):
         self.credentials_provider = credentials_provider
         self.role_to_assume = role_to_assume
         self.aws_proxy_host = aws_proxy_host
         self.aws_proxy_port = aws_proxy_port
         self.logger = logging.getLogger(__name__)
+        self.region = aws_region or "eu-central-1"
 
     def get_credentials_for_all_roles(self):
         self.logger.debug("Getting credentials for all roles...")
@@ -39,10 +40,9 @@ class AssumedRoleCredentialsProvider(object):
 
     def get_credentials_for_assumed_role(self, access_key, secret_key, token):
         results = OrderedDict()
-        region = "eu-central-1"
-        self.logger.debug("Connecting to AWS region %s ...", region)
+        self.logger.debug("Connecting to AWS region %s ...", self.region)
         try:
-            conn = connect_to_region(region,
+            conn = connect_to_region(self.region,
                                      aws_access_key_id=access_key,
                                      aws_secret_access_key=secret_key,
                                      security_token=token,
