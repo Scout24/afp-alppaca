@@ -3,14 +3,7 @@ from __future__ import print_function, absolute_import, division
 import logging
 import sys
 import yamlreader
-from pils import get_item_from_module
-
-
-def levelname_to_integer(levelname):
-    levelname = levelname.lower()
-    level_translation = {'debug': logging.DEBUG, 'info': logging.INFO,
-                         'warning': logging.WARNING, 'error': logging.ERROR}
-    return level_translation[levelname]
+from pils import get_item_from_module, levelname_to_integer
 
 
 def setup_logging(config):
