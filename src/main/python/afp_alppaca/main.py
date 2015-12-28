@@ -11,12 +11,11 @@ from afp_alppaca.compat import OrderedDict
 
 
 def run_scheduler_and_webserver(config):
-    logging_config = None
     try:
         logger = setup_logging(config)
     except Exception:
-        print("Could not setup logging with config '{0}'".format(
-            logging_config), file=sys.stderr)
+        print("Could not setup logging with config '{0}'".format(config),
+              file=sys.stderr)
         raise
     logger.info("Alppaca starting up...")
     try:
