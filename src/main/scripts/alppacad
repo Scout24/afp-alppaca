@@ -1,16 +1,5 @@
 #!/usr/bin/env python
 
-### BEGIN INIT INFO
-# Provides: alppaca
-# Required-Start:
-# Required-Stop:
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
-# Short-Description: Alppaca
-# Description: A(mazing)LocalPrefetchProxyforAmazonCredentiAls
-### END INIT INFO
-
-
 import argparse
 
 from succubus import Daemon

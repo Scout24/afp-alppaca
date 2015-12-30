@@ -44,7 +44,7 @@ def set_properties(project):
     project.get_property('copy_resources_glob').append('setup.cfg')
     project.get_property('copy_resources_glob').append('pre-install.sh')
     project.get_property('copy_resources_glob').append('post-install.sh')
-    project.install_file('/etc/init.d/alppaca', 'src/main/scripts/alppacad')
+    project.install_file('/etc/init.d', 'resources/alppaca')
     project.get_property('coverage_exceptions').append('afp_alppaca.util')
 
 
