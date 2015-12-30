@@ -12,11 +12,7 @@ class AlppacaDaemon(Daemon):
     def run(self):
         args = self.parse_arguments()
         config = load_config(args.config)
-
-        config['bind_port'] = 4242
-
         run_scheduler_and_webserver(config)
-
 
     def parse_arguments(self):
         parser = argparse.ArgumentParser()
@@ -25,6 +21,7 @@ class AlppacaDaemon(Daemon):
             default='/etc/alppaca')
 
         return parser.parse_args()
+
 
 if __name__ == "__main__":
     # FIXME: Use proper pid file directory
