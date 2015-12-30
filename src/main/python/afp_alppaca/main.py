@@ -46,7 +46,7 @@ def run_scheduler_and_webserver(config):
         bind_port = config.get('bind_port', '25772')
         logger.debug("Starting webserver on %s:%s", bind_ip, bind_port)
         webapp = WebApp(credentials)
-        webapp.run(host=bind_ip, port=bind_port)
+        webapp.run(host=bind_ip, port=bind_port, quiet=True)
     except Exception:
         logger.exception("Error in Alppaca")
     finally:
