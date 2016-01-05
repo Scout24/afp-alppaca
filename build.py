@@ -12,7 +12,7 @@ use_plugin("python.integrationtest")
 use_plugin('copy_resources')
 
 
-name = "afp-alppaca"
+name = "afp-alppaca-succapa"
 description = """
     alppaca is a client-side daemon that mimics the AWS meta-data service on link-local 169.254.169.254.
     It is useful for fetching IAM role based credentials for instances not based in Amazon.
