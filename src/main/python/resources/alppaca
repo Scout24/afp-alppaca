@@ -12,4 +12,4 @@
 # Description: A(mazing)LocalPrefetchProxyforAmazonCredentiAls
 ### END INIT INFO
 
-alppacad $@ >/dev/null 2>&1 </dev/null
+alppacad $@
