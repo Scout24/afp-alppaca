@@ -26,5 +26,5 @@ class AlppacaDaemon(Daemon):
 
 if __name__ == "__main__":
     # FIXME: Use proper pid file directory
-    alppaca = AlppacaDaemon(pid_file="/tmp/alppaca.pid")
+    alppaca = AlppacaDaemon(pid_file="/var/run/alppacad/alppacad.pid")
     sys.exit(alppaca.action())
