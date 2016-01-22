@@ -98,6 +98,10 @@ are loaded and merged in alphabetical order by yamlreader.
   ## Connect to specified region for assume_role call
   # aws_region: eu-central-1
 
+  ## Drop privileges and run with this user and group
+  user: alppaca
+  group: alppaca
+
 Source: ``src/main/python/resources/example_config.yaml``
 
 iptables configuration
