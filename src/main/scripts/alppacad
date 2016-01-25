@@ -11,9 +11,7 @@ from afp_alppaca.util import load_config
 
 class AlppacaDaemon(Daemon):
     def run(self):
-        args = self.parse_arguments()
-        config = load_config(args.config)
-        run_scheduler_and_webserver(config)
+        run_scheduler_and_webserver(self.config)
 
     def parse_arguments(self):
         parser = argparse.ArgumentParser()
@@ -22,6 +20,10 @@ class AlppacaDaemon(Daemon):
             default='/etc/alppaca')
 
         return parser.parse_args()
+
+    def load_configuration(self):
+        args = self.parse_arguments()
+        self.config = load_config(args.config)
 
 
 if __name__ == "__main__":
