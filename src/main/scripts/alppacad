@@ -2,8 +2,12 @@
 
 import argparse
 import sys
+import os
 
 from succubus import Daemon
+from pwd import getpwnam
+from grp import getgrnam
+
 
 from afp_alppaca.main import run_scheduler_and_webserver
 from afp_alppaca.util import load_config
@@ -27,6 +31,16 @@ class AlppacaDaemon(Daemon):
 
 
 if __name__ == "__main__":
-    # FIXME: Use proper pid file directory
-    alppaca = AlppacaDaemon(pid_file="/var/run/alppacad/alppacad.pid")
+    pidpath = "/var/run/alppacad"
+    pidfile = os.path.join(pidpath, "alppacad.pid")
+    alppaca = AlppacaDaemon(pid_file=pidfile)
+    if not os.path.exists(pidpath):
+        os.mkdir(pidpath)
+    elif not os.path.isdir(pidpath):
+        os.remove(pidpath)
+        os.mkdir(pidpath)
+    uid = getpwnam(alppaca.user or "root").pw_uid
+    gid = getgrnam(alppaca.group or "root").gr_gid
+    os.chown(pidpath, uid, gid)
+
     sys.exit(alppaca.action())
