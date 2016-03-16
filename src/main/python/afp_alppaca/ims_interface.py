@@ -36,7 +36,7 @@ class IMSCredentialsProvider(object):
                     self.logger.debug("Request for roles successful, but empty response")
                     raise NoRolesFoundException("Server response was empty; host has no roles?")
 
-                roles_list = [line.strip() for line in response.text.split("\n")] if response.text else []
+                roles_list = [line.strip() for line in response.text.split("\n")]
                 self.logger.debug("Received roles: {0}".format(roles_list))
                 return roles_list
             else:
