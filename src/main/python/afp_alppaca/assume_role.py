@@ -11,7 +11,8 @@ from boto.sts import connect_to_region
 
 
 class AssumedRoleCredentialsProvider(object):
-    def __init__(self, credentials_provider, role_to_assume, aws_proxy_host=None, aws_proxy_port=None, aws_region=None):
+    def __init__(self, credentials_provider, role_to_assume,
+                 aws_proxy_host=None, aws_proxy_port=None, aws_region=None):
         self.credentials_provider = credentials_provider
         self.role_to_assume = role_to_assume
         self.aws_proxy_host = aws_proxy_host
@@ -23,7 +24,8 @@ class AssumedRoleCredentialsProvider(object):
         self.logger.debug("Getting credentials for all roles...")
         original_credentials = self.credentials_provider.get_credentials_for_all_roles()
         if not original_credentials:
-            raise NoCredentialsFoundException("Got no credentials from: " + str(self.credentials_provider))
+            raise NoCredentialsFoundException(
+                "Got no credentials from: %s" % self.credentials_provider)
 
         for role in original_credentials:
             self.logger.debug("Got credentials for role '%s':", role)
@@ -50,7 +52,9 @@ class AssumedRoleCredentialsProvider(object):
                                      proxy_port=self.aws_proxy_port
                                      )
             try:
-                response = conn.assume_role(role_arn=self.role_to_assume, role_session_name=self.get_session_name())
+                response = conn.assume_role(
+                    role_arn=self.role_to_assume,
+                    role_session_name=self.get_session_name())
                 self.logger.info("Successfully got credentials for role: %s", self.role_to_assume)
             finally:
                 conn.close()
