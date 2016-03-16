@@ -27,18 +27,22 @@ class AssumedRoleCredentialsProvider(object):
             raise NoCredentialsFoundException(
                 "Got no credentials from: %s" % self.credentials_provider)
 
-        for role in original_credentials:
+        for role, role_credentials in original_credentials.items():
             self.logger.debug("Got credentials for role '%s':", role)
-            access_key, secret_key, token = self.parse_credentials_json(original_credentials[role])
-            self.logger.debug("Access Key: %s", access_key)
-            self.logger.debug("Secret Key (partial): %s...", secret_key[:10])
-            self.logger.debug("Token (partial): %s...", token[:10])
+            access_key, secret_key, token = self.parse_credentials_json(role_credentials)
             return self.get_credentials_for_assumed_role(access_key, secret_key, token)
 
-    @staticmethod
-    def parse_credentials_json(credentials_json):
+    def parse_credentials_json(self, credentials_json):
         credentials_dict = json.loads(credentials_json)
-        return credentials_dict['AccessKeyId'], credentials_dict['SecretAccessKey'], credentials_dict['Token']
+
+        access_key = credentials_dict['AccessKeyId']
+        secret_key = credentials_dict['SecretAccessKey']
+        token = credentials_dict['Token']
+        self.logger.debug("Access Key: %s", access_key)
+        self.logger.debug("Secret Key (partial): %s...", secret_key[:10])
+        self.logger.debug("Token (partial): %s...", token[:10])
+
+        return access_key, secret_key, token
 
     def get_credentials_for_assumed_role(self, access_key, secret_key, token):
         results = OrderedDict()
