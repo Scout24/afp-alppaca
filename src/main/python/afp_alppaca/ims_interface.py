@@ -43,8 +43,7 @@ class IMSCredentialsProvider(object):
                 self.logger.error('Request to "%s" failed', request_url)
                 response.raise_for_status()
         except Exception as error:
-            self.logger.warn("Error getting roles")
-            self.logger.debug(str(error))
+            self.logger.exception("Error getting roles:")
             raise NoRolesFoundException(str(error))
 
     def get_credentials(self, role):
