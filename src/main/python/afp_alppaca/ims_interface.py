@@ -31,20 +31,18 @@ class IMSCredentialsProvider(object):
             self.logger.debug("Requesting Roles from '%s'", request_url)
             response = requests.get(request_url)
 
-            if response.status_code == 200:
-                if not response.text:
-                    self.logger.debug("Request for roles successful, but empty response")
-                    raise NoRolesFoundException("Server response was empty; host has no roles?")
-
-                roles_list = [line.strip() for line in response.text.split("\n")] if response.text else []
-                self.logger.debug("Received roles: {0}".format(roles_list))
-                return roles_list
-            else:
+            if response.status_code != 200:
                 self.logger.error('Request to "%s" failed', request_url)
                 response.raise_for_status()
+            if not response.text:
+                self.logger.debug("Request for roles successful, but empty response")
+                raise NoRolesFoundException("Server response was empty; host has no roles?")
+
+            roles_list = [line.strip() for line in response.text.split("\n")]
+            self.logger.debug("Received roles: {0}".format(roles_list))
+            return roles_list
         except Exception as error:
-            self.logger.warn("Error getting roles")
-            self.logger.debug(str(error))
+            self.logger.exception("Error getting roles:")
             raise NoRolesFoundException(str(error))
 
     def get_credentials(self, role):
@@ -57,17 +55,19 @@ class IMSCredentialsProvider(object):
                 role=role)
             self.logger.debug("Requesting Credentials from '%s'", request_url)
             response = requests.get(request_url)
-            if response.status_code == 200:
-                if not response.text:
-                    self.logger.debug("Request for credentials successful, but empty response")
-                    raise NoCredentialsFoundException("Server response was empty; no credentials for role: {0}".format(role))
-                self.logger.debug("Request for credentials successful")
-                return response.text
-            else:
+
+            if response.status_code != 200:
                 self.logger.error('Request for credentials to "%s" failed', request_url)
                 response.raise_for_status()
+            if not response.text:
+                self.logger.debug("Request for credentials successful, but empty response")
+                raise NoCredentialsFoundException(
+                    "Server response was empty; no credentials for role: {0}".format(role))
+
+            self.logger.debug("Request for credentials successful")
+            return response.text
         except Exception as e:
-            self.logger.exception("Error getting credentials:")
+            self.logger.exception("Error getting credentials for role '%s':", role)
             raise NoCredentialsFoundException(str(e))
 
     def get_credentials_for_all_roles(self):
