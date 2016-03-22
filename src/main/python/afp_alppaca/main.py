@@ -11,32 +11,6 @@ from afp_alppaca.util import setup_logging, load_config
 from afp_alppaca.compat import OrderedDict
 from succubus import Daemon
 
-def get_credentials_provider(config, logger):
-    # initialize the credentials provider
-    ims_host_port = '%s:%s' % (config['ims_host'], config['ims_port'])
-    ims_protocol = config.get('ims_protocol', 'https')
-    logger.info("Will get credentials from '%s' using '%s'",
-                ims_host_port, ims_protocol)
-    credentials_provider = IMSCredentialsProvider(ims_host_port,
-                                                  ims_protocol=ims_protocol)
-
-    role_to_assume = config.get('assume_role')
-    if role_to_assume:
-        logger.info("Option assume_role set to '%s'", role_to_assume)
-        credentials_provider = AssumedRoleCredentialsProvider(
-            credentials_provider,
-            role_to_assume,
-            config.get('aws_proxy_host'),
-            config.get('aws_proxy_port'),
-            config.get('aws_region')
-        )
-    return credentials_provider
-
-def launch_scheduler(config, logger, credentials):
-    credentials_provider = get_credentials_provider(config, logger)
-    scheduler = Scheduler(credentials, credentials_provider)
-    scheduler.refresh_credentials()
-
 def run_webapp(config, logger, credentials):
     bind_ip = config.get('bind_ip', '127.0.0.1')
     bind_port = config.get('bind_port', '25772')
@@ -52,10 +26,10 @@ class AlppacaDaemon(Daemon):
             # Credentials is a shared object that connects the scheduler and the
             # bottle_app. The scheduler writes into it and the bottle_app reads
             # from it.
-            credentials = OrderedDict()
+            self.credentials = OrderedDict()
 
-            launch_scheduler(self.config, self.logger, credentials)
-            run_webapp(self.config, self.logger, credentials)
+            self.launch_scheduler()
+            run_webapp(self.config, self.logger, self.credentials)
         except Exception:
             self.logger.exception("Error in Alppaca")
         finally:
@@ -83,3 +57,29 @@ class AlppacaDaemon(Daemon):
             raise
         else:
             self.logger.debug("Alppaca logging was set up")
+
+    def get_credentials_provider(self):
+        # initialize the credentials provider
+        ims_host_port = '%s:%s' % (self.config['ims_host'], self.config['ims_port'])
+        ims_protocol = self.config.get('ims_protocol', 'https')
+        self.logger.info("Will get credentials from '%s' using '%s'",
+                    ims_host_port, ims_protocol)
+        credentials_provider = IMSCredentialsProvider(ims_host_port,
+                                                      ims_protocol=ims_protocol)
+
+        role_to_assume = self.config.get('assume_role')
+        if role_to_assume:
+            self.logger.info("Option assume_role set to '%s'", role_to_assume)
+            credentials_provider = AssumedRoleCredentialsProvider(
+                credentials_provider,
+                role_to_assume,
+                self.config.get('aws_proxy_host'),
+                self.config.get('aws_proxy_port'),
+                self.config.get('aws_region')
+            )
+        return credentials_provider
+
+    def launch_scheduler(self):
+        credentials_provider = self.get_credentials_provider()
+        scheduler = Scheduler(self.credentials, credentials_provider)
+        scheduler.refresh_credentials()
