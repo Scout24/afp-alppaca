@@ -27,7 +27,6 @@ def set_properties(project):
     if sys.version_info[0:2] < (2, 7):
         project.depends_on("ordereddict")
         project.depends_on("unittest2")
-    project.depends_on("apscheduler")
     project.depends_on("bottle")
     project.depends_on("isodate")
     project.depends_on("pils>=0.1.21")
