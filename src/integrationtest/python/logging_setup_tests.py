@@ -2,7 +2,6 @@ from __future__ import print_function, absolute_import, division
 
 import tempfile
 
-from afp_alppaca.main import run_scheduler_and_webserver
 from afp_alppaca.compat import unittest
 from test_utils import AlppacaIntegrationTest
 
