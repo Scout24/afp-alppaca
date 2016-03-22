@@ -1,13 +1,15 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
+import argparse
 import sys
 
 from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
 from afp_alppaca.ims_interface import IMSCredentialsProvider
 from afp_alppaca.scheduler import Scheduler
 from afp_alppaca.webapp import WebApp
-from afp_alppaca.util import setup_logging
+from afp_alppaca.util import setup_logging, load_config
 from afp_alppaca.compat import OrderedDict
+from succubus import Daemon
 
 def get_credentials_provider(config, logger):
     # initialize the credentials provider
@@ -44,24 +46,40 @@ def run_webapp(config, logger, credentials):
     webapp.run(host=bind_ip, port=bind_port, quiet=True)
 
 
-def run_scheduler_and_webserver(config):
-    try:
-        logger = setup_logging(config)
-    except Exception:
-        print("Could not setup logging with config '{0}'".format(config),
-              file=sys.stderr)
-        raise
-    logger.info("Alppaca starting up...")
+class AlppacaDaemon(Daemon):
+    def run(self):
+        try:
+            # Credentials is a shared object that connects the scheduler and the
+            # bottle_app. The scheduler writes into it and the bottle_app reads
+            # from it.
+            credentials = OrderedDict()
 
-    try:
-        # Credentials is a shared object that connects the scheduler and the
-        # bottle_app. The scheduler writes into it and the bottle_app reads
-        # from it.
-        credentials = OrderedDict()
+            launch_scheduler(self.config, self.logger, credentials)
+            run_webapp(self.config, self.logger, credentials)
+        except Exception:
+            self.logger.exception("Error in Alppaca")
+        finally:
+            self.logger.info("Alppaca shutting down...")
 
-        launch_scheduler(config, logger, credentials)
-        run_webapp(config, logger, credentials)
-    except Exception:
-        logger.exception("Error in Alppaca")
-    finally:
-        logger.info("Alppaca shutting down...")
+    def parse_arguments(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument(
+            '-c', '--config', help="Alppaca YAML config directory", type=str,
+            default='/etc/alppaca')
+
+        return parser.parse_args()
+
+    def load_configuration(self):
+        args = self.parse_arguments()
+        self.config = load_config(args.config)
+        self.setup_logging()
+
+    def setup_logging(self):
+        try:
+            self.logger = setup_logging(self.config)
+        except Exception:
+            print("Could not setup logging with config '{0}'".format(self.config),
+                  file=sys.stderr)
+            raise
+        else:
+            self.logger.debug("Alppaca logging was set up")

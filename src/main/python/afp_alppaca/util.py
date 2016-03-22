@@ -20,10 +20,18 @@ def setup_logging(config):
         'args': [],
         'kwargs': {'address': '/dev/log'}}
     handler_config = handler_config or default_config
-    klass = get_item_from_module(handler_config['module'],
-                                  handler_config['class'])
     args = handler_config.get('args', ())
     kwargs = handler_config.get('kwargs', {})
+    print("Logs are written to {module}.{klass} with args {args!r} and "
+          "kwargs {kwargs!r})".format(
+            module=handler_config['module'],
+            klass=handler_config['class'],
+            args=args,
+            kwargs=kwargs
+        ))
+
+    klass = get_item_from_module(handler_config['module'],
+                                  handler_config['class'])
     try:
         handler = klass(*args, **kwargs)
     except Exception as exc:

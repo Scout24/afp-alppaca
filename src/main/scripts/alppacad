@@ -1,33 +1,16 @@
 #!/usr/bin/env python
+from __future__ import print_function, absolute_import, division
 
-import argparse
 import sys
 import os
 
-from succubus import Daemon
 from pwd import getpwnam
 from grp import getgrnam
 
 
-from afp_alppaca.main import run_scheduler_and_webserver
-from afp_alppaca.util import load_config
+from afp_alppaca.main import AlppacaDaemon
 
 
-class AlppacaDaemon(Daemon):
-    def run(self):
-        run_scheduler_and_webserver(self.config)
-
-    def parse_arguments(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            '-c', '--config', help="Alppaca YAML config directory", type=str,
-            default='/etc/alppaca')
-
-        return parser.parse_args()
-
-    def load_configuration(self):
-        args = self.parse_arguments()
-        self.config = load_config(args.config)
 
 
 if __name__ == "__main__":

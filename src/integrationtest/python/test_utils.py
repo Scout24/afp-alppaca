@@ -4,8 +4,9 @@ import requests
 import time
 from multiprocessing import Process
 
-from afp_alppaca.main import run_scheduler_and_webserver
+from afp_alppaca.main import AlppacaDaemon
 from afp_alppaca.server_mock import MockIms
+
 
 class AlppacaIntegrationTest(object):
     def __init__(self, config):
@@ -30,7 +31,10 @@ class AlppacaIntegrationTest(object):
         self.alppaca_job.join()
 
     def run_alppaca(self):
-        run_scheduler_and_webserver(self.config)
+        daemon = AlppacaDaemon(pid_file="not used")
+        daemon.config = self.config
+        daemon.setup_logging()
+        daemon.run()
 
     def run_api_server_mock(self):
         MockIms().run()
