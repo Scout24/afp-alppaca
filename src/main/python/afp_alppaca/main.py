@@ -11,14 +11,6 @@ from afp_alppaca.util import setup_logging, load_config
 from afp_alppaca.compat import OrderedDict
 from succubus import Daemon
 
-def run_webapp(config, logger, credentials):
-    bind_ip = config.get('bind_ip', '127.0.0.1')
-    bind_port = config.get('bind_port', '25772')
-    logger.debug("Starting webserver on %s:%s", bind_ip, bind_port)
-
-    webapp = WebApp(credentials)
-    webapp.run(host=bind_ip, port=bind_port, quiet=True)
-
 
 class AlppacaDaemon(Daemon):
     def run(self):
@@ -29,7 +21,7 @@ class AlppacaDaemon(Daemon):
             self.credentials = OrderedDict()
 
             self.launch_scheduler()
-            run_webapp(self.config, self.logger, self.credentials)
+            self.run_webapp()
         except Exception:
             self.logger.exception("Error in Alppaca")
         finally:
@@ -57,6 +49,14 @@ class AlppacaDaemon(Daemon):
             raise
         else:
             self.logger.debug("Alppaca logging was set up")
+
+    def run_webapp(self):
+        bind_ip = self.config.get('bind_ip', '127.0.0.1')
+        bind_port = self.config.get('bind_port', '25772')
+        self.logger.debug("Starting webserver on %s:%s", bind_ip, bind_port)
+
+        webapp = WebApp(self.credentials)
+        webapp.run(host=bind_ip, port=bind_port, quiet=True)
 
     def get_credentials_provider(self):
         # initialize the credentials provider
