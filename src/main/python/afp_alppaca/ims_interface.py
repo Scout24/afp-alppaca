@@ -15,9 +15,8 @@ class NoCredentialsFoundException(Exception):
 
 
 class IMSCredentialsProvider(object):
-
-    def __init__(self, ims_url, ims_protocol="https", debug=False):
-        self.ims_host = ims_url
+    def __init__(self, ims_host, ims_protocol="https", debug=False):
+        self.ims_host = ims_host
         self.ims_protocol = ims_protocol
         self.logger = logging.getLogger(__name__)
 
