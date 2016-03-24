@@ -16,22 +16,22 @@ class NoCredentialsFoundException(Exception):
 
 class IMSCredentialsProvider(object):
     def __init__(self, ims_host, ims_protocol="https", debug=False):
-        self.ims_host = ims_host
-        self.ims_protocol = ims_protocol
         self.logger = logging.getLogger(__name__)
+
+        get_role_template = (
+            "{protocol}://{host}/latest/meta-data/iam/security-credentials/")
+        self.get_role_url = get_role_template.format(
+                protocol=ims_protocol, host=ims_host)
+        self.get_creds_template = self.get_role_url + '{role}'
 
     def get_roles(self):
         """ Obtain a role. """
         try:
-            request_template = "{protocol}://{host}/latest/meta-data/iam/security-credentials/"
-            request_url = request_template.format(
-                protocol=self.ims_protocol,
-                host=self.ims_host)
-            self.logger.debug("Requesting Roles from '%s'", request_url)
-            response = requests.get(request_url)
+            self.logger.debug("Requesting Roles from '%s'", self.get_role_url)
+            response = requests.get(self.get_role_url)
 
             if response.status_code != 200:
-                self.logger.error('Request to "%s" failed', request_url)
+                self.logger.error('Request to "%s" failed', self.get_role_url)
                 response.raise_for_status()
             if not response.text:
                 self.logger.debug("Request for roles successful, but empty response")
@@ -47,11 +47,7 @@ class IMSCredentialsProvider(object):
     def get_credentials(self, role):
         """" Obtain a set of temporary credentials given a role. """
         try:
-            request_template = "{protocol}://{host}/latest/meta-data/iam/security-credentials/{role}"
-            request_url = request_template.format(
-                protocol=self.ims_protocol,
-                host=self.ims_host,
-                role=role)
+            request_url = self.get_creds_template.format(role=role)
             self.logger.debug("Requesting Credentials from '%s'", request_url)
             response = requests.get(request_url)
 
