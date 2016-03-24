@@ -70,13 +70,15 @@ class IMSCredentialsProvider(object):
         results = OrderedDict()
 
         try:
-            for role in self.get_roles():
-                try:
-                    results[role] = self.get_credentials(role)
-                except NoCredentialsFoundException:
-                    self.logger.exception("Role %s didn't have any credentials.", role)
+            roles = self.get_roles()
         except NoRolesFoundException as error:
             self.logger.warn("Could not find any roles")
             self.logger.debug(str(error))
             raise
+
+        for role in roles:
+            try:
+                results[role] = self.get_credentials(role)
+            except NoCredentialsFoundException:
+                self.logger.exception("Role %s didn't have any credentials.", role)
         return results
