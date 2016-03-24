@@ -48,25 +48,25 @@ class Scheduler(object):
     def _refresh_credentials(self):
         """ Refresh credentials and schedule next refresh."""
         self.logger.debug("about to fetch credentials")
-        cached_credentials = None
+        new_credentials = None
         factor, max_interval = 1.5, 10
 
         try:
-            cached_credentials = self.credentials_provider.get_credentials_for_all_roles()
+            new_credentials = self.credentials_provider.get_credentials_for_all_roles()
         except NoRolesFoundException:
             factor, max_interval = 3, 300
         except Exception:
             self.logger.exception("Error in credential provider:")
 
-        if cached_credentials:
-            return self.update_credentials(cached_credentials)
+        if new_credentials:
+            return self.update_credentials(new_credentials)
         else:
             self.logger.info("No credentials found!")
             return self.do_backoff(factor=factor, max_interval=max_interval)
 
-    def update_credentials(self, cached_credentials):
+    def update_credentials(self, new_credentials):
         """ Update credentials and retrigger refresh """
-        self.credentials.update(cached_credentials)
+        self.credentials.update(new_credentials)
         self.logger.info("Got credentials")
         self.logger.debug(self.credentials)
         refresh_delta = self.extract_refresh_delta()
