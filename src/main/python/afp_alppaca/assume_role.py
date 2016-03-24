@@ -59,12 +59,14 @@ class AssumedRoleCredentialsProvider(object):
                 response = conn.assume_role(
                     role_arn=self.role_to_assume,
                     role_session_name=self.get_session_name())
-                self.logger.info("Successfully got credentials for role: %s", self.role_to_assume)
+                self.logger.info("Successfully got credentials for role: %s",
+                                 self.role_to_assume)
             finally:
                 conn.close()
             results[self.get_role_name()] = self.create_credentials_json(response)
         except Exception:
-            self.logger.exception("Could not assume the AWS role '%s':", self.role_to_assume)
+            self.logger.exception("Could not assume the AWS role '%s':",
+                                  self.role_to_assume)
 
         return results
 
