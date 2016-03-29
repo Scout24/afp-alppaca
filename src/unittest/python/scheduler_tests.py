@@ -101,6 +101,22 @@ class AcquireValidCredentialsTest(unittest.TestCase):
         scheduler._refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
+    @patch('afp_alppaca.scheduler.BackgroundScheduler')
+    def test_should_keep_valid_credentials_if_refresh_fails(self, scheduler_mock):
+        credentials_mock = OrderedDict()
+        credentials_provider_mock = Mock()
+        expected = OrderedDict({'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'})
+        credentials_provider_mock.get_credentials_for_all_roles.return_value = expected
+        scheduler = Scheduler(credentials_mock, credentials_provider_mock)
+        scheduler.refresh_credentials()
+        self.assertEqual(expected, credentials_mock)
+
+        # now, let's send in no credentials
+        credentials_provider_mock.get_credentials_for_all_roles.return_value = {}
+        scheduler.refresh_credentials()
+        self.assertEqual(expected, credentials_mock)
+        self.assertIsNotNone(scheduler.backoff)
+
 
 class TestExtractRefreshDelta(unittest.TestCase):
 
