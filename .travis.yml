@@ -6,7 +6,9 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-  - "pypy3"
+  # pypy3 on Travis raises ImportError when psutil (which is used by succubus)
+  # is imported.
+  #- "pypy3"
 
 install:
   # Work around for https://github.com/ImmobilienScout24/afp-alppaca/issues/13
