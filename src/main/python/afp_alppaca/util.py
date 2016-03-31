@@ -20,6 +20,16 @@ def setup_logging(config):
         'args': [],
         'kwargs': {'address': '/dev/log'}}
     handler_config = handler_config or default_config
+    handler = create_logging_handler(handler_config)
+
+    log_format = config.get('log_format', 'alppaca: [%(levelname)s] %(message)s')
+    formatter = logging.Formatter(log_format)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+    return logger
+
+def create_logging_handler(handler_config):
     args = handler_config.get('args', ())
     kwargs = handler_config.get('kwargs', {})
     print("Logs are written to {module}.{klass} with args {args!r} and "
@@ -40,13 +50,7 @@ def setup_logging(config):
         raise Exception(message.format(klass=klass, args=args,
                                        kwargs=kwargs, exc=exc))
 
-    log_format = config.get('log_format', 'alppaca: [%(levelname)s] %(message)s')
-    formatter = logging.Formatter(log_format)
-    handler.setFormatter(formatter)
-
-    logger.addHandler(handler)
-    return logger
-
+    return handler
 
 def load_config(config_dir):
     try:

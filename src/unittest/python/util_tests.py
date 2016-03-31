@@ -1,11 +1,12 @@
-from __future__ import print_function, absolute_import, unicode_literals, division
+from __future__ import print_function, absolute_import, division
 
+import logging
 import os
 import shutil
 import tempfile
 
 from afp_alppaca.compat import unittest
-from afp_alppaca.util import load_config
+from afp_alppaca.util import load_config, create_logging_handler
 
 
 class TestUtil(unittest.TestCase):
@@ -32,3 +33,18 @@ class TestUtil(unittest.TestCase):
         # If loading fails, the exception string must contain the confdir name.
         self.assertRaisesRegexp(Exception, self.tmpdir,
                                 load_config, self.tmpdir)
+
+    def test_create_logging_handler_good_case(self):
+        log_file_name = os.path.join(self.tmpdir, "unittest.log")
+        handler_config = {
+            'module': 'logging',
+            'class': 'FileHandler',
+            'args': [log_file_name],
+            'kwargs': {}
+        }
+
+        handler = create_logging_handler(handler_config)
+
+        expected_class = logging.FileHandler
+        self.assertIsInstance(handler, expected_class)
+        self.assertTrue(os.path.exists(log_file_name))
