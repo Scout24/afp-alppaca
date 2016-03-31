@@ -32,98 +32,87 @@ class TestBackoffRefereshGenerator(unittest.TestCase):
 
 
 class RefreshCredentialsTest(unittest.TestCase):
-
     def setUp(self):
         self.credentials_mock = {}
         self.credentials_provider_mock = Mock()
         self.scheduler = Scheduler(self.credentials_mock, self.credentials_provider_mock)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_get_valid_credentials_when_called_with_correct_date(self, build_trigger_mock):
-
+    def test_should_get_valid_credentials_when_called_with_correct_date(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {
             'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'
         }
 
-        self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(1.5)
+        next_sleep = self.scheduler._refresh_credentials()
+        self.assertEqual(next_sleep, 1.5)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_enter_backoff_state_on_empty_credentials(self, build_trigger_mock):
+    def test_should_enter_backoff_state_on_empty_credentials(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {}
 
         self.assertIsNone(self.scheduler.backoff)
-        self.scheduler.refresh_credentials()
+        self.scheduler._refresh_credentials()
         self.assertIsNotNone(self.scheduler.backoff)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_increment_refresh_delta_when_in_backoff_state(self, build_trigger_mock):
+    def test_should_increment_refresh_delta_when_in_backoff_state(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {}
-        self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(1.5)
-        self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(2.25)
-        self.scheduler.refresh_credentials()
-        build_trigger_mock.assert_called_with(3.375)
+        next_sleep = self.scheduler._refresh_credentials()
+        self.assertEqual(next_sleep, 1.5)
+        next_sleep = self.scheduler._refresh_credentials()
+        self.assertEqual(next_sleep, 2.25)
+        next_sleep = self.scheduler._refresh_credentials()
+        self.assertEqual(next_sleep, 3.375)
 
     @patch('datetime.datetime', FixedDateTime)
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_exit_backoff_state_on_valid_credentials(self, build_trigger_mock):
+    def test_should_exit_backoff_state_on_valid_credentials(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {
-            'test_role': '{"Expiration": "1970-01-01T00:00:59Z"}'
+                'test_role': '{"Expiration": "1970-01-01T00:00:59Z"}'
         }
         self.scheduler.backoff = True
-        self.scheduler.refresh_credentials()
+        self.scheduler._refresh_credentials()
         self.assertIsNone(self.scheduler.backoff)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_enter_backoff_state_on_expired_credentials(self, build_trigger_mock):
+    def test_should_enter_backoff_state_on_expired_credentials(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.return_value = {
-            'test_role': '{"Expiration": "1969-12-24T00:00:00Z"}'
+                'test_role': '{"Expiration": "1969-12-24T00:00:00Z"}'
         }
-        self.scheduler.refresh_credentials()
+        self.scheduler._refresh_credentials()
 
         self.assertIsNotNone(self.scheduler.backoff)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
-    def test_should_enter_backoff_state_on_exception(self, build_trigger_mock):
+    def test_should_enter_backoff_state_on_exception(self):
         self.credentials_provider_mock.get_credentials_for_all_roles.side_effect = Exception()
-        self.scheduler.refresh_credentials()
+        self.scheduler._refresh_credentials()
 
         self.assertIsNotNone(self.scheduler.backoff)
 
-    @patch('afp_alppaca.scheduler.Scheduler.build_trigger')
     @patch('afp_alppaca.scheduler.Scheduler.do_backoff')
-    def test_should_enter_backoff_state_on_no_roles_found_exception(self, do_backoff_mock, build_trigger_mock):
+    def test_should_enter_backoff_state_on_no_roles_found_exception(self, do_backoff_mock):
         self.credentials_provider_mock.get_credentials_for_all_roles.side_effect = NoRolesFoundException()
-        self.scheduler.refresh_credentials()
+        self.scheduler._refresh_credentials()
         do_backoff_mock.assert_called_with(factor=3, max_interval=300)
 
 
 class AcquireValidCredentialsTest(unittest.TestCase):
-    @patch('afp_alppaca.scheduler.BackgroundScheduler')
-    def test_should_acquire_valid_credentials(self, scheduler_mock):
+    def test_should_acquire_valid_credentials(self):
         credentials_mock = OrderedDict()
         credentials_provider_mock = Mock()
         expected = OrderedDict({'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'})
         credentials_provider_mock.get_credentials_for_all_roles.return_value = expected
         scheduler = Scheduler(credentials_mock, credentials_provider_mock)
-        scheduler.refresh_credentials()
+        scheduler._refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
-    @patch('afp_alppaca.scheduler.BackgroundScheduler')
-    def test_should_keep_valid_credentials_if_refresh_fails(self, scheduler_mock):
+    def test_should_keep_valid_credentials_if_refresh_fails(self):
         credentials_mock = OrderedDict()
         credentials_provider_mock = Mock()
         expected = OrderedDict({'test_role': '{"Expiration": "1970-01-01T00:00:00Z"}'})
         credentials_provider_mock.get_credentials_for_all_roles.return_value = expected
         scheduler = Scheduler(credentials_mock, credentials_provider_mock)
-        scheduler.refresh_credentials()
+        scheduler._refresh_credentials()
         self.assertEqual(expected, credentials_mock)
 
         # now, let's send in no credentials
         credentials_provider_mock.get_credentials_for_all_roles.return_value = {}
-        scheduler.refresh_credentials()
+        scheduler._refresh_credentials()
         self.assertEqual(expected, credentials_mock)
         self.assertIsNotNone(scheduler.backoff)
 

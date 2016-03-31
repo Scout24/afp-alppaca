@@ -2,6 +2,7 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 
 import argparse
 import sys
+import threading
 
 from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
 from afp_alppaca.ims_interface import IMSCredentialsProvider
@@ -82,4 +83,7 @@ class AlppacaDaemon(Daemon):
     def launch_scheduler(self):
         credentials_provider = self.get_credentials_provider()
         scheduler = Scheduler(self.credentials, credentials_provider)
-        scheduler.refresh_credentials()
+
+        scheduler_thread = threading.Thread(target=scheduler.refresh_credentials)
+        scheduler_thread.daemon = True
+        scheduler_thread.start()

@@ -11,8 +11,6 @@ from grp import getgrnam
 from afp_alppaca.main import AlppacaDaemon
 
 
-
-
 if __name__ == "__main__":
     pidpath = "/var/run/alppacad"
     pidfile = os.path.join(pidpath, "alppacad.pid")
