@@ -10,6 +10,10 @@ AFP-alppaca
     :alt: Coverage status
     :target: https://coveralls.io/r/ImmobilienScout24/afp-alppaca?branch=master
 
+.. image:: https://landscape.io/github/ImmobilienScout24/afp-alppaca/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/ImmobilienScout24/afp-alppaca/master
+   :alt: Code Health
+
 
 A(mazing) Local Prefetch Proxy for Amazon CredentiAls (using AFP)
 
