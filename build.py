@@ -26,7 +26,9 @@ def set_properties(project):
     project.set_property('install_dependencies_upgrade', True)
     if sys.version_info[0:2] < (2, 7):
         project.depends_on("ordereddict")
-        project.depends_on("unittest2")
+    if sys.version_info[0:2] < (3, 4):
+        # Ensure we have assertLogs
+        project.build_depends_on("unittest2>=0.7")
     project.depends_on("bottle")
     project.depends_on("isodate")
     project.depends_on("pils>=0.1.21")

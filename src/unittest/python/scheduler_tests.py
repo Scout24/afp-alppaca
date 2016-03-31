@@ -90,6 +90,47 @@ class RefreshCredentialsTest(unittest.TestCase):
         self.scheduler._refresh_credentials()
         do_backoff_mock.assert_called_with(factor=3, max_interval=300)
 
+    @patch('afp_alppaca.scheduler.time.sleep')
+    def test_eternal_loop_sleeps_correctly(self, mock_sleep):
+        # The eternal loop does not catch BaseExceptions. This is used
+        # to make it a bit less eternal.
+        class TestException(BaseException):
+            pass
+        mock_refresh = Mock()
+        mock_refresh.side_effect = [4242, TestException]
+        self.scheduler._refresh_credentials = mock_refresh
+
+        with self.assertLogs(level=logging.DEBUG) as cm:
+            self.assertRaises(TestException, self.scheduler.refresh_credentials)
+
+        mock_refresh.assert_called_with()
+        mock_sleep.assert_called_with(4242)
+
+        # refresh_credentials must log how long it will sleep.
+        all_log_messages = "".join(cm.output)
+        self.assertIn("4242", all_log_messages)
+
+    @patch('afp_alppaca.scheduler.time.sleep')
+    def test_eternal_loop_catches_exceptions(self, mock_sleep):
+        # The eternal loop does not catch BaseExceptions. This is used
+        # to make it a bit less eternal.
+        class TestException(BaseException):
+            pass
+
+        mock_refresh = Mock()
+        mock_refresh.side_effect = [Exception("123 unit testing"), TestException]
+        self.scheduler._refresh_credentials = mock_refresh
+
+        with self.assertLogs(level=logging.ERROR) as cm:
+            self.assertRaises(TestException, self.scheduler.refresh_credentials)
+
+        mock_refresh.assert_called_with()
+        # Default sleep time in case of uncaught exceptions is 120 seconds.
+        mock_sleep.assert_called_with(120)
+
+        # Exception message must have been logged.
+        all_log_messages = "".join(cm.output)
+        self.assertIn("123 unit testing", all_log_messages)
 
 class AcquireValidCredentialsTest(unittest.TestCase):
     def test_should_acquire_valid_credentials(self):
