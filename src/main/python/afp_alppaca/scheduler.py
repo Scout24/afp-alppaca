@@ -43,6 +43,8 @@ class Scheduler(object):
             except Exception:
                 self.logger.exception("Unhandled error while refreshing credentials:")
                 next_sleep = 120
+            self.logger.debug("Sleeping %s seconds before next credential "
+                              "refresh...", next_sleep)
             time.sleep(next_sleep)
 
     def _refresh_credentials(self):
@@ -68,7 +70,7 @@ class Scheduler(object):
         """ Update credentials and retrigger refresh """
         self.credentials.update(new_credentials)
         self.logger.info("Got credentials")
-        self.logger.debug(self.credentials)
+        self.logger.debug("Credential cache: %s", self.credentials)
         refresh_delta = self.extract_refresh_delta()
         if refresh_delta < 0:
             self.logger.warn("Expiration date is in the past, entering backoff.")
@@ -83,8 +85,10 @@ class Scheduler(object):
     def extract_refresh_delta(self):
         """ Return shortest expiration time in seconds. """
         expiration = isodate.parse_datetime(extract_min_expiration(self.credentials))
-        self.logger.debug("Extracted expiration: %s", expiration)
         refresh_delta = total_seconds(expiration - datetime.datetime.now(tz=pytz.utc))
+
+        self.logger.debug("Extracted expiration: %s %s (in %s seconds)",
+                          expiration, expiration.tzname(), refresh_delta)
         return refresh_delta
 
     def sample_new_refresh_delta(self, refresh_delta):

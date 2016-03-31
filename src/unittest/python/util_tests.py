@@ -1,7 +1,34 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
+import os
+import shutil
+import tempfile
+
 from afp_alppaca.compat import unittest
+from afp_alppaca.util import load_config
 
 
 class TestUtil(unittest.TestCase):
-    pass
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir)
+
+    def test_load_config_good_case(self):
+        config_file_name = os.path.join(self.tmpdir, "config.yaml")
+        with open(config_file_name, 'w') as config_file:
+            config_file.write('the_answer: 42')
+
+        loaded_config = load_config(self.tmpdir)
+
+        self.assertEqual(loaded_config, {'the_answer': 42})
+
+    def test_load_config_reports_config_dir_name(self):
+        config_file_name = os.path.join(self.tmpdir, "broken_config.yaml")
+        with open(config_file_name, 'w') as config_file:
+            config_file.write('too: many: colons: in: one: line')
+
+        # If loading fails, the exception string must contain the confdir name.
+        self.assertRaisesRegexp(Exception, self.tmpdir,
+                                load_config, self.tmpdir)
