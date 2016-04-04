@@ -1,6 +1,7 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
 import argparse
+import signal
 import sys
 import threading
 
@@ -15,7 +16,13 @@ from succubus import Daemon
 
 class AlppacaDaemon(Daemon):
     def run(self):
+        self.logger.warn("Alppaca starting.")
         try:
+            # Handle SIGTERM the same way SIGINT is handled, i.e. throw a
+            # KeyboardInterrupt exception. This makes the "finally:" work.
+            sigint_handler = signal.getsignal(signal.SIGINT)
+            signal.signal(signal.SIGTERM, sigint_handler)
+
             # Credentials is a shared object that connects the scheduler and the
             # bottle_app. The scheduler writes into it and the bottle_app reads
             # from it.
@@ -26,7 +33,7 @@ class AlppacaDaemon(Daemon):
         except Exception:
             self.logger.exception("Error in Alppaca")
         finally:
-            self.logger.info("Alppaca shutting down...")
+            self.logger.warn("Alppaca shutting down.")
 
     def parse_arguments(self):
         parser = argparse.ArgumentParser()
