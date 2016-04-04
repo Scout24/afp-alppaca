@@ -1,6 +1,8 @@
 from __future__ import print_function, absolute_import, division
 
+import os
 import requests
+import signal
 import time
 from multiprocessing import Process
 
@@ -27,8 +29,22 @@ class AlppacaIntegrationTest(object):
     def __exit__(self, *args):
         self.mock_job.terminate()
         self.alppaca_job.terminate()
-        self.mock_job.join()
-        self.alppaca_job.join()
+
+        self.mock_job.join(3)
+        self.alppaca_job.join(3)
+
+        mock_alive = self.mock_job.is_alive()
+        if mock_alive:
+            os.kill(self.mock_job.pid, signal.SIGKILL)
+
+        alppaca_alive = self.alppaca_job.is_alive()
+        if alppaca_alive:
+            os.kill(self.alppaca_job.pid, signal.SIGKILL)
+
+        if mock_alive or alppaca_alive:
+            raise Exception("Processe(s) that ignored SIGTERM:"
+                            "API mock server: %s  Alppaca: %s" % (
+                            mock_alive, alppaca_alive))
 
     def run_alppaca(self):
         daemon = AlppacaDaemon(pid_file="not used")
