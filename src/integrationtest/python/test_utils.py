@@ -30,8 +30,8 @@ class AlppacaIntegrationTest(object):
         self.mock_job.terminate()
         self.alppaca_job.terminate()
 
-        self.mock_job.join(3)
-        self.alppaca_job.join(3)
+        self.mock_job.join(10)
+        self.alppaca_job.join(10)
 
         mock_alive = self.mock_job.is_alive()
         if mock_alive:
@@ -42,7 +42,7 @@ class AlppacaIntegrationTest(object):
             os.kill(self.alppaca_job.pid, signal.SIGKILL)
 
         if mock_alive or alppaca_alive:
-            raise Exception("Processe(s) that ignored SIGTERM:"
+            raise Exception("Processe(s) that ignored SIGTERM: "
                             "API mock server: %s  Alppaca: %s" % (
                             mock_alive, alppaca_alive))
 
