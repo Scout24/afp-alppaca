@@ -8,8 +8,7 @@ import threading
 from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
 from afp_alppaca.ims_interface import IMSCredentialsProvider
 from afp_alppaca.scheduler import Scheduler
-from afp_alppaca.webapp import WebApp
-from afp_alppaca.util import setup_logging, load_config
+from afp_alppaca.util import setup_logging, load_config, redirect_print_to_log
 from afp_alppaca.compat import OrderedDict
 from succubus import Daemon
 
@@ -24,6 +23,8 @@ class AlppacaDaemon(Daemon):
         try:
             # Handle SIGTERM by raising SystemExit to make the "finally:" work.
             signal.signal(signal.SIGTERM, sigterm_handler)
+
+            redirect_print_to_log(self.logger)
 
             # Credentials is a shared object that connects the scheduler and the
             # bottle_app. The scheduler writes into it and the bottle_app reads
@@ -65,8 +66,12 @@ class AlppacaDaemon(Daemon):
         bind_port = self.config.get('bind_port', '25772')
         self.logger.debug("Starting webserver on %s:%s", bind_ip, bind_port)
 
+        # Bottle creates internal shortcuts for writing to STDOUT/STDERR.
+        # Since we replace STDOUT/STDERR with our own versions, bottle needs
+        # to be imported _after_ we replace things.
+        from afp_alppaca.webapp import WebApp
         webapp = WebApp(self.credentials)
-        webapp.run(host=bind_ip, port=bind_port, quiet=True)
+        webapp.run(host=bind_ip, port=bind_port, quiet=False)
 
     def get_credentials_provider(self):
         # initialize the credentials provider

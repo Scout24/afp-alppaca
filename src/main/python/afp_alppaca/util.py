@@ -59,3 +59,29 @@ def load_config(config_dir):
         print("Could not load configuration from '{0}'".format(
             config_dir), file=sys.stderr)
         raise
+
+
+class StdoutToLog(object):
+    """File-like object that logs everything that is written to the 'file'
+
+    This can be used to replace sys.stdout or sys.stderr.
+    """
+    def __init__(self, logger):
+        self.logger = logger
+
+    def write(self, what):
+        # An ordinary print() write()s the line and then it write()s the
+        # newline character. We only want to log former, not the latter.
+        what = what.strip()
+        if not what:
+            return
+        self.logger.warn(what)
+
+    def isatty(self):
+        return False
+
+
+def redirect_print_to_log(logger):
+    out_to_log = StdoutToLog(logger)
+    sys.stdout = out_to_log
+    sys.stderr = out_to_log

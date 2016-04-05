@@ -1,12 +1,13 @@
 from __future__ import print_function, absolute_import, division
 
 import logging
+import mock
 import os
 import shutil
 import tempfile
 
 from afp_alppaca.compat import unittest
-from afp_alppaca.util import load_config, create_logging_handler
+from afp_alppaca.util import load_config, create_logging_handler, StdoutToLog
 
 
 class TestUtil(unittest.TestCase):
@@ -48,3 +49,12 @@ class TestUtil(unittest.TestCase):
         expected_class = logging.FileHandler
         self.assertIsInstance(handler, expected_class)
         self.assertTrue(os.path.exists(log_file_name))
+
+    def test_stdout_to_log(self):
+        mock_logger = mock.Mock()
+        out_to_log = StdoutToLog(mock_logger)
+        message = "Hello, world!"
+
+        out_to_log.write(message)
+
+        mock_logger.warn.assert_called_with(message)
