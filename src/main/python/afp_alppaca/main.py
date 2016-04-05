@@ -14,14 +14,16 @@ from afp_alppaca.compat import OrderedDict
 from succubus import Daemon
 
 
+def sigterm_handler(*args):
+    raise SystemExit("SIGTERM was received")
+
+
 class AlppacaDaemon(Daemon):
     def run(self):
         self.logger.warn("Alppaca starting.")
         try:
-            # Handle SIGTERM the same way SIGINT is handled, i.e. throw a
-            # KeyboardInterrupt exception. This makes the "finally:" work.
-            sigint_handler = signal.getsignal(signal.SIGINT)
-            signal.signal(signal.SIGTERM, sigint_handler)
+            # Handle SIGTERM by raising SystemExit to make the "finally:" work.
+            signal.signal(signal.SIGTERM, sigterm_handler)
 
             # Credentials is a shared object that connects the scheduler and the
             # bottle_app. The scheduler writes into it and the bottle_app reads
