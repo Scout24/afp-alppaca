@@ -7,7 +7,8 @@ import shutil
 import tempfile
 
 from afp_alppaca.compat import unittest
-from afp_alppaca.util import load_config, create_logging_handler, StdoutToLog
+from afp_alppaca.util import (load_config, create_logging_handler, StdoutToLog,
+                              redirect_print_to_log)
 
 
 class TestUtil(unittest.TestCase):
@@ -58,3 +59,25 @@ class TestUtil(unittest.TestCase):
         out_to_log.write(message)
 
         mock_logger.warn.assert_called_with(message)
+
+    def test_stdout_to_log_ignores_newlines(self):
+        mock_logger = mock.Mock()
+        out_to_log = StdoutToLog(mock_logger)
+        message = "\n"
+
+        out_to_log.write(message)
+
+        self.assertEqual(mock_logger.warn.call_count, 0)
+
+    def test_redirect_print_to_log_replaces_stdout_stderr(self):
+        mock_logger = object()
+        with mock.patch('afp_alppaca.util.sys') as mock_sys:
+            redirect_print_to_log(mock_logger)
+
+            stdout = mock_sys.stdout
+            self.assertIsInstance(stdout, StdoutToLog)
+            self.assertIs(stdout.logger, mock_logger)
+
+            stderr = mock_sys.stderr
+            self.assertIsInstance(stderr, StdoutToLog)
+            self.assertIs(stderr.logger, mock_logger)

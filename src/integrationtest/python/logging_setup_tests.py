@@ -43,12 +43,6 @@ class RunAlppacaTests(unittest.TestCase):
         content = self.tmpfile.read()
         self.assertEqual(content, b'')
 
-    def test_log_with_content_log_level_debug(self):
-        self._helper()
-
-        content = self.tmpfile.read()
-        self.assertGreater(len(content), 0)
-
     def test_log_format_is_applied(self):
         self.config['log_format'] = 'foobar: hello world'
 
@@ -56,6 +50,28 @@ class RunAlppacaTests(unittest.TestCase):
 
         content = self.tmpfile.read()
         self.assertIn(b'foobar: hello world', content)
+
+    def test_log_daemon_start_stop_is_logged(self):
+        # The daemon defaults to WARNING. We want start/stop to be logged
+        # by default.
+        self.config['log_level'] = 'warning'
+
+        self._helper()
+
+        content = self.tmpfile.read()
+        self.assertIn(b'Alppaca starting', content)
+        self.assertIn(b'Alppaca shutting down', content)
+
+    def test_log_http_accesses_get_logged(self):
+        # The daemon defaults to WARNING. We want http access to be logged
+        # by default.
+        self.config['log_level'] = 'warning'
+
+        self._helper()
+
+        content = self.tmpfile.read()
+        # The AlppacaIntegrationTest() accesses this path.
+        self.assertIn(b'/latest/meta-data/iam/security-credentials/', content)
 
 
 if __name__ == '__main__':
