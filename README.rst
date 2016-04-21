@@ -94,7 +94,7 @@ are loaded and merged in alphabetical order by yamlreader.
       address: /dev/log
 
   ## Allows to automatically switch to another role
-  # assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
+  # assume_role: arn:aws:iam::123456789012:role/demoRole
 
   ## Proxy settings for assume_role call to aws
   # aws_proxy_host: my_proxy.local
@@ -130,7 +130,7 @@ set alppaca to assume a different role
 You can configure alppaca to issue a assume_role API call using the configuration.
 This can be useful when you want to assume the role of another account::
 
-  assume_role: arn:aws:sts::123456789012:assumed-role/demo/Bob
+  assume_role: arn:aws:iam::123456789012:role/demoRole
 
 In case a proxy is required in order to connect to AWS, use this config::
 
