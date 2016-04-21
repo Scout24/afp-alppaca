@@ -78,20 +78,14 @@ are loaded and merged in alphabetical order by yamlreader.
   ## Possible log levels are debug, info, warning (default), error
   log_level: warning
 
-  ## How the log messages are formatted. See https://docs.python.org/2/library/logging.html#logrecord-attributes for details
-  ## Example for syslog:
-  log_format: 'alppaca: [%(levelname)s] %(message)s'
   ## Example for filelogging:
-  # log_format: '%(asctime)s [%(levelname)s] %(message)s'
+  log_format: '%(asctime)s [%(levelname)s] %(message)s'
 
   ## Import Python logging handler and configure.
-  ## Uses syslog by default.
   logging_handler:
     module: logging.handlers
-    class: SysLogHandler
-    args: []
-    kwargs:
-      address: /dev/log
+    class: WatchedFileHandler
+    args: [/var/log/alppaca.log]
 
   ## Allows to automatically switch to another role
   # assume_role: arn:aws:iam::123456789012:role/demoRole
@@ -103,10 +97,11 @@ are loaded and merged in alphabetical order by yamlreader.
   # aws_region: eu-central-1
 
   ## Drop privileges and run with this user and group
-  user: alppaca
-  group: alppaca
+  # instead of user nobody you can use alpacca/alpacca
+  user: nobody
+  group: nobody
 
-Source: ``src/main/python/resources/example_config.yaml``
+Full Source: ``src/main/python/resources/example_config.yaml``
 
 iptables configuration
 ----------------------
@@ -137,15 +132,9 @@ In case a proxy is required in order to connect to AWS, use this config::
   aws_proxy_host: my_proxy.local
   aws_proxy_port: 3128
 
-redirecting alppaca logs in rsyslog
------------------------------------
 
-With the default log formatting and handler, you can configure rsyslog to filter using the syslogtag "alppaca:"::
-
-    :syslogtag, isequal, "alppaca:"  -/var/log/alppaca.log
-
-Playing around
-==============
+Quickstart - Playing around
+===========================
 
 If you do not want to install the dependencies system wide, use `virtualenv <http://virtualenv.readthedocs.org/en/latest/>`__ and `pybuilder <https://pybuilder.github.io/>`__.
 
@@ -155,7 +144,7 @@ Launch the mock IMS service in one terminal::
 
 Launch ``alppaca`` in another::
 
-    $ PYTHONPATH=src/main/python python src/main/scripts/alppacad -c src/main/python/resources/example_config.yaml
+    $ sudo PYTHONPATH=src/main/python python src/main/scripts/alppacad start -c src/main/python/resources/example_config.yaml
 
 Use ``curl`` to perform some requests in a third one::
 

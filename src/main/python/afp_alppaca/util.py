@@ -30,8 +30,8 @@ def setup_logging(config):
     return logger
 
 def create_logging_handler(handler_config):
-    args = handler_config.get('args', ())
-    kwargs = handler_config.get('kwargs', {})
+    args = handler_config.get('args') or ()
+    kwargs = handler_config.get('kwargs') or {}
     print("Logs are written to {module}.{klass} with args {args!r} and "
           "kwargs {kwargs!r})".format(
             module=handler_config['module'],

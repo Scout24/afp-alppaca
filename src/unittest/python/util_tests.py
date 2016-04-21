@@ -51,6 +51,33 @@ class TestUtil(unittest.TestCase):
         self.assertIsInstance(handler, expected_class)
         self.assertTrue(os.path.exists(log_file_name))
 
+    def test_create_logging_handler_good_case_with_missing_kwargs(self):
+        log_file_name = os.path.join(self.tmpdir, "unittest.log")
+        handler_config = {
+            'module': 'logging',
+            'class': 'FileHandler',
+            'args': [log_file_name],
+            'kwargs': None
+        }
+
+        handler = create_logging_handler(handler_config)
+
+        expected_class = logging.FileHandler
+        self.assertIsInstance(handler, expected_class)
+        self.assertTrue(os.path.exists(log_file_name))
+
+    def test_create_logging_handler_good_case_with_missing_args(self):
+        handler_config = {
+            'module': 'logging',
+            'class': 'StreamHandler',
+            'args': None
+        }
+
+        handler = create_logging_handler(handler_config)
+
+        expected_class = logging.Handler
+        self.assertIsInstance(handler, expected_class)
+
     def test_stdout_to_log(self):
         mock_logger = mock.Mock()
         out_to_log = StdoutToLog(mock_logger)
