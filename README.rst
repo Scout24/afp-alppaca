@@ -146,6 +146,8 @@ Launch ``alppaca`` in another::
 
     $ sudo PYTHONPATH=src/main/python python src/main/scripts/alppacad start -c src/main/python/resources/example_config.yaml
 
+You need to be root (or use sudo) to start the alppaca as a deamon.
+
 Use ``curl`` to perform some requests in a third one::
 
     $ curl localhost:25772/latest/meta-data/iam/security-credentials/
