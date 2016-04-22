@@ -122,7 +122,7 @@ Usage of the init script: ``alppaca <start|restart|stop|status>``
 
 set alppaca to assume a different role
 --------------------------------------
-You can configure alppaca to issue a assume_role API call using the configuration.
+You can configure alppaca to issue an assume_role API call using the configuration.
 This can be useful when you want to assume the role of another account::
 
   assume_role: arn:aws:iam::123456789012:role/demoRole
