@@ -171,9 +171,10 @@ Descriptive Haiku
 See also
 ========
 
-See Hologram_ for another solution that brings temporary AWS credentials onto Developer desktops.
+See Hologram_ for another solution that brings temporary AWS credentials onto Developer desktops. Metadataproxy_ is a solution to provide IAM credentials to docker containers.
 
 .. _Hologram: https://github.com/AdRoll/hologram
+.. _Metadataproxy: https://github.com/lyft/metadataproxy
 
 License
 =======
