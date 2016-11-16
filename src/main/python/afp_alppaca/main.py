@@ -4,7 +4,7 @@ import argparse
 import signal
 import sys
 import threading
-from httplib import HTTPConnection
+from six.moves.http_client import HTTPConnection
 
 from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
 from afp_alppaca.ims_interface import IMSCredentialsProvider
