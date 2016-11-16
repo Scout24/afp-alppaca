@@ -4,6 +4,7 @@ import argparse
 import signal
 import sys
 import threading
+from httplib import HTTPConnection
 
 from afp_alppaca.assume_role import AssumedRoleCredentialsProvider
 from afp_alppaca.ims_interface import IMSCredentialsProvider
@@ -101,3 +102,18 @@ class AlppacaDaemon(Daemon):
         scheduler_thread = threading.Thread(target=scheduler.refresh_credentials)
         scheduler_thread.daemon = True
         scheduler_thread.start()
+
+    def status(self):
+        succubus_status = super(AlppacaDaemon, self).status()
+        if succubus_status != 0:
+            return succubus_status
+
+        conn = HTTPConnection('169.254.169.254', timeout=0.1)
+        try:
+            conn.request("GET", "/")
+            conn.getresponse()
+        except Exception:
+            print("Error: alppaca is not reachable via IP 169.254.169.254.")
+            return 3
+        else:
+            return 0
