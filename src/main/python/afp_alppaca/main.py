@@ -106,14 +106,15 @@ class AlppacaDaemon(Daemon):
     def status(self):
         succubus_status = super(AlppacaDaemon, self).status()
         if succubus_status != 0:
+            print("succubus_status is {0}".format(str(succubus_status)))
             return succubus_status
 
         conn = HTTPConnection('169.254.169.254', timeout=0.1)
         try:
             conn.request("GET", "/")
             conn.getresponse()
-        except Exception:
-            print("Error: alppaca is not reachable via IP 169.254.169.254.")
+        except Exception as e:
+            print("Error: alppaca is not reachable via IP 169.254.169.254. {0}".format(e))
             return 3
         else:
             return 0
