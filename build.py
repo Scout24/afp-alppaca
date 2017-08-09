@@ -35,7 +35,7 @@ def set_properties(project):
     project.depends_on("succubus")
     project.build_depends_on("mock")
     project.build_depends_on("requests-mock")
-    project.depends_on("webtest")
+    project.depends_on("webtest==2.0.20")
     project.depends_on("argparse")
     project.depends_on("yamlreader")
     project.depends_on("six")
